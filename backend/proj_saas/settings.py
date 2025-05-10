@@ -32,6 +32,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -45,6 +48,16 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'proj_saas.urls'
+
+REST_FRAMEWORK = {
+    
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+
+}
+AUTH_USER_MODEL = 'users.CustomUser'
+
 
 TEMPLATES = [
     {
