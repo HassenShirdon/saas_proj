@@ -4,7 +4,7 @@ from pathlib import Path
 from decouple import config
 
 
-DEBUG = config('DEBUG', cast=bool)
+#DEBUG = config('DEBUG', cast=bool)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -14,30 +14,47 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-DEBUG = config('DEBUG', default=False, cast=bool)
-SECRET_KEY = config('SECRET_KEY')
-
+#DEBUG = config('DEBUG', default=False, cast=bool)
+#SECRET_KEY = config('SECRET_KEY')
+DEBUG=True
+SECRET_KEY='Cvehk_gAOShNl9WVpL50YiRZirZz_wB3ZCleF2C7wdo7eXBY4CUcfTFwpmhfSoxdLkg'
 
 
 ALLOWED_HOSTS = []
 
 
+
 # Application definition
 
-INSTALLED_APPS = [
+SHARED_APPS = [
+    'django_tenants',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
     'core',
     'rest_framework',
     'rest_framework_simplejwt',
-    'users',
+    
+    
+]
+TENANT_APPS =[
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    
 ]
 
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "core.Client" # core.Model
+
+TENANT_DOMAIN_MODEL = "core.Domain"  # core.Model
+
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,13 +75,15 @@ REST_FRAMEWORK = {
 }
 AUTH_USER_MODEL = 'users.CustomUser'
 
-
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [],
+    'APP_DIRS': True,
+    'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -82,12 +101,12 @@ WSGI_APPLICATION = 'proj_saas.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST'),
-        'PORT': config('DATABASE_PORT'),
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME':'proj_saas',
+        'USER': 'postgres',
+        'PASSWORD': 'Marjaan',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
