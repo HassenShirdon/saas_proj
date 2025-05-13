@@ -1,26 +1,17 @@
 
 
 from pathlib import Path
-from decouple import config
+import os 
+from dotenv import load_dotenv
 
-
-#DEBUG = config('DEBUG', cast=bool)
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+load_dotenv() 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+SECRET_KEY = os.getenv('SECRET_KEY')
+  
+DEBUG = os.getenv('DEBUG', default=False)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-#DEBUG = config('DEBUG', default=False, cast=bool)
-#SECRET_KEY = config('SECRET_KEY')
-DEBUG=True
-SECRET_KEY='Cvehk_gAOShNl9WVpL50YiRZirZz_wB3ZCleF2C7wdo7eXBY4CUcfTFwpmhfSoxdLkg'
-
-
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '.localhost'] 
 
 
 
@@ -37,14 +28,15 @@ SHARED_APPS = [
     'users',
     'core',
     'rest_framework',
+    
     'rest_framework_simplejwt',
-    
-    
 ]
+
 TENANT_APPS =[
     'django.contrib.auth',
     'django.contrib.contenttypes',
-    
+    'inventory',
+    'finance',
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -62,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'proj_saas.urls'
@@ -73,11 +66,14 @@ REST_FRAMEWORK = {
     )
 
 }
+
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
 DATABASE_ROUTERS = (
     'django_tenants.routers.TenantSyncRouter',
 )
+
 TEMPLATES = [
     {
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -102,11 +98,11 @@ WSGI_APPLICATION = 'proj_saas.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME':'proj_saas',
-        'USER': 'postgres',
-        'PASSWORD': 'Marjaan',
-        'HOST': 'localhost',
-        'PORT': 5432,
+        'NAME':os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT'),
     }
 }
 
