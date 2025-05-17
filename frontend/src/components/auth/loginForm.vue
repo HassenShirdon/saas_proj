@@ -1,29 +1,29 @@
-<template>
-  <form @submit.prevent="handleSubmit">
-    <input v-model="form.email" type="email">
-    <input v-model="form.password" type="password">
+<!-- <template>
+  <form @submit.prevent="">
+    <input v-model="test" type="email" />
+    <input v-model="test" type="password" />
     <button type="submit">Sign In</button>
   </form>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
+// import { ref } from 'vue'
+// import { useAuthStore } from '@/stores/auth'
 
-const emit = defineEmits(['success'])
-const authStore = useAuthStore()
+// const emit = defineEmits(['success'])
+// const authStore = useAuthStore()
 
-const form = ref({
-  email: '',
-  password: ''
-})
+// const form = ref({
+//   email: '',
+//   password: ''
+// })
 
-const handleSubmit = async () => {
-  try {
-    await authStore.login(form.value)
-    emit('success')
-  } catch (error) {
-    console.error('Login failed', error)
-  }
-}
-</script>
+// const handleSubmit = async () => {
+//   try {
+//     await authStore.login(form.value)
+//     emit('success')
+//   } catch (error) {
+//     console.error('Login failed', error)
+//   }
+// }
+</script> -->
