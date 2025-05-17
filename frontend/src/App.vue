@@ -1,10 +1,15 @@
-<script setup>
-
-</script>
-
 <template>
-  <h1>Welcome to our page</h1>
+  <router-view />
 </template>
 
-<style scoped>
-</style> 
+<script>
+export default {
+  name: 'App',
+}
+</script>
+
+<style>
+body {
+  font-family: 'Inter', sans-serif;
+}
+</style>
