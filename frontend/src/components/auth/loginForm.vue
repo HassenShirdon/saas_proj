@@ -4,9 +4,9 @@
     <input v-model="test" type="password" />
     <button type="submit">Sign In</button>
   </form>
-</template>
-
+</template>-->
 <script setup>
+import topnav from '@/components/topnav.vue'
 // import { ref } from 'vue'
 // import { useAuthStore } from '@/stores/auth'
 
@@ -26,4 +26,4 @@
 //     console.error('Login failed', error)
 //   }
 // }
-</script> -->
+</script>

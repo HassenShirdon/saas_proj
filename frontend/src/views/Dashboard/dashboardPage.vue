@@ -20,7 +20,7 @@
 <script>
 // Make sure to adjust these paths if your components are located elsewhere!
 // For example, if they are in 'src/components/dashboard/':
-import TopNav from '@/components/dashboard/TopNav.vue'
+import TopNav from '@/components/dashboard/topNav.vue'
 import Sidebar from '@/components/dashboard/sidebarArea.vue'
 import MainArea from '@/components/dashboard/mainArea.vue'
 

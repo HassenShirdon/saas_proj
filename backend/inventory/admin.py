@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from . models import Supplier, ProductCategory,             InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,     SalesOrder, SalesOrderItem, StockMovement
+from . models import Supplier, ProductCategory,InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,     SalesOrder, SalesOrderItem, StockMovement
 
 
 admin.site.register(Supplier)
