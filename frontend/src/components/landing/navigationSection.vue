@@ -1,64 +1,34 @@
 <template>
-  <nav
-    id="navbar"
-    class="navbar navbar-expand-lg fixed-top custom-navbar shadow-sm"
-    data-bs-spy="scroll"
-    data-bs-target="#navbar"
-    data-bs-offset="80"
-    tabindex="0"
-  >
-    <div class="container-fluid d-flex justify-content-between align-items-center">
-      <!-- Logo -->
-      <a class="navbar-brand d-flex align-items-center" href="#home">
-        <img
-          src="@/assets/logo.png"
-          alt="Marjaan Solutions Logo"
-          height="40"
-          width="auto"
-          class="me-2"
-        />
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="@/assets/logo.png" alt="Logo">
       </a>
-
-      <!-- Toggler -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-
-      <!-- Navigation Links + Auth Buttons -->
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="#home">Home</a>
+            <a class="nav-link" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#features">Features</a>
+            <a class="nav-link" href="#">Features</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#about">About Us</a>
+            <a class="nav-link" href="#">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#testimonials">Testimonials</a>
+            <a class="nav-link" href="#">Pricing</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#pricing">Pricing</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#contact">Contact</a>
+            <a class="nav-link" href="#">Contact</a>
           </li>
         </ul>
-
-        <!-- Auth Buttons -->
-        <div class="d-flex ms-lg-3 mt-3 mt-lg-0">
-          <a href="/signin" class="btn btn-outline-primary me-2">Sign In</a>
-          <a href="/signup" class="btn btn-primary">Sign Up</a>
+        <div class="ms-auto">
+          <button type="button" class="btn btn-primary m-2">Sign In</button>
+          <button type="button" class="btn btn-danger">Danger</button>
         </div>
       </div>
     </div>
@@ -75,51 +45,121 @@ export default {
     })
   },
 }
+window.addEventListener('scroll', () => {
+  const navbar = document.querySelector('.navbar');
+  if (window.scrollY > 50) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
 </script>
 
 <style scoped>
-.custom-navbar {
-  background-color: white;
-  /* transition: background-color 0.3s ease; */
+body {
+  margin: 0;
+  font-family: 'ubuntu', sans-serif;
+}
+
+.navbar {
+  background: #efefef;
   padding: 1rem 2rem;
+  transition: box-shadow 0.3s ease;
+  position: sticky;
+  top: 0;
   z-index: 1000;
 }
 
-.navbar-nav .nav-link {
-  color: #5d7a96;
-  font-weight: 500;
-  margin-left: 1rem;
-  transition: color 0.3s ease;
-}
-
-.navbar-nav .nav-link:hover,
-.navbar-nav .nav-link.active {
-  color: #007acc;
+.navbar.scrolled {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* Bootstrap shadow-sm equivalent */
+  background: #efefef;
 }
 
 .navbar-brand img {
-  max-height: 40px;
-  width: auto;
+  height: 40px;
+  transition: transform 0.3s ease;
 }
 
-/* Auth Buttons */
-.btn-outline-primary {
-  border-color: #00aaff;
-  color: #00aaff;
+.navbar-brand img:hover {
+  transform: scale(1.1);
 }
 
-.btn-outline-primary:hover {
-  background-color: #00aaff;
-  color: #fff;
+.navbar-nav {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
 }
 
-.btn-primary {
-  background-color: #00aaff;
-  border-color: #00aaff;
+.nav-link {
+  color: #1178f5 !important;
+  font-weight: 500;
+  margin: 0 1rem;
+  font-size: 1.1rem;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
-.btn-primary:hover {
-  background-color: #007acc;
-  border-color: #007acc;
+.nav-link:hover {
+  color: #facc15 !important;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #facc15;
+  transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.user-profile img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+  transition: transform 0.3s ease;
+}
+
+.user-profile img:hover {
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  background: #ffffff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 150px;
+}
+
+.dropdown-item {
+  color: #6b21a8;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.dropdown-item:hover {
+  background: #06b6d4;
+  color: #ffffff;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav {
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+}
+
+.nav-link {
+  margin: 0.5rem 0;
 }
 </style>

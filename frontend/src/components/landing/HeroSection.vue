@@ -17,11 +17,7 @@
 
         <!-- Image Column -->
         <div class="col-lg-6 mt-5 mt-lg-0 text-center">
-          <img
-            src="@/assets/hero-illustration.png"
-            alt="Dashboard preview"
-            class="img-fluid hero-img rounded-4"
-          />
+          <img src="@/assets/hero-illustration.png" alt="Dashboard preview" class="img-fluid hero-img rounded-4" />
         </div>
       </div>
     </div>
@@ -36,7 +32,7 @@ export default {
 
 <style scoped>
 .hero-section {
-  min-height: 100vh;
+  min-height: 90vh;
   display: flex;
   align-items: center;
   padding-top: 5rem;

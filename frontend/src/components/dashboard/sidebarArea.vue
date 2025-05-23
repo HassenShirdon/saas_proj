@@ -15,15 +15,16 @@
           <span class="arrow" :class="{ open: showInventory }">▾</span>
         </li>
         <ul v-if="showInventory" class="submenu">
-          <li><RouterLink to="/products" class="sublink">Products</RouterLink></li>
-          <li><RouterLink to="/categories" class="sublink">Categories</RouterLink></li>
+          <li><RouterLink to="dashboard/products" class="sublink">Products</RouterLink></li>
+          <li><RouterLink to="dashboard/categories" class="sublink">Categories</RouterLink></li>
           <li><RouterLink to="/brands" class="sublink">Brands</RouterLink></li>
-          <li><RouterLink to="/suppliers" class="sublink">Suppliers</RouterLink></li>
-          <li><RouterLink to="/units" class="sublink">Units</RouterLink></li>
-          <li><RouterLink to="/stock" class="sublink">Stock</RouterLink></li>
-          <li><RouterLink to="/purchases" class="sublink">Purchases</RouterLink></li>
-          <li><RouterLink to="/sales" class="sublink">Sales</RouterLink></li>
-          <li><RouterLink to="/returns" class="sublink">Returns</RouterLink></li>
+          <li><RouterLink to="dashboard/suppliers" class="sublink">Suppliers</RouterLink></li>
+          <li><RouterLink to="dashboard/customers" class="sublink">Customers</RouterLink></li>
+          <li><RouterLink to="dashboard/units" class="sublink">Units</RouterLink></li>
+          <li><RouterLink to="dashboard/stock" class="sublink">Stock</RouterLink></li>
+          <li><RouterLink to="dashboard/purchases" class="sublink">Purchases</RouterLink></li>
+          <li><RouterLink to="dashboard/sales" class="sublink">Sales</RouterLink></li>
+          <li><RouterLink to="dashboard/returns" class="sublink">Returns</RouterLink></li>
         </ul>
 
         <li><RouterLink to="/reports" class="link">Reports</RouterLink></li>

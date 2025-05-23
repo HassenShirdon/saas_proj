@@ -21,6 +21,7 @@ SHARED_APPS = [
     'django_tenants',
     'django.contrib.contenttypes',
     'django.contrib.staticfiles',
+    'corsheaders',
     'users',
     'core',
     
@@ -47,6 +48,7 @@ MIDDLEWARE = [
     'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -65,6 +67,12 @@ REST_FRAMEWORK = {
 
 }
 
+CORS_ALLOW_ALL_ORIGINS = True 
+
+CORS_ALLOWED_ORIGINS = [
+    'http://jeeh.localhost:8000',
+    'http://localhost:5173',
+]
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
