@@ -43,12 +43,13 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* .table-auto {
+.table-auto {
   border-collapse: collapse;
   width: 100%;
 }
+
 th,
 td {
   text-align: left;
-} */
+}
 </style>

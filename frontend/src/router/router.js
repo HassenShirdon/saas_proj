@@ -1,9 +1,10 @@
 // src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router'
-import customerslist from '@/components/customerslist.vue'
-import LandingPage from '@/views/landing/LandingPage.vue'
-import dashboard from '@/views/dashboard/dashboardPage.vue'
-import login from '@/views/Auth/loginView.vue'
+import { createRouter, createWebHistory } from 'vue-router',
+import customerslist from '@/components/customerslist.vue',
+import ProductList from '@/components/ProductList.vue',
+import LandingPage from '@/views/landing/LandingPage.vue',
+import dashboard from '@/views/dashboard/dashboardPage.vue',
+import login from '@/views/Auth/loginView.vue',
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
         path: 'customers',
         name: 'CustomerList',
         component: customerslist,
+      },
+      {
+        path: 'products',
+        name: 'ProductList',
+        component: ProductList,
       },
       // other dashboard routes can go here
     ],

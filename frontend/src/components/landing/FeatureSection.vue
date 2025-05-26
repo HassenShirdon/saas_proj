@@ -1,19 +1,14 @@
 <template>
-  <section class="py-5 bg-light position-relative overflow-hidden">
-    <div class="container text-center">
+  <section class="features-section py-5 bg-light position-relative overflow-hidden">
+    <div class="container text-center ">
       <h2 class="fw-bold mb-3 display-5">Supercharge Your Business</h2>
       <p class="text-muted mb-5 lead">
         A powerful suite of tools designed to help your operations thrive.
       </p>
 
       <div class="row g-4">
-        <div
-          v-for="(feature, index) in features"
-          :key="index"
-          class="col-md-6 col-lg-4"
-          :data-aos="'fade-up'"
-          :data-aos-delay="index * 100"
-        >
+        <div v-for="(feature, index) in features" :key="index" class="col-md-6 col-lg-4" :data-aos="'fade-up'"
+          :data-aos-delay="index * 100">
           <div class="card h-100 border-0 shadow-sm bg-white rounded-4 p-4">
             <div :class="['icon mb-3 fs-1', feature.iconColor]">
               <i :class="feature.icon"></i>
@@ -85,9 +80,11 @@ export default {
   transform: translateY(-5px);
   transition: all 0.3s ease;
 }
+
 .card .icon {
   transition: transform 0.3s;
 }
+
 .card:hover .icon {
   transform: scale(1.2);
 }
