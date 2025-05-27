@@ -1,36 +1,65 @@
 <template>
-  <aside class="sidebar">
-    <div class="sidebar-header">
-      <h2>Dashboard</h2>
+  <aside class="sidebar bg-primary">
+    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-4">
+      <h2 class="mb-0 fs-4 fw-semibold text-white">Dashboard</h2>
+      <button class="btn btn-sm btn-outline-light d-lg-none" @click="$emit('toggle-collapse')">
+        <i class="bi bi-x-lg"></i>
+      </button>
     </div>
 
-    <nav class="menu">
-      <ul>
-        <li>
-          <RouterLink to="/dashboard" class="link">Home</RouterLink>
+    <nav class="menu px-2">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <RouterLink to="/dashboard" class="nav-link d-flex align-items-center text-white py-3 rounded-3"
+            active-class="active">
+            <i class="bi bi-house-door me-3"></i>
+            <span>Home</span>
+          </RouterLink>
         </li>
 
-        <li @click="toggleInventory" class="link has-dropdown">
-          Inventory
-          <span class="arrow" :class="{ open: showInventory }">▾</span>
-        </li>
-        <ul v-if="showInventory" class="submenu">
-          <li><RouterLink to="dashboard/products" class="sublink">Products</RouterLink></li>
-          <li><RouterLink to="dashboard/categories" class="sublink">Categories</RouterLink></li>
-          <li><RouterLink to="/brands" class="sublink">Brands</RouterLink></li>
-          <li><RouterLink to="dashboard/suppliers" class="sublink">Suppliers</RouterLink></li>
-          <li><RouterLink to="dashboard/customers" class="sublink">Customers</RouterLink></li>
-          <li><RouterLink to="dashboard/units" class="sublink">Units</RouterLink></li>
-          <li><RouterLink to="dashboard/stock" class="sublink">Stock</RouterLink></li>
-          <li><RouterLink to="dashboard/purchases" class="sublink">Purchases</RouterLink></li>
-          <li><RouterLink to="dashboard/sales" class="sublink">Sales</RouterLink></li>
-          <li><RouterLink to="dashboard/returns" class="sublink">Returns</RouterLink></li>
-        </ul>
+        <li class="nav-item">
+          <div
+            class="nav-link d-flex align-items-center justify-content-between text-white py-3 rounded-3 cursor-pointer"
+            :class="{ 'active': showInventory }" @click="toggleInventory">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-box-seam me-3"></i>
+              <span>Inventory</span>
+            </div>
+            <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showInventory }"></i>
+          </div>
 
-        <li><RouterLink to="/reports" class="link">Reports</RouterLink></li>
-        <li><RouterLink to="/settings" class="link">Settings</RouterLink></li>
+          <ul v-if="showInventory" class="submenu nav flex-column ps-5 mt-1">
+            <li class="nav-item" v-for="item in inventoryItems" :key="item.to">
+              <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                active-class="active">
+                <i :class="`bi ${item.icon} me-3`"></i>
+                <span>{{ item.label }}</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item" v-for="item in menuItems" :key="item.to">
+          <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-3 rounded-3"
+            active-class="active">
+            <i :class="`bi ${item.icon} me-3`"></i>
+            <span>{{ item.label }}</span>
+          </RouterLink>
+        </li>
       </ul>
     </nav>
+
+    <div class="px-3 py-4 mt-auto">
+      <div class="user-profile d-flex align-items-center">
+        <div class="avatar me-3">
+          <img src="https://via.placeholder.com/40" alt="User" class="rounded-circle" width="40" height="40">
+        </div>
+        <div class="user-info text-white">
+          <div class="fw-medium">John Doe</div>
+          <small class="text-white-50">Admin</small>
+        </div>
+      </div>
+    </div>
   </aside>
 </template>
 
@@ -39,6 +68,22 @@ export default {
   data() {
     return {
       showInventory: false,
+      inventoryItems: [
+        { to: 'dashboard/products', label: 'Products', icon: 'bi-box' },
+        { to: 'dashboard/categories', label: 'Categories', icon: 'bi-tags' },
+        { to: '/brands', label: 'Brands', icon: 'bi-star' },
+        { to: 'dashboard/suppliers', label: 'Suppliers', icon: 'bi-truck' },
+        { to: 'dashboard/customers', label: 'Customers', icon: 'bi-people' },
+        { to: 'dashboard/units', label: 'Units', icon: 'bi-rulers' },
+        { to: 'dashboard/stock', label: 'Stock', icon: 'bi-clipboard-data' },
+        { to: 'dashboard/purchases', label: 'Purchases', icon: 'bi-cart-plus' },
+        { to: 'dashboard/sales', label: 'Sales', icon: 'bi-cart-check' },
+        { to: 'dashboard/returns', label: 'Returns', icon: 'bi-arrow-return-left' }
+      ],
+      menuItems: [
+        { to: '/reports', label: 'Reports', icon: 'bi-graph-up' },
+        { to: '/settings', label: 'Settings', icon: 'bi-gear' }
+      ]
     }
   },
   methods: {
@@ -51,63 +96,71 @@ export default {
 
 <style scoped>
 .sidebar {
-  width: 260px;
-  background-color: #1976d2; /* light primary */
-  color: white;
+  width: 280px;
   height: 100vh;
-  padding: 20px 15px;
   position: fixed;
   top: 0;
   left: 0;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 1030;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
 }
 
 .sidebar-header {
-  font-size: 22px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  text-align: center;
-  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.menu ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.nav-link {
+  transition: all 0.2s ease;
+  margin-bottom: 0.25rem;
 }
 
-.link,
-.sublink {
-  display: block;
-  padding: 10px 15px;
-  border-radius: 6px;
-  color: white;
-  text-decoration: none;
-  font-size: 15px;
-  transition: background 0.2s ease;
+.nav-link:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
-.link:hover,
-.sublink:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+.nav-link.active {
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  font-weight: 500;
 }
 
-.has-dropdown {
+.submenu .nav-link {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.submenu .nav-link.active {
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+.cursor-pointer {
   cursor: pointer;
-  position: relative;
 }
 
-.arrow {
-  float: right;
-  transition: transform 0.3s ease;
+.transition-all {
+  transition: all 0.3s ease;
 }
 
-.arrow.open {
+.rotate-180 {
   transform: rotate(180deg);
 }
 
-.submenu {
-  padding-left: 15px;
-  margin-top: 5px;
+.user-profile {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar.show {
+    transform: translateX(0);
+  }
 }
 </style>

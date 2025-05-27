@@ -1,10 +1,10 @@
 // src/router/index.js
-import { createRouter, createWebHistory } from 'vue-router',
-import customerslist from '@/components/customerslist.vue',
-import ProductList from '@/components/ProductList.vue',
-import LandingPage from '@/views/landing/LandingPage.vue',
-import dashboard from '@/views/dashboard/dashboardPage.vue',
-import login from '@/views/Auth/loginView.vue',
+import { createRouter, createWebHistory } from 'vue-router'
+import customerList from '@/components/Dashboard_Lists/customerslist.vue'
+import ProductList from '@/components/Dashboard_Lists/productList.vue'
+import LandingPage from '@/views/landing/LandingPage.vue'
+import dashboard from '@/views/dashboard/dashboardPage.vue'
+import login from '@/views/Auth/loginView.vue'
 
 const routes = [
   {
@@ -29,8 +29,8 @@ const routes = [
     children: [
       {
         path: 'customers',
-        name: 'CustomerList',
-        component: customerslist,
+        name: 'customerList',
+        component: customerList,
       },
       {
         path: 'products',

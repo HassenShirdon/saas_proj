@@ -26,9 +26,10 @@
             <a class="nav-link" href="#">Contact</a>
           </li>
         </ul>
-        <div class="ms-auto">
-          <button type="button" class="btn btn-primary m-2">Sign In</button>
-          <button type="button" class="btn btn-danger">Danger</button>
+        <div class="d-flex ms-auto ">
+          <!-- <button type="button" class="btn btn-primary ">Sign In</button> -->
+          <button type="button" class="btn btn-primary rounded-pill m-2">Log In</button>
+          <button type="button" class="btn btn-danger rounded-pill m-2">Logout</button>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@
                 <i class="fas fa-box-open me-2"></i>Product Management
             </h1>
             <button class="btn btn-add text-white">
-                <i class="fas fa-plus me-2"></i>Add Product
+                <i class="bi bi-house-door-fill"></i>Add Product
             </button>
         </div>
 
@@ -81,23 +81,6 @@
 <script setup>
 </script>
 <style>
-:root {
-    --primary-color: #7367f0;
-    --primary-hover: #5d52d8;
-    --secondary-color: #82868b;
-    --success-color: #28c76f;
-    --danger-color: #ea5455;
-    --warning-color: #ff9f43;
-    --info-color: #00cfe8;
-    --dark-color: #4b4b4b;
-    --light-color: #f8f8f8;
-}
-
-body {
-    background-color: #f5f5f9;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
 .page-header {
     display: flex;
     justify-content: space-between;
