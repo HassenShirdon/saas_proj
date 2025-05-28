@@ -9,7 +9,15 @@ from .models import (
     SalesOrder,
     SalesOrderItem,
     StockMovement,
+    products,
 )
+
+class ProductsSerializer(serializers.ModelSerializer):
+    """Serializer for Products model."""
+    class Meta:
+        model = products
+        fields = '__all__'
+        read_only_fields = ['id']
 
 class SupplierSerializer(serializers.ModelSerializer):
     """Serializer for Supplier model."""

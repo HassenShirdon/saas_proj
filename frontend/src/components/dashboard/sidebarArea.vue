@@ -39,6 +39,112 @@
           </ul>
         </li>
 
+        <li class="nav-item">
+          <div
+            class="nav-link d-flex align-items-center justify-content-between text-white py-3 rounded-3 cursor-pointer"
+            :class="{ 'active': showFinance }" @click="toggleFinance">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-cash-stack me-3"></i>
+              <span>Finance</span>
+            </div>
+            <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showFinance }"></i>
+          </div>
+
+          <ul v-if="showFinance" class="submenu nav flex-column ps-5 mt-1">
+            <li class="nav-item">
+              <div
+                class="nav-link d-flex align-items-center justify-content-between text-white py-2 rounded-3 cursor-pointer"
+                :class="{ 'active': showChartOfAccounts }" @click="toggleChartOfAccounts">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-journal-bookmark me-3"></i>
+                  <span>Chart of Accounts</span>
+                </div>
+                <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showChartOfAccounts }"></i>
+              </div>
+              <ul v-if="showChartOfAccounts" class="submenu nav flex-column ps-4 mt-1">
+                <li class="nav-item" v-for="item in chartOfAccountsItems" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                    active-class="active">
+                    <i :class="`bi ${item.icon} me-3`"></i>
+                    <span>{{ item.label }}</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <div
+                class="nav-link d-flex align-items-center justify-content-between text-white py-2 rounded-3 cursor-pointer"
+                :class="{ 'active': showJournalEntries }" @click="toggleJournalEntries">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-journal-text me-3"></i>
+                  <span>Journal Entries</span>
+                </div>
+                <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showJournalEntries }"></i>
+              </div>
+              <ul v-if="showJournalEntries" class="submenu nav flex-column ps-4 mt-1">
+                <li class="nav-item" v-for="item in journalEntryItems" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                    active-class="active">
+                    <i :class="`bi ${item.icon} me-3`"></i>
+                    <span>{{ item.label }}</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <div
+                class="nav-link d-flex align-items-center justify-content-between text-white py-2 rounded-3 cursor-pointer"
+                :class="{ 'active': showSupplierTransactions }" @click="toggleSupplierTransactions">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-truck me-3"></i>
+                  <span>Supplier Transactions</span>
+                </div>
+                <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showSupplierTransactions }"></i>
+              </div>
+              <ul v-if="showSupplierTransactions" class="submenu nav flex-column ps-4 mt-1">
+                <li class="nav-item" v-for="item in supplierTransactionItems" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                    active-class="active">
+                    <i :class="`bi ${item.icon} me-3`"></i>
+                    <span>{{ item.label }}</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <div
+                class="nav-link d-flex align-items-center justify-content-between text-white py-2 rounded-3 cursor-pointer"
+                :class="{ 'active': showCustomerTransactions }" @click="toggleCustomerTransactions">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-people me-3"></i>
+                  <span>Customer Transactions</span>
+                </div>
+                <i class="bi bi-chevron-down transition-all" :class="{ 'rotate-180': showCustomerTransactions }"></i>
+              </div>
+              <ul v-if="showCustomerTransactions" class="submenu nav flex-column ps-4 mt-1">
+                <li class="nav-item" v-for="item in customerTransactionItems" :key="item.to">
+                  <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                    active-class="active">
+                    <i :class="`bi ${item.icon} me-3`"></i>
+                    <span>{{ item.label }}</span>
+                  </RouterLink>
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item" v-for="item in otherFinanceItems" :key="item.to">
+              <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-2 rounded-3"
+                active-class="active">
+                <i :class="`bi ${item.icon} me-3`"></i>
+                <span>{{ item.label }}</span>
+              </RouterLink>
+            </li>
+          </ul>
+        </li>
+
         <li class="nav-item" v-for="item in menuItems" :key="item.to">
           <RouterLink :to="item.to" class="nav-link d-flex align-items-center text-white py-3 rounded-3"
             active-class="active">
@@ -68,6 +174,11 @@ export default {
   data() {
     return {
       showInventory: false,
+      showFinance: false,
+      showChartOfAccounts: false,
+      showJournalEntries: false,
+      showSupplierTransactions: false,
+      showCustomerTransactions: false,
       inventoryItems: [
         { to: 'dashboard/products', label: 'Products', icon: 'bi-box' },
         { to: 'dashboard/categories', label: 'Categories', icon: 'bi-tags' },
@@ -80,6 +191,28 @@ export default {
         { to: 'dashboard/sales', label: 'Sales', icon: 'bi-cart-check' },
         { to: 'dashboard/returns', label: 'Returns', icon: 'bi-arrow-return-left' }
       ],
+      chartOfAccountsItems: [
+        { to: '/finance/AccountList', label: 'Account Types', icon: 'bi-journal-bookmark' },
+        { to: '/finance/Account', label: 'Accounts', icon: 'bi-journal-text' }
+      ],
+      journalEntryItems: [
+        { to: '/finance/JournalEntry', label: 'Journal Entries', icon: 'bi-journal' },
+        { to: '/finance/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi-journal-plus' }
+      ],
+      supplierTransactionItems: [
+        { to: '/finance/SupplierInvoice', label: 'Supplier Invoices', icon: 'bi-file-earmark-text' },
+        { to: '/finance/SupplierInvoiceLine', label: 'Invoice Lines', icon: 'bi-list-ul' },
+        { to: '/finance/SupplierPayment', label: 'Supplier Payments', icon: 'bi-cash-stack' }
+      ],
+      customerTransactionItems: [
+        { to: '/finance/CustomerInvoice', label: 'Customer Invoices', icon: 'bi-receipt' },
+        { to: '/finance/CustomerInvoiceLine', label: 'Invoice Lines', icon: 'bi-list-check' },
+        { to: '/finance/CustomerPayment', label: 'Customer Payments', icon: 'bi-credit-card' }
+      ],
+      otherFinanceItems: [
+        { to: '/finance/Expense', label: 'Expenses', icon: 'bi-wallet2' },
+        { to: '/finance/FinancialPeriod', label: 'Financial Periods', icon: 'bi-calendar-range' }
+      ],
       menuItems: [
         { to: '/reports', label: 'Reports', icon: 'bi-graph-up' },
         { to: '/settings', label: 'Settings', icon: 'bi-gear' }
@@ -90,7 +223,22 @@ export default {
     toggleInventory() {
       this.showInventory = !this.showInventory
     },
-  },
+    toggleFinance() {
+      this.showFinance = !this.showFinance
+    },
+    toggleChartOfAccounts() {
+      this.showChartOfAccounts = !this.showChartOfAccounts
+    },
+    toggleJournalEntries() {
+      this.showJournalEntries = !this.showJournalEntries
+    },
+    toggleSupplierTransactions() {
+      this.showSupplierTransactions = !this.showSupplierTransactions
+    },
+    toggleCustomerTransactions() {
+      this.showCustomerTransactions = !this.showCustomerTransactions
+    }
+  }
 }
 </script>
 

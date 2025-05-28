@@ -1,5 +1,5 @@
 
-
+from datetime import timedelta
 from pathlib import Path
 import os 
 from dotenv import load_dotenv
@@ -11,7 +11,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
   
 DEBUG = os.getenv('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['localhost', '.localhost'] 
+ALLOWED_HOSTS = ['localhost', '.localhost', '127.0.1',] 
 
 
 
@@ -36,6 +36,7 @@ TENANT_APPS =[
     'django.contrib.messages',
     'inventory',
     'finance',
+    'hrm',
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -63,6 +64,9 @@ REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 
 }
@@ -72,6 +76,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     'http://jeeh.localhost:8000',
     'http://localhost:5173',
+    'http://127.0.0.1:8000',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -97,6 +102,16 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'proj_saas.wsgi.application'
 
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': os.getenv('SECRET_KEY'),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases

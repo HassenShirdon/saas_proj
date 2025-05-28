@@ -1,7 +1,22 @@
-from .models  import Supplier, ProductCategory, InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,SalesOrder,SalesOrderItem, StockMovement
+from .models  import Supplier, products, ProductCategory, InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,SalesOrder,SalesOrderItem, StockMovement
 
 from rest_framework import generics
-from .serializers import SupplierSerializer,      ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer
+from .serializers import SupplierSerializer,  ProductsSerializer,    ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer
+
+
+class productList(generics.ListCreateAPIView):
+    """API view to list and create products."""
+    queryset = products.objects.all()
+    serializer_class = ProductsSerializer
+    filterset_fields = ['name', 'description', 'category', 'price']
+    ordering_fields = ['name', 'price']
+
+class productDetail(generics.RetrieveUpdateDestroyAPIView):
+    """API view to retrieve, update or delete a product."""
+    queryset = products.objects.all()
+    serializer_class = ProductsSerializer
+    filterset_fields = ['name', 'description', 'category', 'price']
+    lookup_field = 'name'
 
 class SupplierList(generics.ListCreateAPIView):
     """API view to list and create suppliers."""

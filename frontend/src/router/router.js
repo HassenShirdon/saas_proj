@@ -5,6 +5,7 @@ import ProductList from '@/components/Dashboard_Lists/productList.vue'
 import LandingPage from '@/views/landing/LandingPage.vue'
 import dashboard from '@/views/dashboard/dashboardPage.vue'
 import login from '@/views/Auth/loginView.vue'
+import Register from '@/views/Auth/register.vue'
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login,
+  },
+  {
+    path: '/sign-up',
+    name: 'signup',
+    component: Register,
   },
 
   {

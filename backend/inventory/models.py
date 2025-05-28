@@ -1,6 +1,25 @@
 from django.db import models
 from django.utils import timezone
 
+
+class products(models.Model):
+    """Represents a product in the inventory."""
+    name = models.CharField(max_length=255, unique=True)
+    description = models.TextField(blank=True, null=True)
+    sku = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    unit_cost = models.DecimalField(max_digits=10, decimal_places=2, help_text="Standard cost of one unit")
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2, help_text="Selling price per unit")
+    current_stock = models.IntegerField(default=0)
+    reorder_level = models.IntegerField(default=10)
+    last_updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Product"
+        verbose_name_plural = "Products"
+
 class Supplier(models.Model):
     """Represents a supplier of inventory items."""
     name = models.CharField(max_length=255, unique=True)
