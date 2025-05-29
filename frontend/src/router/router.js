@@ -1,9 +1,7 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
-import customerList from '@/components/Dashboard_Lists/customerslist.vue'
-import ProductList from '@/components/Dashboard_Lists/productList.vue'
-import LandingPage from '@/views/landing/LandingPage.vue'
-import dashboard from '@/views/dashboard/dashboardPage.vue'
+import LandingPage from '@/views/Landing/landingPage.vue'
+import dashboard from '@/views/Dashboard/dashboardPage.vue'
 import login from '@/views/Auth/loginView.vue'
 import Register from '@/views/Auth/register.vue'
 
@@ -36,12 +34,12 @@ const routes = [
       {
         path: 'customers',
         name: 'customerList',
-        component: customerList,
+        component: '',
       },
       {
         path: 'products',
         name: 'ProductList',
-        component: ProductList,
+        component: '',
       },
       // other dashboard routes can go here
     ],

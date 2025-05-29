@@ -1,35 +1,62 @@
-
 from datetime import timedelta
 from pathlib import Path
-import os 
+import os
 from dotenv import load_dotenv
 
-load_dotenv() 
+# Load environment variables
+load_dotenv()
+
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Security settings
 SECRET_KEY = os.getenv('SECRET_KEY')
-  
-DEBUG = os.getenv('DEBUG', default=False)
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY must be set in .env file")
 
-ALLOWED_HOSTS = ['localhost', '.localhost', '127.0.1',] 
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'  # Convert string to boolean
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']  # Fixed typo
 
+# For SaaS, allow tenant domains dynamically
+TENANT_SUBFOLDER_PREFIX = None  # Set if using subfolder-based tenants
 
-# Application definition
-
-SHARED_APPS = [
-    'django_tenants',
+INSTALLED_APPS = [
+    'django_tenants',  # Required for multi-tenancy
+    'django.contrib.admin',  # Admin for public schema
+    'django.contrib.auth',  # Authentication for public schema
     'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
-    'users',
-    'core',
-    
+    'corsheaders',  # For CORS support
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'core',  # Tenant-related models
+    'users',  # Custom user model
+    'inventory',
+    'finance',
+    'hrm',
 ]
 
-TENANT_APPS =[
-    'django.contrib.admin',
-    'django.contrib.auth',
+# Shared and tenant-specific apps
+SHARED_APPS = [
+    'django_tenants',
+    'django.contrib.admin',  # Added for public schema admin
+    'django.contrib.auth',  # Added for authentication
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'core',
+    'users',
+]
+
+TENANT_APPS = [
+    'django.contrib.contenttypes',
     'rest_framework',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
@@ -41,12 +68,16 @@ TENANT_APPS =[
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
-TENANT_MODEL = "core.Client" # core.Model
+# Tenant configuration
+TENANT_MODEL = "core.Client"  # Ensure core.Client exists
+TENANT_DOMAIN_MODEL = "core.Domain"  # Ensure core.Domain exists
+PUBLIC_SCHEMA_NAME = 'public'  # Explicitly define public schema
+#PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'  # Optional: for public schema
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True  # Fallback to public schema
 
-TENANT_DOMAIN_MODEL = "core.Domain"  # core.Model
-
+# Middleware
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',
+    'django_tenants.middleware.main.TenantMainMiddleware',  # Must be first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -55,42 +86,65 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
+# URL configuration
 ROOT_URLCONF = 'proj_saas.urls'
 
+# REST Framework configuration
 REST_FRAMEWORK = {
-    
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    )
-
+    ),
 }
 
-CORS_ALLOW_ALL_ORIGINS = True 
-
+# CORS configuration
 CORS_ALLOWED_ORIGINS = [
-    'http://jeeh.localhost:8000',
     'http://localhost:5173',
     'http://127.0.0.1:8000',
+    # Add tenant-specific domains dynamically in production
 ]
+CORS_ALLOW_CREDENTIALS = True  # Allow credentials for JWT
 
-AUTH_USER_MODEL = 'users.CustomUser'
+# JWT configuration
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),  # Added for sliding refresh
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'UPDATE_LAST_LOGIN': True,  # Track last login
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': os.getenv('SECRET_KEY'),
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+}
 
-DATABASE_ROUTERS = (
-    'django_tenants.routers.TenantSyncRouter',
-)
+# Database configuration
+DATABASES = {
+    'default': {
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': os.getenv('DATABASE_NAME'),
+        'USER': os.getenv('DATABASE_USER'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
+    }
+}
 
+# Database routers
+DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
+
+# Template configuration
 TEMPLATES = [
     {
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [],
-    'APP_DIRS': True,
-    'OPTIONS': {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],  # Added for custom templates
+        'APP_DIRS': True,
+        'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -100,71 +154,62 @@ TEMPLATES = [
     },
 ]
 
+# WSGI application
 WSGI_APPLICATION = 'proj_saas.wsgi.application'
 
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': os.getenv('SECRET_KEY'),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django_tenants.postgresql_backend',
-        'NAME':os.getenv('DATABASE_NAME'),
-        'USER': os.getenv('DATABASE_USER'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT'),
-    }
-}
-
+# Authentication
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
+# Static and media files
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For collectstatic
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    X_FRAME_OPTIONS = 'DENY'
 
-STATIC_URL = 'static/'
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django_tenants': {
+            'handlers': ['console'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+        },
+    },
+}
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

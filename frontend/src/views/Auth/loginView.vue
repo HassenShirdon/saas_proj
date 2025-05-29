@@ -9,12 +9,8 @@
                 <p>Please login to your account</p>
 
                 <div data-mdb-input-init class="form-outline mb-4">
-                  <input
-                    type="email"
-                    id="form2Example11"
-                    class="form-control"
-                    placeholder="Phone number or email address"
-                  />
+                  <input type="email" id="form2Example11" class="form-control"
+                    placeholder="Phone number or email address" />
                   <label class="form-label" for="form2Example11">Username</label>
                 </div>
 
@@ -24,12 +20,8 @@
                 </div>
 
                 <div class="text-center pt-1 mb-5 pb-1">
-                  <button
-                    data-mdb-button-init
-                    data-mdb-ripple-init
-                    class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                    type="button"
-                  >
+                  <button data-mdb-button-init data-mdb-ripple-init
+                    class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">
                     Log in
                   </button>
                   <a class="text-muted p-2" href="#!">Forgot password?</a>
@@ -37,12 +29,7 @@
 
                 <div class="d-flex align-items-center justify-content-center pb-4">
                   <p class="mb-0 me-2">Don't have an account?</p>
-                  <button
-                    type="button"
-                    data-mdb-button-init
-                    data-mdb-ripple-init
-                    class="btn btn-outline-danger"
-                  >
+                  <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-danger">
                     Create new
                   </button>
                 </div>
@@ -72,12 +59,14 @@
     height: 100vh !important;
   }
 }
+
 @media (min-width: 769px) {
   .gradient-custom-2 {
     border-top-right-radius: 0.3rem;
     border-bottom-right-radius: 0.3rem;
   }
 }
+
 .card-body {
   display: flex;
   align-items: center;
