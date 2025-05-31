@@ -1,47 +1,46 @@
 <template>
-  <section class="h-100 gradient-form" style="background-color: #eee">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-xl-6">
-          <div class="card rounded-3 text-black">
-            <div class="card-body p-md-5 mx-md-4 flex-grow-1">
-              <form>
-                <p>Please login to your account</p>
 
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="email" id="form2Example11" class="form-control"
-                    placeholder="Phone number or email address" />
-                  <label class="form-label" for="form2Example11">Username</label>
-                </div>
-
-                <div data-mdb-input-init class="form-outline mb-4">
-                  <input type="password" id="form2Example22" class="form-control" />
-                  <label class="form-label" for="form2Example22">Password</label>
-                </div>
-
-                <div class="text-center pt-1 mb-5 pb-1">
-                  <button data-mdb-button-init data-mdb-ripple-init
-                    class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3" type="button">
-                    Log in
-                  </button>
-                  <a class="text-muted p-2" href="#!">Forgot password?</a>
-                </div>
-
-                <div class="d-flex align-items-center justify-content-center pb-4">
-                  <p class="mb-0 me-2">Don't have an account?</p>
-                  <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-danger">
-                    Create new
-                  </button>
-                </div>
-              </form>
-            </div>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <h2 class="text-center mb-4">Login</h2>
+        <form @submit.prevent="handleLogin">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" v-model="username" id="username" class="form-control" required />
           </div>
-        </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" v-model="password" id="password" class="form-control" required />
+          </div>
+          <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+        <p class="mt-3 text-center">
+          Don't have an account? <router-link to="/register">Register here</router-link>
+        </p>
       </div>
     </div>
-  </section>
+  </div>
+
+
 </template>
 
+<script setup>
+import { ref } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
+
+const username = ref('');
+const password = ref('');
+const auth = useAuthStore();
+
+async function handleLogin() {
+  try {
+    await auth.login({ username: username.value, password: password.value });
+  } catch (error) {
+    alert('Login failed');
+  }
+}
+</script>
 <style scoped>
 .gradient-custom-2 {
   /* fallback for old browsers */

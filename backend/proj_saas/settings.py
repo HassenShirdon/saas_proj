@@ -104,7 +104,12 @@ REST_FRAMEWORK = {
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'http://127.0.0.1:8000',
+    'http://localhost:8000',
+    'http://jeeh.localhost:8000',
+    'http://jeeh.localhost:5173',
+    'http://demo.localhost:5173',
+    'http://demo.localhost:8000'
+
     # Add tenant-specific domains dynamically in production
 ]
 CORS_ALLOW_CREDENTIALS = True  # Allow credentials for JWT

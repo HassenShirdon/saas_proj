@@ -27,9 +27,10 @@
           </li>
         </ul>
         <div class="d-flex ms-auto ">
-          <!-- <button type="button" class="btn btn-primary ">Sign In</button> -->
-          <button type="button" class="btn btn-primary rounded-pill m-2">Log In</button>
-          <button type="button" class="btn btn-danger rounded-pill m-2">Logout</button>
+
+          <router-link to="/signin" class="btn btn-primary rounded-pill m-2">Log in</router-link>
+          <router-link to="/sign-up" class="btn btn-primary rounded-pill m-2">Register</router-link>
+
         </div>
       </div>
     </div>
@@ -37,23 +38,46 @@
 </template>
 
 <script>
-export default {
-  name: 'TopBarNav',
-  mounted() {
-    new bootstrap.ScrollSpy(document.body, {
-      target: '#navbar',
-      offset: 80,
-    })
+
+import { createRouter, createWebHistory } from 'vue-router'
+import login from '@/views/Auth/loginView.vue';
+import Register from '@/views/Auth/register.vue'
+const routes = [
+  {
+    path: '/signin',
+    name: 'login',
+    component: login,
   },
-}
-window.addEventListener('scroll', () => {
-  const navbar = document.querySelector('.navbar');
-  if (window.scrollY > 50) {
-    navbar.classList.add('scrolled');
-  } else {
-    navbar.classList.remove('scrolled');
-  }
-});
+  {
+    path: '/sign-up',
+    name: 'register',
+    component: Register,
+  },
+]
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
+})
+
+export default router
+
+// export default {
+//   name: 'TopBarNav',
+//   mounted() {
+//     new bootstrap.ScrollSpy(document.body, {
+//       target: '#navbar',
+//       offset: 80,
+//     })
+//   },
+// }
+// window.addEventListener('scroll', () => {
+//   const navbar = document.querySelector('.navbar');
+//   if (window.scrollY > 50) {
+//     navbar.classList.add('scrolled');
+//   } else {
+//     navbar.classList.remove('scrolled');
+//   }
+// });
 </script>
 
 <style scoped>
@@ -64,7 +88,7 @@ body {
 
 .navbar {
   background: #efefef;
-  padding: 1rem 2rem;
+  padding: 0.5rem 1.5rem;
   transition: box-shadow 0.3s ease;
   position: sticky;
   top: 0;

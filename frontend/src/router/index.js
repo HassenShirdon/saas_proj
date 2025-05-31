@@ -1,5 +1,6 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
+import { useAuthStore } from '@/stores/authStore'
 import LandingPage from '@/views/Landing/landingPage.vue'
 import dashboard from '@/views/Dashboard/dashboardPage.vue'
 import login from '@/views/Auth/loginView.vue'
@@ -15,16 +16,19 @@ const routes = [
     path: '/dashboard',
     name: 'dashboard',
     component: dashboard,
+    meta: { requiresAuth: true },
   },
   {
-    path: '/login',
+    path: '/signin',
     name: 'login',
     component: login,
+    meta: { requiresGuest: true },
   },
   {
     path: '/sign-up',
     name: 'signup',
     component: Register,
+    meta: { requiresGuest: true },
   },
 
   {
@@ -37,9 +41,10 @@ const routes = [
         component: '',
       },
       {
-        path: 'products',
+        path: '/dashboard/products',
         name: 'ProductList',
-        component: '',
+        component: () => import('@/views/Products/ProductList.vue'),
+        meta: { requiresAuth: true },
       },
       // other dashboard routes can go here
     ],
@@ -50,5 +55,15 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
+router.beforeEach((to, from, next) => {
+  const auth = useAuthStore()
 
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    next('/signin')
+  } else if (to.meta.requiresGuest && auth.isAuthenticated) {
+    next('/dashboard')
+  } else {
+    next()
+  }
+})
 export default router
