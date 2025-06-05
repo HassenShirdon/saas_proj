@@ -36,9 +36,10 @@ const routes = [
     component: dashboard,
     children: [
       {
-        path: 'customers',
-        name: 'customerList',
-        component: '',
+        path: '/dashboard/customers',
+        name: 'customers',
+        component: () => import('@/views/Customers/CustomerList.vue'),
+        meta: { requiresAuth: true },
       },
       {
         path: '/dashboard/products',

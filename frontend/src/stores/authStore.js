@@ -29,5 +29,18 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('access_token')
       router.push('/login')
     },
+    async refreshToken() {
+      try {
+        const res = await axios.post('token/refresh/', {
+          refresh: localStorage.getItem('refresh_token'),
+        })
+        this.accessToken = res.data.access
+        localStorage.setItem('access_token', res.data.access)
+        return res.data.access
+      } catch (error) {
+        this.logout()
+        throw error
+      }
+    },
   },
 })

@@ -16,28 +16,11 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'  # Convert string to boolean
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']  # Fixed typo
+ALLOWED_HOSTS = ['*']  # Fixed typo
 
 # For SaaS, allow tenant domains dynamically
 TENANT_SUBFOLDER_PREFIX = None  # Set if using subfolder-based tenants
 
-INSTALLED_APPS = [
-    'django_tenants',  # Required for multi-tenancy
-    'django.contrib.admin',  # Admin for public schema
-    'django.contrib.auth',  # Authentication for public schema
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'corsheaders',  # For CORS support
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'core',  # Tenant-related models
-    'users',  # Custom user model
-    'inventory',
-    'finance',
-    'hrm',
-]
 
 # Shared and tenant-specific apps
 SHARED_APPS = [
@@ -58,6 +41,7 @@ SHARED_APPS = [
 TENANT_APPS = [
     'django.contrib.contenttypes',
     'rest_framework',
+    'django.contrib.auth',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -95,6 +79,7 @@ ROOT_URLCONF = 'proj_saas.urls'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication', 
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -108,7 +93,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://jeeh.localhost:8000',
     'http://jeeh.localhost:5173',
     'http://demo.localhost:5173',
-    'http://demo.localhost:8000'
+    'http://demo.localhost:8000',
 
     # Add tenant-specific domains dynamically in production
 ]
