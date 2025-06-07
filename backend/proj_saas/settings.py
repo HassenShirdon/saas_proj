@@ -41,6 +41,7 @@ SHARED_APPS = [
 TENANT_APPS = [
     'django.contrib.contenttypes',
     'rest_framework',
+    'django.contrib.admin',  # Added for public schema admin
     'django.contrib.auth',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
@@ -203,3 +204,6 @@ LOGGING = {
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+print("DB NAME:", os.getenv('DATABASE_NAME'))
