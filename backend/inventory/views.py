@@ -1,5 +1,7 @@
 from .models  import Supplier, products, ProductCategory, InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,SalesOrder,SalesOrderItem, StockMovement
 
+from rest_framework.views import APIView
+
 from rest_framework import generics
 from .serializers import SupplierSerializer,  ProductsSerializer,    ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer
 

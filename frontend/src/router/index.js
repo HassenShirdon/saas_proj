@@ -38,16 +38,28 @@ const routes = [
       {
         path: '/dashboard/customers',
         name: 'customers',
-        component: () => import('@/views/Customers/CustomerList.vue'),
+        component: () => import('@/views/inventory/Customers/CustomerList.vue'),
         meta: { requiresAuth: true },
       },
       {
         path: '/dashboard/products',
         name: 'ProductList',
-        component: () => import('@/views/Products/ProductList.vue'),
+        component: () => import('@/views/inventory/Products/ProductList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/suppliers',
+        name: 'suppliers',
+        component: () => import('@/views/inventory/Suppliers/SupplierList.vue'),
         meta: { requiresAuth: true },
       },
       // other dashboard routes can go here
+      {
+        path: '/dashboard/categories',
+        name: 'categories',
+        component: () => import('@/views/inventory/productCategory/productCategory.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
 ]

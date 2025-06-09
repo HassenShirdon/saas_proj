@@ -4,8 +4,7 @@ from django.core.exceptions import PermissionDenied
 
 class Client(TenantMixin):
     name = models.CharField(max_length=100)
-    created_on = models.DateField(auto_now_add=True)
-    auto_create_schema = True
+   
 
     def save(self, *args, **kwargs):
         if connection.schema_name != 'public':

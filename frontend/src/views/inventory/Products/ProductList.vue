@@ -18,12 +18,8 @@
           </div>
         </div>
 
-        <ProductForm
-          v-if="selected?.id === product.id"
-          :initial="selected"
-          @submit="handleUpdate"
-          @cancel="selected = null"
-        />
+        <ProductForm v-if="selected?.id === product.id" :initial="selected" @submit="handleUpdate"
+          @cancel="selected = null" />
       </li>
     </ul>
 

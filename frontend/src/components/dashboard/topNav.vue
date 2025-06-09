@@ -15,8 +15,10 @@
       <img src="@/assets/iconLogo.png" alt="User" class="avatar" />
       <transition name="fade">
         <div v-if="showDropdown" class="dropdown">
-          <div class="username">John Doe</div>
-          <button @click="logout" class="logout-btn">Logout</button>
+          <div class="username">{{ authStore.user?.name || authStore.user?.username || 'User' }}</div>
+          <button @click="handleLogout" class="logout-btn" :disabled="isLoggingOut">
+            {{ isLoggingOut ? 'Logging out...' : 'Logout' }}
+          </button>
         </div>
       </transition>
     </div>
@@ -24,16 +26,47 @@
 </template>
 
 <script>
+import { useAuthStore } from '@/stores/authStore'
+import { useRouter } from 'vue-router'
+
 export default {
+  setup() {
+    const authStore = useAuthStore()
+    const router = useRouter()
+
+    return {
+      authStore,
+      router,
+    }
+  },
   data() {
     return {
       showDropdown: false,
+      isLoggingOut: false,
     }
   },
   methods: {
-    logout() {
-      // Your logout logic here
-      console.log('Logging out...')
+    async handleLogout() {
+      try {
+        this.isLoggingOut = true
+        this.showDropdown = false
+
+        // Call the logout method from your auth store
+        await this.authStore.logout()
+
+        // Redirect to login page or home page after logout
+        this.$router.push('/signin')
+
+        // Optional: Show success message
+        // this.$toast.success('Logged out successfully')
+
+      } catch (error) {
+        console.error('Logout failed:', error)
+        // Optional: Show error message
+        // this.$toast.error('Logout failed. Please try again.')
+      } finally {
+        this.isLoggingOut = false
+      }
     },
   },
 }
@@ -141,8 +174,13 @@ export default {
   transition: background 0.3s ease;
 }
 
-.logout-btn:hover {
+.logout-btn:hover:not(:disabled) {
   background: #4338ca;
+}
+
+.logout-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
 }
 
 /* Dropdown Animation */

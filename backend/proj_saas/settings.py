@@ -25,8 +25,8 @@ TENANT_SUBFOLDER_PREFIX = None  # Set if using subfolder-based tenants
 # Shared and tenant-specific apps
 SHARED_APPS = [
     'django_tenants',
-    'django.contrib.admin',  # Added for public schema admin
-    'django.contrib.auth',  # Added for authentication
+    # 'django.contrib.admin',  # Added for public schema admin
+    # 'django.contrib.auth',  # Added for authentication
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -35,7 +35,7 @@ SHARED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'core',
-    'users',
+    
 ]
 
 TENANT_APPS = [
@@ -49,6 +49,7 @@ TENANT_APPS = [
     'inventory',
     'finance',
     'hrm',
+    'users',
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -206,4 +207,3 @@ LOGGING = {
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-print("DB NAME:", os.getenv('DATABASE_NAME'))

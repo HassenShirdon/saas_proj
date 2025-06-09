@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+    <div class="container">
       <a class="navbar-brand" href="#">
         <img src="@/assets/logo.png" alt="Logo">
       </a>
@@ -9,28 +9,26 @@
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+        <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#">Home</a>
+            <a class="nav-link" href="#home">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Features</a>
+            <a class="nav-link" href="#features">Features</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About</a>
+            <a class="nav-link" href="#about">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
+            <a class="nav-link" href="#pricing">Pricing</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact</a>
+            <a class="nav-link" href="#contact">Contact</a>
           </li>
         </ul>
-        <div class="d-flex ms-auto ">
-
-          <router-link to="/signin" class="btn btn-primary rounded-pill m-2">Log in</router-link>
-          <router-link to="/sign-up" class="btn btn-primary rounded-pill m-2">Register</router-link>
-
+        <div class="nav-buttons">
+          <router-link to="/signin" class="btn btn-login">Log in</router-link>
+          <router-link to="/sign-up" class="btn btn-register">Get Started</router-link>
         </div>
       </div>
     </div>
@@ -38,46 +36,25 @@
 </template>
 
 <script>
-
-import { createRouter, createWebHistory } from 'vue-router'
-import login from '@/views/Auth/loginView.vue';
-import Register from '@/views/Auth/register.vue'
-const routes = [
-  {
-    path: '/signin',
-    name: 'login',
-    component: login,
+export default {
+  name: 'NavigationSection',
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll);
   },
-  {
-    path: '/sign-up',
-    name: 'register',
-    component: Register,
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll);
   },
-]
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-})
-
-export default router
-
-// export default {
-//   name: 'TopBarNav',
-//   mounted() {
-//     new bootstrap.ScrollSpy(document.body, {
-//       target: '#navbar',
-//       offset: 80,
-//     })
-//   },
-// }
-// window.addEventListener('scroll', () => {
-//   const navbar = document.querySelector('.navbar');
-//   if (window.scrollY > 50) {
-//     navbar.classList.add('scrolled');
-//   } else {
-//     navbar.classList.remove('scrolled');
-//   }
-// });
+  methods: {
+    handleScroll() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -87,18 +64,20 @@ body {
 }
 
 .navbar {
-  background: #efefef;
-  padding: 0.5rem 1.5rem;
-  transition: box-shadow 0.3s ease;
-  position: sticky;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem 0;
+  transition: all 0.3s ease;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 1000;
+  backdrop-filter: blur(10px);
 }
 
 .navbar.scrolled {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  /* Bootstrap shadow-sm equivalent */
-  background: #efefef;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 0.75rem 0;
 }
 
 .navbar-brand img {
@@ -107,7 +86,7 @@ body {
 }
 
 .navbar-brand img:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
 }
 
 .navbar-nav {
@@ -117,16 +96,17 @@ body {
 }
 
 .nav-link {
-  color: #1178f5 !important;
+  color: #2d3748 !important;
   font-weight: 500;
-  margin: 0 1rem;
-  font-size: 1.1rem;
+  padding: 0.5rem 1rem !important;
+  margin: 0 0.25rem;
+  font-size: 1rem;
   position: relative;
   transition: color 0.3s ease;
 }
 
 .nav-link:hover {
-  color: #facc15 !important;
+  color: #00aaff !important;
 }
 
 .nav-link::after {
@@ -134,57 +114,68 @@ body {
   position: absolute;
   width: 0;
   height: 2px;
-  bottom: -5px;
-  left: 0;
-  background-color: #facc15;
-  transition: width 0.3s ease;
+  bottom: 0;
+  left: 50%;
+  background-color: #00aaff;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
 }
 
 .nav-link:hover::after {
-  width: 100%;
+  width: 80%;
 }
 
-.user-profile img {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid #ffffff;
-  transition: transform 0.3s ease;
+.nav-buttons {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
 }
 
-.user-profile img:hover {
-  transform: scale(1.1);
-}
-
-.dropdown-menu {
-  background: #ffffff;
+.btn-login {
+  color: #2d3748;
+  background: transparent;
   border: none;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  min-width: 150px;
-}
-
-.dropdown-item {
-  color: #6b21a8;
   font-weight: 500;
-  padding: 0.5rem 1rem;
-  transition: background 0.3s ease, color 0.3s ease;
+  padding: 0.5rem 1.25rem;
+  transition: all 0.3s ease;
 }
 
-.dropdown-item:hover {
-  background: #06b6d4;
-  color: #ffffff;
+.btn-login:hover {
+  color: #00aaff;
+  transform: translateY(-1px);
+}
+
+.btn-register {
+  background: #00aaff;
+  color: white;
+  border: none;
+  font-weight: 500;
+  padding: 0.5rem 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-register:hover {
+  background: #0088cc;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.2);
 }
 
 @media (max-width: 991px) {
   .navbar-nav {
-    justify-content: flex-start;
-    margin-top: 1rem;
+    margin: 1rem 0;
   }
-}
 
-.nav-link {
-  margin: 0.5rem 0;
+  .nav-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .btn-login,
+  .btn-register {
+    width: 100%;
+    text-align: center;
+  }
 }
 </style>

@@ -70,6 +70,14 @@
                             </div>
                         </div>
 
+                        <!-- API Error Display -->
+                        <div v-if="apiError" class="alert alert-danger" role="alert">
+                            <h6 class="alert-heading mb-2">
+                                <i class="fas fa-exclamation-triangle me-2"></i>Error occurred:
+                            </h6>
+                            <p class="mb-0">{{ apiError }}</p>
+                        </div>
+
                         <!-- Form Validation Summary -->
                         <div v-if="Object.keys(errors).length > 0" class="alert alert-danger" role="alert">
                             <h6 class="alert-heading mb-2">
@@ -78,6 +86,11 @@
                             <ul class="mb-0">
                                 <li v-for="(error, field) in errors" :key="field">{{ error }}</li>
                             </ul>
+                        </div>
+
+                        <!-- Success Message -->
+                        <div v-if="successMessage" class="alert alert-success" role="alert">
+                            <i class="fas fa-check-circle me-2"></i>{{ successMessage }}
                         </div>
                     </div>
 
@@ -102,7 +115,8 @@
 </template>
 
 <script setup>
-import { ref, watch, computed, nextTick } from 'vue'
+import { ref, watch, computed, onUnmounted } from 'vue'
+import { createCustomer, updateCustomer } from '@/api/inventory'
 
 const props = defineProps({
     show: {
@@ -119,7 +133,7 @@ const props = defineProps({
     }
 })
 
-const emit = defineEmits(['close', 'save'])
+const emit = defineEmits(['close', 'save', 'customer-saved'])
 
 const form = ref({
     name: '',
@@ -131,6 +145,8 @@ const form = ref({
 
 const errors = ref({})
 const isSubmitting = ref(false)
+const apiError = ref('')
+const successMessage = ref('')
 
 // Computed property to check if form is valid
 const isFormValid = computed(() => {
@@ -162,6 +178,8 @@ const resetForm = () => {
     }
     errors.value = {}
     isSubmitting.value = false
+    apiError.value = ''
+    successMessage.value = ''
 }
 
 const populateForm = (customer) => {
@@ -206,6 +224,8 @@ const handleSubmit = async () => {
     }
 
     isSubmitting.value = true
+    apiError.value = ''
+    successMessage.value = ''
 
     try {
         // Prepare data for submission
@@ -217,10 +237,65 @@ const handleSubmit = async () => {
             address: form.value.address.trim() || null
         }
 
-        emit('save', customerData)
+        let response
+        if (props.isEdit && props.customer) {
+            // Update existing customer
+            response = await updateCustomer(props.customer.id, customerData)
+            successMessage.value = 'Customer updated successfully!'
+        } else {
+            // Create new customer
+            response = await createCustomer(customerData)
+            successMessage.value = 'Customer created successfully!'
+        }
+
+        // Emit success event to parent component
+        emit('customer-saved', response.data)
+        emit('save', response.data)
+
+        // Close modal after a short delay to show success message
+        setTimeout(() => {
+            closeModal()
+        }, 1500)
+
     } catch (error) {
-        console.error('Error submitting form:', error)
-        // Handle error (you might want to show an error message)
+        console.error('Error saving customer:', error)
+
+        // Handle different types of errors
+        if (error.response) {
+            // Server responded with error status
+            const status = error.response.status
+            const data = error.response.data
+
+            if (status === 400 && data) {
+                // Validation errors from server
+                if (typeof data === 'object') {
+                    // Handle field-specific errors
+                    Object.keys(data).forEach(field => {
+                        if (Array.isArray(data[field])) {
+                            errors.value[field] = data[field][0]
+                        } else {
+                            errors.value[field] = data[field]
+                        }
+                    })
+                } else {
+                    apiError.value = data.message || 'Validation error occurred'
+                }
+            } else if (status === 401) {
+                apiError.value = 'Unauthorized. Please log in again.'
+            } else if (status === 403) {
+                apiError.value = 'You do not have permission to perform this action.'
+            } else if (status === 500) {
+                apiError.value = 'Server error. Please try again later.'
+            } else {
+                apiError.value = data.message || `Error: ${status}`
+            }
+        } else if (error.request) {
+            // Network error
+            apiError.value = 'Network error. Please check your connection and try again.'
+        } else {
+            // Other error
+            apiError.value = 'An unexpected error occurred. Please try again.'
+        }
     } finally {
         isSubmitting.value = false
     }
@@ -242,7 +317,6 @@ const cleanup = () => {
 }
 
 // Cleanup on unmount
-import { onUnmounted } from 'vue'
 onUnmounted(cleanup)
 </script>
 

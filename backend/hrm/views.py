@@ -1,3 +1,4 @@
+
 from rest_framework import generics
 from .models import (
     Employee,
@@ -17,6 +18,7 @@ from .serializers import (
     SalarySerializer,
 )
 # Create your views here.
+
 
 class EmployeeList(generics.ListCreateAPIView):
     """API view to list and create employees."""
