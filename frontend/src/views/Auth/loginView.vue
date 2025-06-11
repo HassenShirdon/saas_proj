@@ -1,36 +1,50 @@
 <template>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
-        <h2 class="text-center mb-4">Login Form</h2>
+  <div class="login-bg d-flex align-items-center justify-content-center min-vh-100">
+    <div class="login-card shadow-lg p-4 rounded-4 bg-white" style="max-width: 400px; width: 100%;">
+      <div class="text-center mb-4">
+        <img src="@/assets/logo.png" alt="Logo" style="width: 60px; height: 60px;" class="mb-2" />
+        <h2 class="fw-bold mb-1">Sign in to your account</h2>
+        <p class="text-muted small">Welcome back! Please enter your details.</p>
+      </div>
 
-        <!-- Error message display -->
-        <div v-if="errorMessage" class="alert alert-danger" role="alert">
+      <!-- Error message display -->
+      <transition name="fade">
+        <div v-if="errorMessage" class="alert alert-danger py-2 px-3" role="alert">
           {{ errorMessage }}
         </div>
+      </transition>
 
-        <!-- Loading state -->
-        <div v-if="isLoading" class="alert alert-info" role="alert">
+      <!-- Loading state -->
+      <transition name="fade">
+        <div v-if="isLoading" class="alert alert-info py-2 px-3" role="alert">
           Logging in...
         </div>
+      </transition>
 
-        <form @submit.prevent="handleLogin">
-          <div class="mb-3">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" v-model="username" id="username" class="form-control" required :disabled="isLoading" />
-          </div>
-          <div class="mb-3">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" v-model="password" id="password" class="form-control" required
-              :disabled="isLoading" />
-          </div>
-          <button type="submit" class="btn btn-primary w-100" :disabled="isLoading">
-            {{ isLoading ? 'Logging in...' : 'Login' }}
-          </button>
-        </form>
-        <p class="mt-3 text-center">
-          Don't have an account? <router-link to="/register">Register here</router-link>
-        </p>
+      <form @submit.prevent="handleLogin" autocomplete="on">
+        <div class="mb-3">
+          <label for="username" class="form-label fw-semibold">Username</label>
+          <input type="text" v-model="username" id="username" class="form-control modern-input" required
+            :disabled="isLoading" autocomplete="username" placeholder="Enter your username" />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label fw-semibold">Password</label>
+          <input type="password" v-model="password" id="password" class="form-control modern-input" required
+            :disabled="isLoading" autocomplete="current-password" placeholder="Enter your password" />
+        </div>
+        <button type="submit" class="btn btn-primary w-100 py-2 rounded-3 fw-semibold" :disabled="isLoading">
+          <span v-if="isLoading">
+            <span class="spinner-border spinner-border-sm me-2"></span>
+            Logging in...
+          </span>
+          <span v-else>Login</span>
+        </button>
+      </form>
+      <div class="mt-4 text-center">
+        <span class="text-muted">Don't have an account?</span>
+        <router-link to="/register" class="ms-1 fw-semibold text-decoration-none modern-link">
+          Register here
+        </router-link>
       </div>
     </div>
   </div>

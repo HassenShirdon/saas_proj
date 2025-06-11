@@ -17,17 +17,32 @@ export const useAuthStore = defineStore('auth', {
         const res = await axios.post('token/', credentials)
         this.accessToken = res.data.access
         localStorage.setItem('access_token', res.data.access)
+        if (res.data.refresh) {
+          localStorage.setItem('refresh_token', res.data.refresh)
+        }
         router.push('/dashboard')
       } catch (error) {
         console.error('Login error:', error.response?.data || error.message)
         throw error // Re-throw the error so the component can catch it
       }
     },
+    async register(userData) {
+      try {
+        await axios.post('register/', userData)
+        // Optionally, auto-login after registration
+        // await this.login({ username: userData.username, password: userData.password })
+        router.push('/signin')
+      } catch (error) {
+        console.error('Registration error:', error.response?.data || error.message)
+        throw error
+      }
+    },
     logout() {
       this.accessToken = null
       this.user = null
       localStorage.removeItem('access_token')
-      router.push('/login')
+      localStorage.removeItem('refresh_token')
+      router.push('/signin')
     },
     async refreshToken() {
       try {

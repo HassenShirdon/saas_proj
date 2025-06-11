@@ -20,7 +20,7 @@ const routes = [
   },
   {
     path: '/signin',
-    name: 'login',
+    name: 'signin',
     component: login,
     meta: { requiresGuest: true },
   },
@@ -41,12 +41,12 @@ const routes = [
         component: () => import('@/views/inventory/Customers/CustomerList.vue'),
         meta: { requiresAuth: true },
       },
-      {
-        path: '/dashboard/products',
-        name: 'ProductList',
-        component: () => import('@/views/inventory/Products/ProductList.vue'),
-        meta: { requiresAuth: true },
-      },
+      // {
+      //   path: '/dashboard/products',
+      //   name: 'ProductList',
+      //   component: () => import('@/views/inventory/inentory_Items/items.vue'),
+      //   meta: { requiresAuth: true },
+      // },
       {
         path: '/dashboard/suppliers',
         name: 'suppliers',
@@ -58,6 +58,18 @@ const routes = [
         path: '/dashboard/categories',
         name: 'categories',
         component: () => import('@/views/inventory/productCategory/productCategory.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/products',
+        name: 'productList',
+        component: () => import('@/views/inventory/inventory_Items/items.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/purchases',
+        name: 'purchaseOrders',
+        component: () => import('@/views/inventory/purchaseOrder/purchaseOrderList.vue'),
         meta: { requiresAuth: true },
       },
     ],

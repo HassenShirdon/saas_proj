@@ -24,7 +24,7 @@
             <div class="trust-badges mt-5">
               <p class="text-muted mb-3">Trusted by leading companies</p>
               <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
-                <img src="@/assets/logo.png" alt="Company 1" class="company-logo">
+                <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo">
                 <img src="@/assets/logo.png" alt="Company 2" class="company-logo">
                 <img src="@/assets/logo.png" alt="Company 3" class="company-logo">
               </div>

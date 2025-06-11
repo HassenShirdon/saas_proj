@@ -58,3 +58,37 @@ export const updateProductCategory = (id, productCategory) => {
 export const deleteProductCategory = (id) => {
   return axios.delete(`/inventory/product-categories/${id}/`)
 }
+
+export const getItems = () => {
+  return axios.get('/inventory/inventory-items/')
+}
+export const getItem = (id) => {
+  return axios.get(`/inventory/inventory-items/${id}/`)
+}
+export const createItem = (item) => {
+  return axios.post('/inventory/inventory-items/', item)
+}
+export const updateItem = (id, item) => {
+  return axios.put(`/inventory/inventory-items/${id}/`, item)
+}
+export const deleteItem = (id) => {
+  return axios.delete(`/inventory/inventory-items/${id}/`)
+}
+
+export const getPurchaseOrders = () => {
+  return axios.get('/inventory/purchase-orders/')
+}
+
+const getPurchaseOrder = (id) => {
+  return axios.get(`/inventory/purchase-orders/${id}/`)
+}
+
+export const createPurchaseOrder = (purchaseOrder) => {
+  return axios.post('/inventory/purchase-orders/', purchaseOrder)
+}
+export const updatePurchaseOrder = (id, purchaseOrder) => {
+  return axios.put(`/inventory/purchase-orders/${id}/`, purchaseOrder)
+}
+export const deletePurchaseOrder = (id) => {
+  return axios.delete(`/inventory/purchase-orders/${id}/`)
+}

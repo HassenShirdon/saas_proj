@@ -16,7 +16,6 @@ export const useProductCategoryStore = defineStore('productCategory', {
         this.productCategories = res.data // Fixed: assign to correct state property
         this.loading = false
       } catch (error) {
-        console.error('Error adding product category:', error)
         throw error
       }
     },
@@ -25,25 +24,22 @@ export const useProductCategoryStore = defineStore('productCategory', {
         await productCategoryApi.createproductCategory(productCategory)
         await this.fetchproductCategories() // Fixed: call correct method
       } catch (error) {
-        console.error('Error adding product category:', error)
         throw error
       }
     },
     async updateproductCategory(id, productCategory) {
       try {
-        await productCategoryApi.updateproductCategory(id, productCategory)
+        await productCategoryApi.updateProductCategory(id, productCategory)
         await this.fetchproductCategories() // Fixed: call correct method
       } catch (error) {
-        console.error('Error updating product category:', error)
         throw error
       }
     },
     async removeproductCategory(id) {
       try {
-        await productCategoryApi.deleteproductCategory(id)
+        await productCategoryApi.deleteProductCategory(id)
         await this.fetchproductCategories() // Fixed: call correct method
       } catch (error) {
-        console.error('Error removing product category:', error)
         throw error
       }
     },

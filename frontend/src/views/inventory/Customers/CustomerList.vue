@@ -57,14 +57,16 @@
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
-                                <button @click="openEditModal(customer)" class="btn btn-sm btn-outline-primary"
-                                    type="button" title="Edit Customer">
-                                    <i class="fas fa-edit"></i>
+
+                                <button @click="openEditModal(customer)" class="btn btn-outline-primary btn-sm me-2"
+                                    title="Edit Customer">
+                                    <i class="bi bi-pencil"></i>
                                 </button>
-                                <button @click="deleteCustomer(customer.id)" class="btn btn-sm btn-outline-danger"
-                                    type="button" title="Delete Customer">
-                                    <i class="fas fa-trash"></i>
+                                <button @click="deleteCustomer(customer.id)" class="btn btn-outline-danger btn-sm"
+                                    title="Delete">
+                                    <i class="bi bi-trash"></i>
                                 </button>
+
                             </div>
                         </td>
                     </tr>
