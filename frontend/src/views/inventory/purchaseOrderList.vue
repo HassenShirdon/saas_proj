@@ -1,9 +1,12 @@
 <template>
-    <div>
-        <button class="btn btn-primary" @click="openAddModal">Add Purchase Order</button>
-        <div class="table-container table-responsive">
+    <div class="container ">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-4">Purchase Orders</h1>
+            <button class="btn btn-primary" @click="openAddModal">Add Purchase Order</button>
+        </div>
+        <div class="table-container table-modern">
             <table class="table table-striped table-hover">
-                <thead class="thead-dark">
+                <thead class="table-dark">
                     <tr>
                         <th>PO Number</th>
                         <th>Supplier</th>
@@ -51,20 +54,45 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { usePurchaseOrderStore } from '@/stores/inventory/purchaseOrderStore'
-import PurchaseOrderModal from '@/components/PurchaseOrder/purchaseOrderModal.vue'
+import PurchaseOrderModal from '@/components/inventory_modals/purchaseOrderModal.vue'
 
 const store = usePurchaseOrderStore()
 const showModal = ref(false)
 const selectedPurchaseOrder = ref(null)
 const isEdit = ref(false)
 
+// Load from localStorage if available
+const LOCAL_STORAGE_KEY = 'purchaseOrders'
+
+function loadFromLocalStorage() {
+    const data = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (data) {
+        try {
+            store.purchaseOrders = JSON.parse(data)
+        } catch (e) {
+            console.error('Failed to parse purchase orders from localStorage', e)
+        }
+    }
+}
+
 onMounted(async () => {
-    console.log('Component mounted, fetching purchase orders...')
-    await store.fetchPurchaseOrders()
-    console.log('Purchase orders fetched:', store.purchaseOrders)
+    loadFromLocalStorage()
+    if (!store.purchaseOrders || store.purchaseOrders.length === 0) {
+        await store.fetchPurchaseOrders()
+    }
 })
+
+// Watch for changes and save to localStorage
+watch(
+    () => store.purchaseOrders,
+    (newVal) => {
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(newVal))
+    },
+    { deep: true }
+)
+
 const openAddModal = () => {
     selectedPurchaseOrder.value = null
     isEdit.value = false

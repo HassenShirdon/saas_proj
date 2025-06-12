@@ -18,7 +18,7 @@
         <!-- Table or Empty State -->
         <div v-else class="table-responsive">
             <table class="table table-striped table-hover">
-                <thead class="table-primary">
+                <thead class="table-dark">
                     <tr>
                         <th scope="col">S.No</th>
                         <th scope="col">Name</th>
@@ -78,7 +78,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useProductCategoryStore } from '@/stores/inventory/productCategoriesStore'
-import ProductCategoryModal from '@/components/ProductCategory/ProductCategoryModal.vue'
+import ProductCategoryModal from '@/components/inventory_modals/ProductCategoryModal.vue'
 
 const store = useProductCategoryStore()
 const showModal = ref(false)

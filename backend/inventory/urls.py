@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('suppliers/', views.SupplierList.as_view(), name='supplierlist'),
-    path('products/', views.productList.as_view(), name='productlist'),
+    path('products/', views.productsList.as_view(), name='productlist'),
     path('products/<str:name>/', views.productDetail.as_view(), name='product-detail'),
     path('suppliers/<str:name>/', views.SupplierDetail.as_view(), name='supplier-detail'),
     path('product-categories/', views.ProductCategoryList.as_view(), name='productcategorylist'),
@@ -16,5 +16,6 @@ urlpatterns = [
     path('purchase-order-items/', views.PurchaseOrderItemList.as_view(), name='purchaseorderitemlist'),
     path('purchase-order-items/<int:id>/', views.PurchaseOrderItemDetail.as_view(), name='purchaseorderitem-detail'),
     path('Customers/', views.CustomerList.as_view(), name='customerlist'),
+    path('stocks/', views.StockMovementList.as_view(), name='stocklist'),
     # Add more URLs for other views as you create them
 ]

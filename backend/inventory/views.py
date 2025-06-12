@@ -6,7 +6,7 @@ from rest_framework import generics
 from .serializers import SupplierSerializer,  ProductsSerializer,    ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer
 
 
-class productList(generics.ListCreateAPIView):
+class productsList(generics.ListCreateAPIView):
     """API view to list and create products."""
     queryset = products.objects.all()
     serializer_class = ProductsSerializer

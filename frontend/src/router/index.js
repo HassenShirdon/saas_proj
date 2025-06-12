@@ -1,78 +1,87 @@
 // src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import LandingPage from '@/views/Landing/landingPage.vue'
-import dashboard from '@/views/Dashboard/dashboardPage.vue'
-import login from '@/views/Auth/loginView.vue'
-import Register from '@/views/Auth/register.vue'
 
 const routes = [
   {
     path: '/',
     name: 'landing',
-    component: LandingPage,
+    component: import('@/views/Landing/landingPage.vue'),
   },
   {
     path: '/dashboard',
     name: 'dashboard',
-    component: dashboard,
+    component: import('@/views/Dashboard/dashboardPage.vue'),
     meta: { requiresAuth: true },
-  },
-  {
-    path: '/signin',
-    name: 'signin',
-    component: login,
-    meta: { requiresGuest: true },
-  },
-  {
-    path: '/sign-up',
-    name: 'signup',
-    component: Register,
-    meta: { requiresGuest: true },
-  },
-
-  {
-    path: '/dashboard',
-    component: dashboard,
     children: [
       {
         path: '/dashboard/customers',
         name: 'customers',
-        component: () => import('@/views/inventory/Customers/CustomerList.vue'),
+        component: () => import('@/views/inventory/CustomerList.vue'),
         meta: { requiresAuth: true },
       },
-      // {
-      //   path: '/dashboard/products',
-      //   name: 'ProductList',
-      //   component: () => import('@/views/inventory/inentory_Items/items.vue'),
-      //   meta: { requiresAuth: true },
-      // },
+      {
+        path: '/dashboard/products',
+        name: 'products',
+        component: () => import('@/views/inventory/ProductList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/inventory-items',
+        name: 'inventory-items',
+        component: () => import('@/views/inventory/items.vue'),
+        meta: { requiresAuth: true },
+      },
       {
         path: '/dashboard/suppliers',
         name: 'suppliers',
-        component: () => import('@/views/inventory/Suppliers/SupplierList.vue'),
+        component: () => import('@/views/inventory/SupplierList.vue'),
         meta: { requiresAuth: true },
       },
       // other dashboard routes can go here
       {
         path: '/dashboard/categories',
         name: 'categories',
-        component: () => import('@/views/inventory/productCategory/productCategory.vue'),
+        component: () => import('@/views/inventory/productCategory.vue'),
         meta: { requiresAuth: true },
       },
       {
         path: '/dashboard/products',
         name: 'productList',
-        component: () => import('@/views/inventory/inventory_Items/items.vue'),
+        component: () => import('@/views/inventory/items.vue'),
         meta: { requiresAuth: true },
       },
       {
-        path: '/dashboard/purchases',
+        path: '/dashboard/purchaseOrders',
         name: 'purchaseOrders',
-        component: () => import('@/views/inventory/purchaseOrder/purchaseOrderList.vue'),
+        component: () => import('@/views/inventory/purchaseOrderList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/stock-movement',
+        name: 'stockMovement',
+        component: () => import('@/views/inventory/stockMovement.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/employees',
+        name: 'employees',
+        component: () => import('@/views/hrm/employeeList.vue'),
         meta: { requiresAuth: true },
       },
     ],
+  },
+  {
+    path: '/signin',
+    name: 'signin',
+    component: import('@/views/Auth/loginView.vue'),
+    meta: { requiresGuest: true },
+  },
+  {
+    path: '/sign-up',
+    name: 'signup',
+    component: import('@/views/Auth/register.vue'),
+    meta: { requiresGuest: true },
   },
 ]
 

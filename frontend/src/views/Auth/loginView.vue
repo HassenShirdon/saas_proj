@@ -37,7 +37,7 @@
             <span class="spinner-border spinner-border-sm me-2"></span>
             Logging in...
           </span>
-          <span v-else>Login</span>
+          <span v-else>signin</span>
         </button>
       </form>
       <div class="mt-4 text-center">

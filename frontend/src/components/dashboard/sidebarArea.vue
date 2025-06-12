@@ -145,6 +145,27 @@
             </ul>
           </Transition>
         </li>
+        <li>
+          <button class="nav-link nav-toggle" :class="{ active: activeSection === 'Hrm' }" @click="toggleSection('Hrm')"
+            :aria-expanded="activeSection === 'Hrm'">
+            <i class="nav-icon bi bi-people"></i>
+            <span>HRM</span>
+            <i class="bi bi-chevron-down chevron" :class="{ rotated: activeSection === 'Hrm' }"></i>
+          </button>
+          <Transition name="submenu">
+            <ul v-show="activeSection === 'Hrm'" class="submenu">
+              <li v-for="item in Hrm" :key="item.to">
+                <RouterLink :to="item.to" class="submenu-link" active-class="active">
+                  <i :class="item.icon"></i>
+                  <span>{{ item.label }}</span>
+                </RouterLink>
+              </li>
+            </ul>
+          </Transition>
+        </li>
+
+
+
 
         <!-- Other Menu Items -->
         <li v-for="item in menuItems" :key="item.to">
@@ -157,7 +178,7 @@
     </nav>
 
     <!-- User Profile -->
-    <div class="user-section">
+    <!-- <div class="user-section">
       <div class="user-profile">
         <img class="user-avatar" src="https://via.placeholder.com/40" alt="User Avatar" />
         <div class="user-info">
@@ -168,7 +189,7 @@
           <i class="bi bi-three-dots-vertical"></i>
         </button>
       </div>
-    </div>
+    </div> -->
   </aside>
 </template>
 
@@ -184,14 +205,22 @@ export default {
       inventoryItems: [
         { to: '/dashboard/products', label: 'Products', icon: 'bi bi-box' },
         { to: '/dashboard/categories', label: 'Categories', icon: 'bi bi-tags' },
-        { to: '/dashboard/brands', label: 'Brands', icon: 'bi bi-star' },
         { to: '/dashboard/suppliers', label: 'Suppliers', icon: 'bi bi-truck' },
         { to: '/dashboard/customers', label: 'Customers', icon: 'bi bi-people' },
-        { to: '/dashboard/units', label: 'Units', icon: 'bi bi-rulers' },
-        { to: '/dashboard/stock', label: 'Stock', icon: 'bi bi-clipboard-data' },
-        { to: '/dashboard/purchases', label: 'Purchases', icon: 'bi bi-cart-plus' },
+        { to: '/dashboard/inventory-items', label: 'inventory-items', icon: 'bi bi-card-list' },
+        { to: '/dashboard/stock-movement', label: 'Stock-movement', icon: 'bi bi-clipboard-data' },
+        { to: '/dashboard/purchaseOrders', label: 'PurchaseOrders', icon: 'bi bi-cart-plus' },
         { to: '/dashboard/sales', label: 'Sales', icon: 'bi bi-cart-check' },
         { to: '/dashboard/returns', label: 'Returns', icon: 'bi bi-arrow-return-left' }
+      ],
+      Hrm: [
+        { to: '/dashboard/employees', label: 'Employees', icon: 'bi bi-people' },
+        { to: '/dashboard/departments', label: 'Departments', icon: 'bi bi-people' },
+        { to: '/dashboard/attendance', label: 'Attendance', icon: 'bi bi-people' },
+        { to: '/dashboard/leaves', label: 'Leaves', icon: 'bi bi-people' },
+        { to: '/dashboard/salaries', label: 'Salaries', icon: 'bi bi-people' },
+        { to: '/dashboard/performance-reviews', label: 'Performance-reviews', icon: 'bi bi-people' },
+
       ],
       chartOfAccountsItems: [
         { to: '/finance/AccountList', label: 'Account Types', icon: 'bi bi-journal-bookmark' },
@@ -330,7 +359,7 @@ export default {
   border-radius: 0.9rem;
   background: transparent;
   color: rgba(255, 255, 255, 0.85);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
@@ -354,7 +383,7 @@ export default {
 }
 
 .nav-icon {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   width: 1.8rem;
   text-align: center;
   flex-shrink: 0;
@@ -362,7 +391,7 @@ export default {
 
 .chevron {
   margin-left: auto;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: transform 0.3s;
 }
 
@@ -389,7 +418,7 @@ export default {
   padding: 0.7rem 1.5rem 0.7rem 2.5rem;
   color: rgba(255, 255, 255, 0.7);
   border-radius: 0.7rem;
-  font-size: 0.97rem;
+  font-size: 0.9rem;
   font-weight: 500;
   background: transparent;
   border: none;
@@ -424,8 +453,8 @@ export default {
   padding: 0.6rem 1.5rem 0.6rem 3.5rem;
   color: rgba(255, 255, 255, 0.65);
   border-radius: 0.6rem;
-  font-size: 0.93rem;
-  font-weight: 500;
+  font-size: 0.9rem;
+  font-weight: 400;
   background: transparent;
   text-decoration: none;
   transition: background 0.18s, color 0.18s;
@@ -477,9 +506,9 @@ export default {
 }
 
 .user-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #fff;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #5d79f2;
   margin-bottom: 0.1rem;
   letter-spacing: -0.01em;
   text-shadow: 0 1px 4px rgba(13, 110, 253, 0.08);

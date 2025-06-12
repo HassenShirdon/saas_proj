@@ -15,7 +15,11 @@
       <img src="@/assets/iconLogo.png" alt="User" class="avatar" />
       <transition name="fade">
         <div v-if="showDropdown" class="dropdown">
-          <div class="username">{{ authStore.user?.name || authStore.user?.username || 'User' }}</div>
+          <div class="username">
+            {{ authStore.user && (authStore.user.name || authStore.user.username) ? (authStore.user.name ||
+              authStore.user.username) : 'User' }}
+
+          </div>
           <button @click="handleLogout" class="logout-btn" :disabled="isLoggingOut">
             {{ isLoggingOut ? 'Logging out...' : 'Logout' }}
           </button>
@@ -24,53 +28,45 @@
     </div>
   </header>
 </template>
-
-<script>
+<script setup>
+import { ref } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 
-export default {
-  setup() {
-    const authStore = useAuthStore()
-    const router = useRouter()
+const authStore = useAuthStore()
+const router = useRouter()
 
-    return {
-      authStore,
-      router,
-    }
-  },
-  data() {
-    return {
-      showDropdown: false,
-      isLoggingOut: false,
-    }
-  },
-  methods: {
-    async handleLogout() {
-      try {
-        this.isLoggingOut = true
-        this.showDropdown = false
+// Use storeToRefs to keep user reactive
+const { user } = storeToRefs(authStore)
 
-        // Call the logout method from your auth store
-        await this.authStore.logout()
+const showDropdown = ref(false)
+const isLoggingOut = ref(false)
 
-        // Redirect to login page or home page after logout
-        this.$router.push('/signin')
+async function handleLogout() {
+  try {
+    isLoggingOut.value = true
+    showDropdown.value = false
 
-        // Optional: Show success message
-        // this.$toast.success('Logged out successfully')
+    // Call the logout method from your auth store
+    await authStore.logout()
 
-      } catch (error) {
-        console.error('Logout failed:', error)
-        // Optional: Show error message
-        // this.$toast.error('Logout failed. Please try again.')
-      } finally {
-        this.isLoggingOut = false
-      }
-    },
-  },
+    // Redirect to login page or home page after logout
+    router.push('/signin')
+
+    // Optional: Show success message
+    // this.$toast.success('Logged out successfully')
+  } catch (error) {
+    console.error('Logout failed:', error)
+    // Optional: Show error message
+    // this.$toast.error('Logout failed. Please try again.')
+  } finally {
+    isLoggingOut.value = false
+  }
 }
 </script>
+<!-- }
+</script> -->
 
 <style scoped>
 .topnav {

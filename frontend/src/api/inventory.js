@@ -2,12 +2,21 @@
 import axios from '@/api/axios'
 
 // Products
-export const getProducts = () => axios.get('/inventory/products/')
-export const getProduct = (id) => axios.get(`/inventory/products/${id}/`)
-export const createProduct = (product) => axios.post('/inventory/products/', product)
-export const updateProduct = (id, product) => axios.put(`/inventory/products/${id}/`, product)
-export const deleteProduct = (id) => axios.delete(`/inventory/products/${id}/`)
-
+export const getProducts = () => {
+  return axios.get('/inventory/products/')
+}
+export const getProduct = (id) => {
+  return axios.get(`/inventory/products/${id}/`)
+}
+export const createProduct = (product) => {
+  return axios.post('/inventory/products/', product)
+}
+export const updateProduct = (id, product) => {
+  return axios.put(`/inventory/products/${id}/`, product)
+}
+export const deleteProduct = (id) => {
+  axios.delete(`/inventory/products/${id}/`)
+}
 // Customers
 export const getCustomers = () => {
   return axios.get('/inventory/Customers/')
@@ -91,4 +100,24 @@ export const updatePurchaseOrder = (id, purchaseOrder) => {
 }
 export const deletePurchaseOrder = (id) => {
   return axios.delete(`/inventory/purchase-orders/${id}/`)
+}
+
+export const getStockMovements = () => {
+  return axios.get(`/inventory/stocks`)
+}
+
+export const getStockMovement = (id) => {
+  return axios.get(`/inventory/stocks/${id}/`)
+}
+
+export const createStockMovement = (stock) => {
+  return axios.post(`/inventory/stocks/`, stock)
+}
+
+export const updateStockMovement = (id, stock) => {
+  return axios.put(`/inventory/stocks/${id}/`, stock)
+}
+
+export const deleteStockMovement = (id) => {
+  return axios.delete(`/inventory/stocks/${id}/`)
 }

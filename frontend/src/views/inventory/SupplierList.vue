@@ -103,7 +103,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useSupplierStore } from '@/stores/inventory/supplierStore'
-import SupplierModal from '@/components/suppliers/SupplierModal.vue'
+import SupplierModal from '@/components/inventory_modals/SupplierModal.vue'
 
 const store = useSupplierStore()
 const showModal = ref(false)

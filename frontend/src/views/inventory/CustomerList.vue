@@ -106,7 +106,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import { useCustomerStore } from '@/stores/inventory/customerStore'
-import CustomerModal from '@/components/customers/CustomerModal.vue'
+import CustomerModal from '@/components/inventory_modals/CustomerModal.vue'
 
 const store = useCustomerStore()
 const showModal = ref(false)

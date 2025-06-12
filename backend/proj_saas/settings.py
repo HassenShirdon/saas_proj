@@ -41,7 +41,7 @@ SHARED_APPS = [
 TENANT_APPS = [
     'django.contrib.contenttypes',
     'rest_framework',
-    'django.contrib.admin',  # Added for public schema admin
+    'django.contrib.admin',
     'django.contrib.auth',
     'rest_framework_simplejwt',
     'django.contrib.sessions',
@@ -50,6 +50,14 @@ TENANT_APPS = [
     'finance',
     'hrm',
     'users',
+]
+
+# Custom user roles for tenants
+TENANT_USER_ROLES = [
+    ('finance_manager', 'Finance Manager'),
+    ('operation_manager', 'Operation Manager'),
+    ('administrator', 'Administrator'),
+    ('human_resource_manager', 'Human Resource Manager'),
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
