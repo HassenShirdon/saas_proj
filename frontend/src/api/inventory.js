@@ -3,13 +3,13 @@ import axios from '@/api/axios'
 
 // Products
 export const getProducts = () => {
-  return axios.get('/inventory/products/')
+  return axios.get(`/inventory/products/`)
 }
 export const getProduct = (id) => {
   return axios.get(`/inventory/products/${id}/`)
 }
 export const createProduct = (product) => {
-  return axios.post('/inventory/products/', product)
+  return axios.post(`/inventory/products/`, product)
 }
 export const updateProduct = (id, product) => {
   return axios.put(`/inventory/products/${id}/`, product)
@@ -19,13 +19,13 @@ export const deleteProduct = (id) => {
 }
 // Customers
 export const getCustomers = () => {
-  return axios.get('/inventory/Customers/')
+  return axios.get(`/inventory/Customers/`)
 }
 export const getCustomer = (id) => {
   return axios.get(`/inventory/Customer/${id}/`)
 }
 export const createCustomer = (customer) => {
-  return axios.post('/inventory/Customers/', customer)
+  return axios.post(`/inventory/Customers/`, customer)
 }
 export const updateCustomer = (id, customer) => {
   return axios.put(`/inventory/Customers/${id}`, customer)

@@ -8,6 +8,7 @@ const routes = [
     name: 'landing',
     component: import('@/views/Landing/landingPage.vue'),
   },
+
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -18,6 +19,12 @@ const routes = [
         path: '/dashboard/customers',
         name: 'customers',
         component: () => import('@/views/inventory/CustomerList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/departments',
+        name: 'departments',
+        component: () => import('@/views/hrm/departmentList.vue'),
         meta: { requiresAuth: true },
       },
       {
@@ -67,6 +74,30 @@ const routes = [
         path: '/dashboard/employees',
         name: 'employees',
         component: () => import('@/views/hrm/employeeList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/attendance',
+        name: 'attendance',
+        component: () => import('@/views/hrm/attendanceList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/leaves',
+        name: 'leaves',
+        component: () => import('@/views/hrm/leavesList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/salaries',
+        name: 'salaries',
+        component: () => import('@/views/hrm/salariesList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/performance-reviews',
+        name: 'performanceReviews',
+        component: () => import('@/views/hrm/performanceReviewsList.vue'),
         meta: { requiresAuth: true },
       },
     ],

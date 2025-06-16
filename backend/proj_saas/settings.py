@@ -25,27 +25,27 @@ TENANT_SUBFOLDER_PREFIX = None  # Set if using subfolder-based tenants
 # Shared and tenant-specific apps
 SHARED_APPS = [
     'django_tenants',
-    # 'django.contrib.admin',  # Added for public schema admin
-    # 'django.contrib.auth',  # Added for authentication
+    'core',
+    'django.contrib.admin',  # Added for public schema admin
+    'django.contrib.auth',  # Added for authentication
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
+    'django_filters',
     'rest_framework_simplejwt',
-    'core',
+    'users',
     
 ]
 
 TENANT_APPS = [
     'django.contrib.contenttypes',
-    'rest_framework',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'rest_framework_simplejwt',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'rest_framework',
+    'django_filters',
     'inventory',
     'finance',
     'hrm',
@@ -61,7 +61,7 @@ TENANT_USER_ROLES = [
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
-
+SITE_ID=1
 # Tenant configuration
 TENANT_MODEL = "core.Client"  # Ensure core.Client exists
 TENANT_DOMAIN_MODEL = "core.Domain"  # Ensure core.Domain exists
@@ -94,12 +94,17 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+        # ...
+    ),
 }
 
 # CORS configuration
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
+    'http://127.0.0.1:8000',
     'http://jeeh.localhost:8000',
     'http://jeeh.localhost:5173',
     'http://demo.localhost:5173',

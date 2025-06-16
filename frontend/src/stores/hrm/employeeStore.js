@@ -9,9 +9,16 @@ export const useEmployeeStore = defineStore('employee', {
   actions: {
     async fetchEmployees() {
       this.loading = true
-      const res = await employeeApi.getEmployees()
-      this.employees = res.data
-      this.loading = false
+      try {
+        const res = await employeeApi.getEmployees()
+        console.log('✅ API response:', res)
+        this.employees = res.data
+      } catch (error) {
+        console.error('❌ API fetch failed:', error)
+        alert('Failed to fetch employees. See console for details.')
+      } finally {
+        this.loading = false
+      }
     },
     async addEmployee(employee) {
       await employeeApi.createEmployee(employee)

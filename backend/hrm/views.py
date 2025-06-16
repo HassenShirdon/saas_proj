@@ -1,110 +1,292 @@
+from rest_framework import generics, filters
+from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import Prefetch
 
-from rest_framework import generics
 from .models import (
     Employee,
     Department,
     PerformanceReview,
     Attendance,
     LeaveRequest,
-    Salary,
+    LeaveType,
+    SalaryHistory,
+    PayrollRecord,
 )
 
 from .serializers import (
     EmployeeSerializer,
+    EmployeeDetailSerializer,
     DepartmentSerializer,
-    attendanceSerializer,
+    DepartmentDetailSerializer,
+    AttendanceSerializer,
     LeaveRequestSerializer,
+    LeaveTypeSerializer,
     PerformanceReviewSerializer,
-    SalarySerializer,
+    SalaryHistorySerializer,
+    PayrollRecordSerializer,
 )
-# Create your views here.
 
-
-class EmployeeList(generics.ListCreateAPIView):
+# Employee Views
+class EmployeeListCreateView(generics.ListCreateAPIView):
     """API view to list and create employees."""
-    queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    filterset_fields = ['first_name', 'last_name', 'email', 'phone_number', 'date_of_birth', 'date_hired', 'position']
-    ordering_fields = ['first_name', 'last_name', 'date_hired']
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filterset_fields = {
+        'department': ['exact'],
+        'manager': ['exact'],
+        'status': ['exact'],
+        'position': ['icontains'],
+        'date_hired': ['gte', 'lte', 'exact'],
+    }
+    search_fields = ['first_name', 'last_name', 'email', 'employee_id']
+    ordering_fields = ['first_name', 'last_name', 'date_hired', 'employee_id']
+    ordering = ['last_name', 'first_name']
 
-class EmployeeDetail(generics.RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return Employee.objects.select_related('department', 'manager').filter(status='active')
+
+class EmployeeDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete an employee."""
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeSerializer
-    filterset_fields = ['first_name', 'last_name', 'email', 'phone_number', 'date_of_birth', 'date_hired', 'position']
-    lookup_field = 'email'  
+    serializer_class = EmployeeDetailSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'  # Use primary key for safety
 
-class DepartmentList(generics.ListCreateAPIView):
+    def get_queryset(self):
+        return Employee.objects.select_related(
+            'department', 'manager'
+        ).prefetch_related(
+            'subordinates',
+            'attendances',
+            'leave_requests',
+            'performance_reviews',
+            'salary_history'
+        )
+
+# Department Views
+class DepartmentListCreateView(generics.ListCreateAPIView):
     """API view to list and create departments."""
-    queryset = Department.objects.all()
+    queryset = Department.objects.select_related('manager')
     serializer_class = DepartmentSerializer
-    filterset_fields = ['name', 'description']
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name', 'description']
     ordering_fields = ['name']
+    ordering = ['name']
 
-class DepartmentDetail(generics.RetrieveUpdateDestroyAPIView):
+class DepartmentDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a department."""
-    queryset = Department.objects.all()
-    serializer_class = DepartmentSerializer
-    filterset_fields = ['name', 'description']
-    lookup_field = 'name'
+    serializer_class = DepartmentDetailSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
 
-class AttendanceList(generics.ListCreateAPIView):
+    def get_queryset(self):
+        return Department.objects.select_related('manager').prefetch_related(
+            Prefetch('employees', queryset=Employee.objects.filter(status='active'))
+        )
+
+# Attendance Views
+class AttendanceListCreateView(generics.ListCreateAPIView):
     """API view to list and create attendance records."""
-    queryset = Attendance.objects.all()
-    serializer_class = attendanceSerializer
-    filterset_fields = ['employee', 'date', 'check_in_time', 'check_out_time']
-    ordering_fields = ['date', 'check_in_time'] 
-
-class AttendanceDetail(generics.RetrieveUpdateDestroyAPIView): 
-    """API view to retrieve, update or delete an attendance record."""
-    queryset = Attendance.objects.all()
-    serializer_class = attendanceSerializer
-    filterset_fields = ['employee', 'date', 'check_in_time', 'check_out_time']
-    lookup_field = 'date'  # Assuming date is unique per employee
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'employee': ['exact'],
+        'date': ['gte', 'lte', 'exact'],
+        'status': ['exact'],
+    }
     ordering_fields = ['date', 'check_in_time']
+    ordering = ['-date']
 
-class LeaveRequestList(generics.ListCreateAPIView):
+    def get_queryset(self):
+        return Attendance.objects.select_related('employee')
+
+class AttendanceDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API view to retrieve, update or delete an attendance record."""
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        return Attendance.objects.select_related('employee')
+
+# Leave Type Views
+class LeaveTypeListCreateView(generics.ListCreateAPIView):
+    """API view to list and create leave types."""
+    queryset = LeaveType.objects.all()
+    serializer_class = LeaveTypeSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['name']
+    ordering_fields = ['name']
+    ordering = ['name']
+
+class LeaveTypeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API view to retrieve, update or delete a leave type."""
+    queryset = LeaveType.objects.all()
+    serializer_class = LeaveTypeSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+# Leave Request Views
+class LeaveRequestListCreateView(generics.ListCreateAPIView):
     """API view to list and create leave requests."""
-    queryset = LeaveRequest.objects.all()
     serializer_class = LeaveRequestSerializer
-    filterset_fields = ['employee', 'start_date', 'end_date', 'status']
-    ordering_fields = ['start_date', 'end_date', 'status']  
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'employee': ['exact'],
+        'leave_type': ['exact'],
+        'status': ['exact'],
+        'start_date': ['gte', 'lte', 'exact'],
+        'end_date': ['gte', 'lte', 'exact'],
+    }
+    ordering_fields = ['start_date', 'end_date', 'applied_date']
+    ordering = ['-applied_date']
 
-class LeaveRequestDetail(generics.RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return LeaveRequest.objects.select_related('employee', 'leave_type', 'approved_by')
+
+class LeaveRequestDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a leave request."""
-    queryset = LeaveRequest.objects.all()
     serializer_class = LeaveRequestSerializer
-    filterset_fields = ['employee', 'start_date', 'end_date', 'status']
-    lookup_field = 'id'  # Assuming ID is used for lookups
-    ordering_fields = ['start_date', 'end_date', 'status']
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
 
-class PerformanceReviewList(generics.ListCreateAPIView):
+    def get_queryset(self):
+        return LeaveRequest.objects.select_related('employee', 'leave_type', 'approved_by')
+
+# Performance Review Views
+class PerformanceReviewListCreateView(generics.ListCreateAPIView):
     """API view to list and create performance reviews."""
-    queryset = PerformanceReview.objects.all()
     serializer_class = PerformanceReviewSerializer
-    filterset_fields = ['employee', 'review_date', 'rating']
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'employee': ['exact'],
+        'reviewer': ['exact'],
+        'rating': ['exact', 'gte', 'lte'],
+        'review_date': ['gte', 'lte', 'exact'],
+    }
     ordering_fields = ['review_date', 'rating']
+    ordering = ['-review_date']
 
-class performanceReviewDetail(generics.RetrieveUpdateDestroyAPIView):
+    def get_queryset(self):
+        return PerformanceReview.objects.select_related('employee', 'reviewer')
+
+class PerformanceReviewDetailView(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a performance review."""
-    queryset = PerformanceReview.objects.all()
     serializer_class = PerformanceReviewSerializer
-    filterset_fields = ['employee', 'review_date', 'rating']
-    lookup_field = 'id'  # Assuming ID is used for lookups
-    ordering_fields = ['review_date', 'rating']
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
 
-class SalaryList(generics.ListCreateAPIView):
-    """API view to list and create salary records."""
-    queryset = Salary.objects.all()
-    serializer_class = SalarySerializer
-    filterset_fields = ['employee', 'payment_date', 'amount']
-    ordering_fields = ['payment_date', 'amount']
+    def get_queryset(self):
+        return PerformanceReview.objects.select_related('employee', 'reviewer')
 
-class SalaryDetail(generics.RetrieveUpdateDestroyAPIView):
-    """API view to retrieve, update or delete a salary record."""
-    queryset = Salary.objects.all()
-    serializer_class = SalarySerializer
-    filterset_fields = ['employee', 'payment_date', 'amount']
-    lookup_field = 'id'  # Assuming ID is used for lookups
-    ordering_fields = ['payment_date', 'amount']
+# Salary History Views
+class SalaryHistoryListCreateView(generics.ListCreateAPIView):
+    """API view to list and create salary history records."""
+    serializer_class = SalaryHistorySerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'employee': ['exact'],
+        'effective_date': ['gte', 'lte', 'exact'],
+        'amount': ['gte', 'lte', 'exact'],
+    }
+    ordering_fields = ['effective_date', 'amount']
+    ordering = ['-effective_date']
 
+    def get_queryset(self):
+        return SalaryHistory.objects.select_related('employee')
+
+class SalaryHistoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API view to retrieve, update or delete a salary history record."""
+    serializer_class = SalaryHistorySerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        return SalaryHistory.objects.select_related('employee')
+
+# Payroll Record Views
+class PayrollRecordListCreateView(generics.ListCreateAPIView):
+    """API view to list and create payroll records."""
+    serializer_class = PayrollRecordSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'employee': ['exact'],
+        'payment_date': ['gte', 'lte', 'exact'],
+        'pay_period_start': ['gte', 'lte', 'exact'],
+        'pay_period_end': ['gte', 'lte', 'exact'],
+    }
+    ordering_fields = ['payment_date', 'pay_period_start']
+    ordering = ['-payment_date']
+
+    def get_queryset(self):
+        return PayrollRecord.objects.select_related('employee')
+
+class PayrollRecordDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """API view to retrieve, update or delete a payroll record."""
+    serializer_class = PayrollRecordSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        return PayrollRecord.objects.select_related('employee')
+
+# Additional Views for Common Use Cases
+class EmployeesByDepartmentView(generics.ListAPIView):
+    """Get all employees in a specific department."""
+    serializer_class = EmployeeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        department_id = self.kwargs['department_id']
+        return Employee.objects.filter(
+            department_id=department_id, 
+            status='active'
+        ).select_related('department', 'manager')
+
+class EmployeeSubordinatesView(generics.ListAPIView):
+    """Get all subordinates of a specific employee."""
+    serializer_class = EmployeeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        manager_id = self.kwargs['manager_id']
+        return Employee.objects.filter(
+            manager_id=manager_id, 
+            status='active'
+        ).select_related('department')
+
+class PendingLeaveRequestsView(generics.ListAPIView):
+    """Get all pending leave requests."""
+    serializer_class = LeaveRequestSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return LeaveRequest.objects.filter(
+            status='pending'
+        ).select_related('employee', 'leave_type').order_by('-applied_date')
+
+class EmployeeAttendanceView(generics.ListAPIView):
+    """Get attendance records for a specific employee."""
+    serializer_class = AttendanceSerializer
+    permission_classes = [IsAuthenticated]
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter]
+    filterset_fields = {
+        'date': ['gte', 'lte', 'exact'],
+        'status': ['exact'],
+    }
+    ordering_fields = ['date']
+    ordering = ['-date']
+
+    def get_queryset(self):
+        employee_id = self.kwargs['employee_id']
+        return Attendance.objects.filter(
+            employee_id=employee_id
+        ).select_related('employee')

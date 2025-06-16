@@ -5,15 +5,19 @@ from .models import (
     Employee,
     Department,
     Attendance,
-    Salary,
+    SalaryHistory,
+    LeaveType,
     LeaveRequest,
     PerformanceReview,
+    PayrollRecord,
 )
 
 admin.site.register(Employee)
 admin.site.register(Department)
 admin.site.register(Attendance)
-admin.site.register(Salary)
+admin.site.register(SalaryHistory)
 admin.site.register(LeaveRequest)
+admin.site.register(LeaveType)
+admin.site.register(PayrollRecord)
 admin.site.register(PerformanceReview)
 
