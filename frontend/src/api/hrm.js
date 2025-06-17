@@ -1,7 +1,7 @@
 import axios from '@/api/axios'
 
 export const getEmployees = () => {
-  return axios.get(`/hrm/employee`)
+  return axios.get(`/hrm/employees`)
 }
 
 export const getEmployee = (id) => {
@@ -78,20 +78,20 @@ export const deleteLeave = (id) => {
 }
 
 export const getSalaries = () => {
-  return axios.get(`/hrm/salaries/`)
+  return axios.get(`hrm/salary-history/`)
 }
 
 export const getSalary = (id) => {
-  return axios.get(`/hrm/salaries/${id}/`)
+  return axios.get(`hrm/salary-history/${id}/`)
 }
 export const createSalary = (salary) => {
-  return axios.post('/hrm/salaries/', salary)
+  return axios.post('hrm/salary-history/', salary)
 }
 export const updateSalary = (id, salary) => {
-  return axios.put(`/hrm/salaries/{id}/`, salary)
+  return axios.put(`hrm/salary-history/{id}/`, salary)
 }
 export const deleteSalary = (id) => {
-  return axios.delete(`/hrm/salaries/${id}/`)
+  return axios.delete(`hrm/salary-history/${id}/`)
 }
 
 export const getPerformanceReviews = () => {

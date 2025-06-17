@@ -13,6 +13,7 @@
                         <th>S.No </th>
                         <th>Department Name</th>
                         <th>Description</th>
+                        <th>Manager</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -21,6 +22,7 @@
                         <td>{{ department.id }}</td>
                         <td class="fw-semibold">{{ department.name }}</td>
                         <td>{{ department.description || '-' }}</td>
+                        <td>{{ department.manager || '-' }}</td>
 
                         <td class="text-center">
                             <button class="btn btn-outline-primary btn-sm me-2" title="Edit">

@@ -23,8 +23,9 @@
                         <th scope="col">S. No</th>
                         <th scope="col">Employee Name</th>
                         <th scope="col">amount</th>
-                        <th scope="col">Payment date</th>
-                        <th scope="col">Notes</th>
+                        <th scope="col">Effective date</th>
+                        <th scope="col">End date</th>
+                        <th scope="col">Reason</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
@@ -32,18 +33,18 @@
                     <tr v-for="salary in salaries" :key="salary.id">
                         <th scope="row">{{ salary.id }}</th>
                         <td class="fw-semibold">{{ salary.employee }}</td>
-                        <td>{{ salaries.employee || '-' }}</td>
+                        <td>€ {{ salary.amount || '-' }}</td>
                         <td>
 
-                            {{ salary.amount }}
+                            {{ salary.effective_date }}
                             < </td>
                         <td>
 
-                            {{ salary.payment_date }}
+                            {{ salary.end_date }}
                         </td>
                         <td>
 
-                            {{ salary.notes }}
+                            {{ salary.reason }}
                         </td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
@@ -77,7 +78,7 @@
 
     </div>
 </template>
-<script>
+<script setup>
 import { ref, onMounted } from 'vue'
 import { useSalaryStore } from '@/stores/hrm/salaryStore'
 
@@ -90,6 +91,7 @@ const isEdit = ref(false)
 onMounted(async () => {
     await store.fetchSalaries()
     salaries.value = store.salaries
+    console.log(salaries)
 })
 
 const handleSave = async (salaryData) => {

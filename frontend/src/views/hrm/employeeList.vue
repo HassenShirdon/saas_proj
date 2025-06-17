@@ -20,15 +20,20 @@
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">Email</th>
+                        <th scope="col">Phone Number</th>
                         <th scope="col">Date of Birth</th>
                         <th scope="col">Hired Date</th>
                         <th scope="col">Position</th>
+                        <th scope="col">Department</th>
+                        <th scope="col">Manager</th>
+                        <th scope="col">Current Salary</th>
+                        <th scope="col">Status</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(employee, index) in store.employees" :key="employee.id">
-                        <th scope="row">{{ index + 1 }}</th>
+                    <tr v-for="employee in employees" :key="employee.id">
+                        <th scope="row">{{ employee.id }}</th>
                         <td class="fw-semibold">{{ employee.first_name }}</td>
                         <td>{{ employee.last_name || '-' }}</td>
                         <td>
@@ -37,7 +42,7 @@
                             </a>
                             <span v-else class="text-muted">-</span>
                         </td>
-
+                        <td>{{ employee.phone_number || '-' }}</td>
                         <td>
                             <span v-if="employee.date_of_birth" class="d-inline-block text-truncate"
                                 style="max-width: 200px;" :title="employee.date_of_birth">
@@ -45,8 +50,12 @@
                             </span>
                             <span v-else class="text-muted">-</span>
                         </td>
-                        <td>{{ employee.hired_date || '-' }}</td>
+                        <td>{{ employee.date_hired || '-' }}</td>
                         <td>{{ employee.position || '-' }}</td>
+                        <td>{{ employee.department || '-' }}</td>
+                        <td>{{ employee.manager || '-' }}</td>
+                        <td>{{ employee.current_salary || '-' }}</td>
+                        <td>{{ employee.status || '-' }}</td>
                         <td class="text-center">
                             <div class="btn-group" role="group">
 
@@ -85,6 +94,7 @@ import { onMounted, ref } from 'vue'
 import { useEmployeeStore } from '@/stores/hrm/employeeStore'
 
 const store = useEmployeeStore()
+const employees = ref([])
 const selectedEmployee = ref(null)
 const showModal = ref(false)
 const isEdit = ref(false)
@@ -92,6 +102,8 @@ const isEdit = ref(false)
 onMounted(async () => {
     console.log('Component mounted, fetching employees...')
     await store.fetchEmployees()
+    employees.value = store.employees
+
     console.log('Employees fetched:', store.employees)
 })
 
