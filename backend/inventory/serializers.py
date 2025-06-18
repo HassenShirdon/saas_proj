@@ -9,13 +9,15 @@ from .models import (
     SalesOrder,
     SalesOrderItem,
     StockMovement,
-    products,
+    Product,
+    InventoryAdjustment,
+    InventoryAdjustmentLine,
 )
 
-class ProductsSerializer(serializers.ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
     """Serializer for Products model."""
     class Meta:
-        model = products
+        model = Product
         fields = '__all__'
         read_only_fields = ['id']
 
@@ -82,4 +84,19 @@ class StockMovementSerializer(serializers.ModelSerializer):
         model = StockMovement
         fields = '__all__'
         read_only_fields = ['id'] 
+
+class InventoryAdjustmentSerializer(serializers.ModelSerializer):
+    """Serializer for InventoryAdjustment model"""
+    class Meta:
+        model= InventoryAdjustment
+        feilds = '__all__'
+        read_only_fields = ['id'] 
+
+class InventoryAdjustmentLineSerializer(serializers.ModelSerializer):
+    """Serializer for InventoryAdjustmentLine model"""
+    class Meta:
+        model= InventoryAdjustmentLine
+        feilds = '__all__'
+        read_only_fields = ['id'] 
+
 

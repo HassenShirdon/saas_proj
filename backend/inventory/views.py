@@ -1,23 +1,35 @@
-from .models  import Supplier, products, ProductCategory, InventoryItem, PurchaseOrder, PurchaseOrderItem, Customer,SalesOrder,SalesOrderItem, StockMovement
-
+from .models import (
+    Supplier,
+    ProductCategory,
+    InventoryItem,
+    PurchaseOrder,
+    PurchaseOrderItem,
+    Customer,
+    SalesOrder,
+    SalesOrderItem,
+    StockMovement,
+    Product,
+    InventoryAdjustment,
+    InventoryAdjustmentLine,
+)
 from rest_framework.views import APIView
 
 from rest_framework import generics
-from .serializers import SupplierSerializer,  ProductsSerializer,    ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer
+from .serializers import SupplierSerializer,  ProductSerializer,    ProductCategorySerializer, InventoryItemSerializer, PurchaseOrderSerializer, PurchaseOrderItemSerializer, CustomerSerializer, SalesOrderSerializer, SalesOrderItemSerializer, StockMovementSerializer, InventoryAdjustmentSerializer, InventoryAdjustmentLineSerializer
 
 
-class productsList(generics.ListCreateAPIView):
-    """API view to list and create products."""
-    queryset = products.objects.all()
-    serializer_class = ProductsSerializer
-    filterset_fields = ['name', 'description', 'category', 'price']
-    ordering_fields = ['name', 'price']
+class ProductList(generics.ListCreateAPIView):
+    """API view to list and create Product."""
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filterset_fields = ['name', 'category', 'created_at']
+    ordering_fields = ['name', 'category']
 
-class productDetail(generics.RetrieveUpdateDestroyAPIView):
+class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a product."""
-    queryset = products.objects.all()
-    serializer_class = ProductsSerializer
-    filterset_fields = ['name', 'description', 'category', 'price']
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    filterset_fields = ['name',  'category']
     lookup_field = 'name'
 
 class SupplierList(generics.ListCreateAPIView):
@@ -25,6 +37,7 @@ class SupplierList(generics.ListCreateAPIView):
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
     filterset_fields = ['name', 'contact_person', 'email', 'phone_number']
+    ordering_feilds = ['email','name']
 
 class SupplierDetail(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a supplier."""
@@ -137,3 +150,18 @@ class StockMovementList(generics.ListCreateAPIView):
     serializer_class = StockMovementSerializer
     filterset_fields = ['inventory_item', 'movement_type', 'quantity', 'date']
     ordering_fields = ['date']
+
+class InventoryAdjustmentList(generics.ListCreateAPIView):
+    """API View to list the Inventory Adjustment"""
+    queryset = InventoryAdjustment.objects.all()
+    serializer_class = InventoryAdjustmentSerializer
+    filterset_feilds = ['adjustment_number','adjustment_date']
+    ordering_feilds = ['adjustment_number','adjustment_date']
+
+
+class InventoryAdjustmentLineList(generics.ListCreateAPIView):
+    """API View to list the Inventory Adjustment"""
+    queryset = InventoryAdjustmentLine.objects.all()
+    serializer_class = InventoryAdjustmentLineSerializer
+    filterset_feilds = ['adjustment','inventory_item']
+    ordering_feilds = ['adjustment','inventory_item']
