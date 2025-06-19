@@ -2,7 +2,6 @@
   <div class="login-bg d-flex align-items-center justify-content-center min-vh-100">
     <div class="login-card shadow-lg p-4 rounded-4 bg-white" style="max-width: 400px; width: 100%;">
       <div class="text-center mb-4">
-        <img src="@/assets/logo.png" alt="Logo" style="width: 60px; height: 60px;" class="mb-2" />
         <h2 class="fw-bold mb-1">Sign in to your account</h2>
         <p class="text-muted small">Welcome back! Please enter your details.</p>
       </div>
@@ -66,7 +65,7 @@ async function handleLogin() {
   isLoading.value = true;
 
   try {
-    console.log('Attempting login with:', { username: username.value });
+    // console.log('Attempting login with:', { username: username.value });
     await auth.login({ username: username.value, password: password.value });
     // Login successful - auth store will handle redirect
   } catch (error) {
@@ -110,17 +109,6 @@ async function handleLogin() {
 </script>
 
 <style scoped>
-.gradient-custom-2 {
-  /* fallback for old browsers */
-  background: #fccb90;
-
-  /* Chrome 10-25, Safari 5.1-6 */
-  background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
-}
-
 @media (min-width: 768px) {
   .gradient-form {
     height: 100vh !important;

@@ -6,70 +6,75 @@ export const getProducts = () => {
   return axios.get(`/inventory/products/`)
 }
 export const getProduct = (id) => {
-  return axios.get(`/inventory/products/${id}/`)
+  return axios.get(`/inventory/product/${id}/`)
 }
 export const createProduct = (product) => {
   return axios.post(`/inventory/products/`, product)
 }
 export const updateProduct = (id, product) => {
-  return axios.put(`/inventory/products/${id}/`, product)
+  return axios.put(`/inventory/product/${id}/`, product)
 }
 export const deleteProduct = (id) => {
-  axios.delete(`/inventory/products/${id}/`)
+  axios.delete(`/inventory/product/${id}/`)
 }
 // Customers
 export const getCustomers = () => {
-  return axios.get(`/inventory/Customers/`)
+  return axios.get(`/inventory/Customers/`) // This is correct
 }
+
 export const getCustomer = (id) => {
-  return axios.get(`/inventory/Customer/${id}/`)
+  return axios.get(`/inventory/Customer/${id}/`) // Added missing slash at end
 }
+
 export const createCustomer = (customer) => {
-  return axios.post(`/inventory/Customers/`, customer)
+  return axios.post(`/inventory/Customers/`, customer) // This is correct
 }
+
 export const updateCustomer = (id, customer) => {
-  return axios.put(`/inventory/Customers/${id}`, customer)
+  return axios.put(`/inventory/Customer/${id}/`, customer) // Added missing slash at end
 }
+
 export const deleteCustomer = (id) => {
-  return axios.delete(`/inventory/Customers/${id}`)
+  return axios.delete(`/inventory/Customer/${id}/`) // Added missing slash at end
 }
 
 // Suppliers
 export const getSuppliers = () => {
-  return axios.get('/inventory/suppliers/')
+  return axios.get(`/inventory/suppliers/`)
 }
 export const getSupplier = (id) => {
-  return axios.get(`/inventory/Supplier/${id}/`)
+  return axios.get(`/inventory/supplier/${id}/`)
 }
 export const createSupplier = (supplier) => {
-  return axios.post('/inventory/suppliers/', supplier)
+  return axios.post(`/inventory/suppliers/`, supplier)
 }
 export const updateSupplier = (id, supplier) => {
-  return axios.put(`/inventory/suppliers/${id}`, supplier)
+  return axios.put(`/inventory/supplier/${id}/`, supplier)
 }
 export const deleteSupplier = (id) => {
-  return axios.delete(`/inventory/suppliers/${id}`)
+  return axios.delete(`/inventory/supplier/${id}/`)
 }
 
-// Product Categories - Fixed naming and parameter issues
+// Product Categories
 export const getProductCategories = () => {
-  return axios.get('/inventory/product-categories/')
+  return axios.get(`/inventory/product-categories/`)
 }
 export const getProductCategory = (id) => {
-  return axios.get(`/inventory/product-categories/${id}/`)
+  return axios.get(`/inventory/product-category/${id}/`)
 }
 export const createProductCategory = (productCategory) => {
-  return axios.post('/inventory/product-categories/', productCategory)
+  return axios.post(`/inventory/product-categories/`, productCategory)
 }
 export const updateProductCategory = (id, productCategory) => {
-  return axios.put(`/inventory/product-categories/${id}/`, productCategory)
+  return axios.put(`/inventory/product-category/${id}/`, productCategory)
 }
 export const deleteProductCategory = (id) => {
-  return axios.delete(`/inventory/product-categories/${id}/`)
+  return axios.delete(`/inventory/product-category/${id}/`)
 }
 
+// inventory Items
 export const getItems = () => {
-  return axios.get('/inventory/inventory-items/')
+  return axios.get(`/inventory/inventory-items/`)
 }
 export const getItem = (id) => {
   return axios.get(`/inventory/inventory-items/${id}/`)

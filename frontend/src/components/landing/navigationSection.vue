@@ -27,8 +27,8 @@
           </li>
         </ul>
         <div class="nav-buttons">
-          <router-link to="/signin" class="btn btn-login">Log in</router-link>
-          <router-link to="/sign-up" class="btn btn-register">Get Started</router-link>
+          <router-link to="/login" class="btn btn-login">Log in</router-link>
+          <router-link to="/register" class="btn btn-register">Get Started</router-link>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@ export default {
 <style scoped>
 body {
   margin: 0;
-  font-family: 'ubuntu', sans-serif;
+  padding: 0;
 }
 
 .navbar {

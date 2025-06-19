@@ -103,14 +103,14 @@ const routes = [
     ],
   },
   {
-    path: '/signin',
-    name: 'signin',
+    path: '/login',
+    name: 'login',
     component: import('@/views/Auth/loginView.vue'),
     meta: { requiresGuest: true },
   },
   {
-    path: '/sign-up',
-    name: 'signup',
+    path: '/register',
+    name: 'register',
     component: import('@/views/Auth/register.vue'),
     meta: { requiresGuest: true },
   },
@@ -124,7 +124,7 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
 
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    next('/signin')
+    next('/login')
   } else if (to.meta.requiresGuest && auth.isAuthenticated) {
     next('/dashboard')
   } else {

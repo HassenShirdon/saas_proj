@@ -2,43 +2,43 @@
 import { defineStore } from 'pinia'
 import * as productCategoryApi from '@/api/inventory'
 
-export const useProductCategoryStore = defineStore('productCategory', {
+export const useProductCategoryStore = defineStore('productCategories', {
   state: () => ({
-    productCategories: [], // Fixed: changed from 'products' to 'productCategories'
+    productCategories: [],
     loading: false,
   }),
   actions: {
     async fetchProductCategories() {
-      // Fixed: method name should match what component calls
       this.loading = true
       try {
         const res = await productCategoryApi.getProductCategories()
-        this.productCategories = res.data // Fixed: assign to correct state property
+        this.productCategories = res.data
         this.loading = false
       } catch (error) {
+        this.loading = false
         throw error
       }
     },
-    async addproductCategory(productCategory) {
+    async addProductCategory(productCategory) {
       try {
-        await productCategoryApi.createproductCategory(productCategory)
-        await this.fetchproductCategories() // Fixed: call correct method
+        await productCategoryApi.createProductCategory(productCategory)
+        await this.fetchProductCategories()
       } catch (error) {
         throw error
       }
     },
-    async updateproductCategory(id, productCategory) {
+    async updateProductCategory(id, productCategory) {
       try {
         await productCategoryApi.updateProductCategory(id, productCategory)
-        await this.fetchproductCategories() // Fixed: call correct method
+        await this.fetchProductCategories()
       } catch (error) {
         throw error
       }
     },
-    async removeproductCategory(id) {
+    async removeProductCategory(id) {
       try {
         await productCategoryApi.deleteProductCategory(id)
-        await this.fetchproductCategories() // Fixed: call correct method
+        await this.fetchProductCategories()
       } catch (error) {
         throw error
       }

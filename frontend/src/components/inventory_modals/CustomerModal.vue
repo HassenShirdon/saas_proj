@@ -33,9 +33,9 @@
                                 <input id="contactPerson" v-model="form.contact_person" type="text" class="form-control"
                                     :class="{ 'is-invalid': errors.contact_person }"
                                     placeholder="Enter contact person name">
-                                <div v-if="errors.contact_person" class="invalid-feedback">
+                                <!-- <div v-if="errors.contact_person" class="invalid-feedback">
                                     {{ errors.contact_person }}
-                                </div>
+                                </div> -->
                             </div>
 
                             <!-- Email -->
@@ -69,6 +69,28 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- status -->
+                        <div class="col-12 mb-3">
+                            <select v-model="form.is_active" class="form-select" aria-label="status" id="is_active">
+                                <option selected>Select status of employee</option>
+                                <option value="True">True</option>
+                                <option value="False">False</option>
+                            </select>
+                        </div>
+
+                        <!-- <div class="col-12 mb-3">
+                            <label for="is_active" class="form-label">Status</label>
+                            <textarea id="is_active" v-model="form.is_active" class="form-control"
+                                :class="{ 'is-invalid': errors.is_active }" rows="3"
+                                placeholder="Enter full address"></textarea>
+                            <div v-if="errors.is_active" class="invalid-feedback">
+                                {{ errors.is_active }}
+                            </div>
+                        </div> -->
+
+
+
+
 
                         <!-- API Error Display -->
                         <div v-if="apiError" class="alert alert-danger" role="alert">
@@ -140,7 +162,10 @@ const form = ref({
     contact_person: '',
     email: '',
     phone_number: '',
-    address: ''
+    address: '',
+    is_active: ''
+    // created_at: '',
+    // updated_at: ''
 })
 
 const errors = ref({})
@@ -174,7 +199,10 @@ const resetForm = () => {
         contact_person: '',
         email: '',
         phone_number: '',
-        address: ''
+        address: '',
+        is_active: ''
+        // created_at: '',
+        // updated_at: ''
     }
     errors.value = {}
     isSubmitting.value = false
@@ -188,7 +216,11 @@ const populateForm = (customer) => {
         contact_person: customer.contact_person || '',
         email: customer.email || '',
         phone_number: customer.phone_number || '',
-        address: customer.address || ''
+        address: customer.address || '',
+        is_active: customer.is_active || ''
+        // created_at: customer.created_at || '' 
+        // updated_at: customer.created_at || ''
+
     }
 }
 
@@ -234,7 +266,10 @@ const handleSubmit = async () => {
             contact_person: form.value.contact_person.trim() || null,
             email: form.value.email.trim() || null,
             phone_number: form.value.phone_number.trim() || null,
-            address: form.value.address.trim() || null
+            address: form.value.address.trim() || null,
+            is_active: form.value.is_active || null
+            // created_at: form.value.created_at.trim() || null
+            // updated_at: form.value.updated_at.trim() || null
         }
 
         let response
