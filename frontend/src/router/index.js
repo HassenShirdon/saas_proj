@@ -36,7 +36,7 @@ const routes = [
       {
         path: '/dashboard/inventory-items',
         name: 'inventory-items',
-        component: () => import('@/views/inventory/items.vue'),
+        component: () => import('@/views/inventory/ItemList.vue'),
         meta: { requiresAuth: true },
       },
       {
@@ -53,14 +53,8 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
-        path: '/dashboard/products',
-        name: 'productList',
-        component: () => import('@/views/inventory/items.vue'),
-        meta: { requiresAuth: true },
-      },
-      {
-        path: '/dashboard/purchaseOrders',
-        name: 'purchaseOrders',
+        path: '/dashboard/purchase-orders',
+        name: 'purchase-orders',
         component: () => import('@/views/inventory/purchaseOrderList.vue'),
         meta: { requiresAuth: true },
       },

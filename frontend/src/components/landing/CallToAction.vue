@@ -33,7 +33,7 @@
           </div>
         </div>
         <div class="cta-image">
-          <img src="@/assets/hero-illustration.png" alt="Get Started" class="img-fluid">
+          <img src="@/assets/loginScreen.jpg" alt="Get Started" class="img-fluid ">
         </div>
       </div>
     </div>
@@ -48,8 +48,8 @@ export default {
 
 <style scoped>
 .cta-section {
-  padding: 6rem 0;
-  background: linear-gradient(135deg, #00aaff, #0088cc);
+  padding: 3rem 0;
+  background: #00aaff;
   position: relative;
   overflow: hidden;
 }
@@ -61,7 +61,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('@/assets/pattern.svg') center/cover;
+
   opacity: 0.1;
 }
 

@@ -5,8 +5,7 @@
         <!-- Text Column -->
         <div class="col-lg-6 text-center text-lg-start">
           <div class="hero-content">
-            <span class="badge bg-primary-soft mb-3">Enterprise Solutions</span>
-            <h1 class="display-4 fw-bold mb-4">
+            <h1 class="display-1 fw-medium  mb-4">
               Transform Your Business with <span class="text-gradient">Marjaan Solutions</span>
             </h1>
             <p class="lead mb-5">
@@ -21,14 +20,7 @@
                 <i class="bi bi-play-circle me-2"></i>Watch Demo
               </a>
             </div>
-            <div class="trust-badges mt-5">
-              <p class="text-muted mb-3">Trusted by leading companies</p>
-              <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
-                <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo">
-                <img src="@/assets/logo.png" alt="Company 2" class="company-logo">
-                <img src="@/assets/logo.png" alt="Company 3" class="company-logo">
-              </div>
-            </div>
+
           </div>
         </div>
 
@@ -46,7 +38,16 @@
             </div>
           </div>
         </div>
+        <div class="trust-badges mt-4 d-flex flex-column align-items-center justify-content-between bg-light pb-1 ">
+          <p class=" mb-3  fw-semibold badge" style="font-size: large; color: #00aaff;">Trusted by leading companies</p>
+          <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
+            <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo">
+            <img src="@/assets/logo.png" alt="Company 2" class="company-logo">
+            <img src="@/assets/logo.png" alt="Company 3" class="company-logo">
+          </div>
+        </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -63,7 +64,7 @@ export default {
   display: flex;
   align-items: center;
   padding: 6rem 0;
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+  background: #f0f0f0;
   position: relative;
   overflow: hidden;
 }
@@ -81,12 +82,12 @@ export default {
 }
 
 .bg-primary-soft {
-  background-color: rgba(0, 170, 255, 0.1);
+  background-color: #f0f0f0;
   color: #00aaff;
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #00aaff, #0088cc);
+  background: #f0f0f0;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -112,7 +113,7 @@ h1 {
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.2);
+  box-shadow: #f0f0f0;
 }
 
 .btn-primary:hover {
@@ -144,7 +145,7 @@ h1 {
 
 .hero-image {
   border-radius: 24px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); */
   transition: all 0.3s ease;
 }
 
@@ -199,6 +200,19 @@ h1 {
 
 .company-logo:hover {
   opacity: 1;
+}
+
+.trust-badges {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.company-logo {
+  height: 50px;
+  margin: 1 2rem;
 }
 
 @media (max-width: 991px) {

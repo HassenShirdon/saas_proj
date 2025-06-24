@@ -91,7 +91,7 @@ export default {
 <style scoped>
 .about-section {
   padding: 6rem 0;
-  background: linear-gradient(to bottom, #ffffff, #f8fafc);
+  background: #ffffff;
   position: relative;
   overflow: hidden;
 }

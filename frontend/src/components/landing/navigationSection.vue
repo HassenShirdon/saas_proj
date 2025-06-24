@@ -27,8 +27,8 @@
           </li>
         </ul>
         <div class="nav-buttons">
-          <router-link to="/login" class="btn btn-login">Log in</router-link>
-          <router-link to="/register" class="btn btn-register">Get Started</router-link>
+          <!-- <router-link to="/login" class="btn btn-login">Log in</router-link> -->
+          <router-link to="/login" class="btn btn-register">Go to Dashboard</router-link>
         </div>
       </div>
     </div>
@@ -64,7 +64,7 @@ body {
 }
 
 .navbar {
-  background: rgba(255, 255, 255, 0.95);
+  background: #f0f0f0;
   padding: 1rem 0;
   transition: all 0.3s ease;
   position: fixed;

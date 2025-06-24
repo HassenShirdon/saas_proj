@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
         await axios.post('register/', userData)
         // Optionally, auto-login after registration
         // await this.login({ username: userData.username, password: userData.password })
-        router.push('/signin')
+        router.push('/login')
       } catch (error) {
         console.error('Registration error:', error.response?.data || error.message)
         throw error
@@ -42,7 +42,7 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
-      router.push('/signin')
+      router.push('/login')
     },
     async refreshToken() {
       try {

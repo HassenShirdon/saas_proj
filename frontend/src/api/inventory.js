@@ -77,42 +77,43 @@ export const getItems = () => {
   return axios.get(`/inventory/inventory-items/`)
 }
 export const getItem = (id) => {
-  return axios.get(`/inventory/inventory-items/${id}/`)
+  return axios.get(`/inventory/inventory-item/${id}/`)
 }
 export const createItem = (item) => {
-  return axios.post('/inventory/inventory-items/', item)
+  return axios.post(`/inventory/inventory-items/`, item)
 }
 export const updateItem = (id, item) => {
-  return axios.put(`/inventory/inventory-items/${id}/`, item)
+  return axios.put(`/inventory/inventory-item/${id}/`, item)
 }
 export const deleteItem = (id) => {
-  return axios.delete(`/inventory/inventory-items/${id}/`)
+  return axios.delete(`/inventory/inventory-item/${id}/`)
 }
-
+//purchase orders
 export const getPurchaseOrders = () => {
-  return axios.get('/inventory/purchase-orders/')
+  return axios.get(`/inventory/purchase-orders/`)
 }
 
 const getPurchaseOrder = (id) => {
-  return axios.get(`/inventory/purchase-orders/${id}/`)
+  return axios.get(`/inventory/purchase-order/${id}/`)
 }
 
 export const createPurchaseOrder = (purchaseOrder) => {
   return axios.post('/inventory/purchase-orders/', purchaseOrder)
 }
 export const updatePurchaseOrder = (id, purchaseOrder) => {
-  return axios.put(`/inventory/purchase-orders/${id}/`, purchaseOrder)
+  return axios.put(`/inventory/purchase-order/${id}/`, purchaseOrder)
 }
 export const deletePurchaseOrder = (id) => {
-  return axios.delete(`/inventory/purchase-orders/${id}/`)
+  return axios.delete(`/inventory/purchase-order/${id}/`)
 }
 
+//StockMovement
 export const getStockMovements = () => {
   return axios.get(`/inventory/stocks`)
 }
 
 export const getStockMovement = (id) => {
-  return axios.get(`/inventory/stocks/${id}/`)
+  return axios.get(`/inventory/stock/${id}/`)
 }
 
 export const createStockMovement = (stock) => {
@@ -120,9 +121,9 @@ export const createStockMovement = (stock) => {
 }
 
 export const updateStockMovement = (id, stock) => {
-  return axios.put(`/inventory/stocks/${id}/`, stock)
+  return axios.put(`/inventory/stock/${id}/`, stock)
 }
 
 export const deleteStockMovement = (id) => {
-  return axios.delete(`/inventory/stocks/${id}/`)
+  return axios.delete(`/inventory/stock/${id}/`)
 }

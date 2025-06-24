@@ -61,8 +61,8 @@ class InventoryItemList(generics.ListCreateAPIView):
     """API view to list and create inventory items."""
     queryset = InventoryItem.objects.all()
     serializer_class = InventoryItemSerializer
-    filterset_fields = ['name', 'description', 'category', 'quantity', 'unit_price']
-    ordering_fields = ['name', 'quantity']
+    filterset_fields = ['product', 'last_updated']
+    ordering_fields = ['total_cost']
 
 class InventoryItemDetail(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete an inventory item."""
@@ -139,8 +139,8 @@ class StockMovementList(generics.ListCreateAPIView):
     """API view to list and create stock movements."""
     queryset = StockMovement.objects.all()
     serializer_class = StockMovementSerializer
-    filterset_fields = ['inventory_item', 'movement_type', 'quantity', 'date']
-    ordering_fields = ['date']
+    filterset_fields = ['inventory_item', 'movement_type', 'quantity']
+    ordering_fields = ['recorded_at']
 
 class InventoryAdjustmentList(generics.ListCreateAPIView):
     """API View to list the Inventory Adjustment"""

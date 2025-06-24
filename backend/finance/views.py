@@ -52,7 +52,7 @@ class AccountList(generics.ListCreateAPIView):
     """API view to list and create accounts."""
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
-    filterset_fields = ['name', 'account_type', 'balance']
+   
     ordering_fields = ['name', 'balance']
 
 class AccountDetail(generics.RetrieveUpdateDestroyAPIView):

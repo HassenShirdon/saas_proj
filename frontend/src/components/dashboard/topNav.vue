@@ -52,7 +52,7 @@ async function handleLogout() {
     await authStore.logout()
 
     // Redirect to login page or home page after logout
-    router.push('/signin')
+    router.push('/login')
 
     // Optional: Show success message
     // this.$toast.success('Logged out successfully')
@@ -70,7 +70,7 @@ async function handleLogout() {
 
 <style scoped>
 .topnav {
-  width: 100vw;
+  width: 80vw;
   /* Force full viewport width */
   left: 0;
   right: 0;

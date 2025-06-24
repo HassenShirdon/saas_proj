@@ -2,7 +2,7 @@
   <section class="features-section">
     <div class="container">
       <div class="section-header text-center">
-        <span class="badge bg-primary-soft mb-3">Features</span>
+        <span class="display-2 badge bg-primary-soft">Features</span>
         <h2 class="section-title">Everything You Need to Scale</h2>
         <p class="section-description">
           Powerful tools and features to help your business grow efficiently
@@ -18,18 +18,11 @@
             </div>
             <h3 class="feature-title">{{ feature.title }}</h3>
             <p class="feature-description">{{ feature.description }}</p>
-            <a href="#" class="feature-link">
-              Learn more <i class="bi bi-arrow-right"></i>
-            </a>
           </div>
         </div>
       </div>
 
-      <div class="features-cta text-center mt-5">
-        <a href="#pricing" class="btn btn-primary btn-lg">
-          View All Features <i class="bi bi-arrow-right ms-2"></i>
-        </a>
-      </div>
+
     </div>
   </section>
 </template>
@@ -99,8 +92,8 @@ export default {
 
 <style scoped>
 .features-section {
-  padding: 6rem 0;
-  background: linear-gradient(to bottom, #f8fafc, #ffffff);
+  padding: 4rem 0;
+  background: #f0f0f0
 }
 
 .section-header {
@@ -134,7 +127,7 @@ export default {
 }
 
 .feature-card {
-  background: white;
+  background: rgb(250, 247, 247);
   border-radius: 16px;
   padding: 2rem;
   height: 100%;
