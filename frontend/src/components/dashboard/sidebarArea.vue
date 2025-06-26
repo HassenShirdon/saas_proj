@@ -1,62 +1,53 @@
 <template>
-  <aside class="sidebar bg-white shadow-sm border-end" :class="{ 'sidebar-collapsed': isCollapsed }" :style="{
-    width: isCollapsed ? '80px' : '280px',
-    minHeight: '100vh',
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    zIndex: 100,
-    transition: 'width 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
-  }">
+  <aside class="sidebar" :class="{ 'sidebar-collapsed': isCollapsed }">
     <!-- Header -->
-    <div class="sidebar-header d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
-      <div class="logo-section d-flex align-items-center gap-2">
-        <span class="logo-icon d-flex align-items-center justify-content-center bg-primary text-white rounded"
-          style="width:32px;height:32px;font-size:1.25rem;">
-          <i class="bi bi-grid-3x3-gap-fill"></i>
-        </span>
-        <span class="logo-text fw-semibold"
-          :style="{ opacity: isCollapsed ? 0 : 1, transition: 'opacity 0.3s' }">Dashboard</span>
+    <div class="sidebar-header">
+      <div class="logo-section">
+        <div class="logo-icon">
+          <i class="bi bi-grid"></i>
+        </div>
+        <span class="logo-text" v-show="!isCollapsed">Dashboard</span>
       </div>
-      <button
-        class="collapse-btn btn btn-light d-flex align-items-center justify-content-center rounded-circle border-0"
-        @click="toggleCollapse" aria-label="Toggle sidebar" style="width:32px;height:32px;">
+      <button class="collapse-btn" @click="toggleCollapse" aria-label="Toggle sidebar">
         <i class="bi" :class="isCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'"></i>
       </button>
     </div>
 
     <!-- Navigation -->
-    <nav class="sidebar-nav flex-grow-1 overflow-auto px-2 py-2">
-      <ul class="nav-list list-unstyled d-flex flex-column gap-1">
+    <nav class="sidebar-nav">
+      <ul class="nav-list">
         <!-- Home -->
         <li>
-          <RouterLink to="/dashboard"
-            class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-            active-class="active" exact-active-class="exact-active">
-            <i class="nav-icon bi bi-house-door"></i>
+          <RouterLink to="/dashboard" class="nav-link" active-class="active" exact-active-class="exact-active">
+            <div class="nav-icon-wrapper">
+              <i class="nav-icon bi bi-house-door"></i>
+            </div>
             <span class="nav-text" v-show="!isCollapsed">Home</span>
+            <div class="nav-indicator"></div>
           </RouterLink>
         </li>
 
         <!-- Inventory -->
         <li>
-          <button
-            class="nav-link nav-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-            :class="{ active: activeSection === 'inventory' }" @click="toggleSection('inventory')"
-            :aria-expanded="activeSection === 'inventory'">
-            <i class="nav-icon bi bi-box-seam"></i>
+          <button class="nav-link nav-toggle" :class="{ active: activeSection === 'inventory' }"
+            @click="toggleSection('inventory')" :aria-expanded="activeSection === 'inventory'">
+            <div class="nav-icon-wrapper">
+              <i class="nav-icon bi bi-box-seam"></i>
+            </div>
             <span class="nav-text" v-show="!isCollapsed">Inventory</span>
-            <i class="bi bi-chevron-down chevron ms-auto" :class="{ rotated: activeSection === 'inventory' }"
+            <i class="chevron bi bi-chevron-down" :class="{ rotated: activeSection === 'inventory' }"
               v-show="!isCollapsed"></i>
+            <div class="nav-indicator"></div>
           </button>
           <Transition name="slide-down">
-            <ul v-show="activeSection === 'inventory' && !isCollapsed" class="submenu list-unstyled ms-2">
+            <ul v-show="activeSection === 'inventory' && !isCollapsed" class="submenu">
               <li v-for="item in inventoryItems" :key="item.to">
-                <RouterLink :to="item.to"
-                  class="submenu-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                  active-class="active">
-                  <i :class="item.icon"></i>
+                <RouterLink :to="item.to" class="submenu-link" active-class="active">
+                  <div class="submenu-icon-wrapper">
+                    <i :class="item.icon"></i>
+                  </div>
                   <span>{{ item.label }}</span>
+                  <div class="submenu-indicator"></div>
                 </RouterLink>
               </li>
             </ul>
@@ -65,120 +56,79 @@
 
         <!-- Finance -->
         <li>
-          <button
-            class="nav-link nav-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-            :class="{ active: activeSection === 'finance' }" @click="toggleSection('finance')"
-            :aria-expanded="activeSection === 'finance'">
-            <i class="nav-icon bi bi-cash-stack"></i>
+          <button class="nav-link nav-toggle" :class="{ active: activeSection === 'finance' }"
+            @click="toggleSection('finance')" :aria-expanded="activeSection === 'finance'">
+            <div class="nav-icon-wrapper">
+              <i class="nav-icon bi bi-cash-stack"></i>
+            </div>
             <span class="nav-text" v-show="!isCollapsed">Finance</span>
-            <i class="bi bi-chevron-down chevron ms-auto" :class="{ rotated: activeSection === 'finance' }"
+            <i class="chevron bi bi-chevron-down" :class="{ rotated: activeSection === 'finance' }"
               v-show="!isCollapsed"></i>
+            <div class="nav-indicator"></div>
           </button>
           <Transition name="slide-down">
-            <ul v-show="activeSection === 'finance' && !isCollapsed" class="submenu list-unstyled ms-2">
+            <ul v-show="activeSection === 'finance' && !isCollapsed" class="submenu">
               <!-- Chart of Accounts -->
               <li>
-                <button
-                  class="submenu-link submenu-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-                  :class="{ active: activeSubsection === 'chartOfAccounts' }"
+                <button class="submenu-link submenu-toggle" :class="{ active: activeSubsection === 'chartOfAccounts' }"
                   @click="toggleSubsection('chartOfAccounts')">
-                  <i class="bi bi-journal-bookmark"></i>
+                  <div class="submenu-icon-wrapper">
+                    <i class="bi bi-journal-bookmark"></i>
+                  </div>
                   <span>Chart of Accounts</span>
-                  <i class="bi bi-chevron-down chevron ms-auto"
+                  <i class="chevron bi bi-chevron-down"
                     :class="{ rotated: activeSubsection === 'chartOfAccounts' }"></i>
+                  <div class="submenu-indicator"></div>
                 </button>
                 <Transition name="slide-down">
-                  <ul v-show="activeSubsection === 'chartOfAccounts'" class="nested-submenu list-unstyled ms-3">
+                  <ul v-show="activeSubsection === 'chartOfAccounts'" class="nested-submenu">
                     <li v-for="item in chartOfAccountsItems" :key="item.to">
-                      <RouterLink :to="item.to"
-                        class="nested-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                        active-class="active">
-                        <i :class="item.icon"></i>
+                      <RouterLink :to="item.to" class="nested-link" active-class="active">
+                        <div class="nested-icon-wrapper">
+                          <i :class="item.icon"></i>
+                        </div>
                         <span>{{ item.label }}</span>
+                        <div class="nested-indicator"></div>
                       </RouterLink>
                     </li>
                   </ul>
                 </Transition>
               </li>
+
               <!-- Journal Entries -->
               <li>
-                <button
-                  class="submenu-link submenu-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-                  :class="{ active: activeSubsection === 'journalEntries' }"
+                <button class="submenu-link submenu-toggle" :class="{ active: activeSubsection === 'journalEntries' }"
                   @click="toggleSubsection('journalEntries')">
-                  <i class="bi bi-journal-text"></i>
+                  <div class="submenu-icon-wrapper">
+                    <i class="bi bi-journal-text"></i>
+                  </div>
                   <span>Journal Entries</span>
-                  <i class="bi bi-chevron-down chevron ms-auto"
-                    :class="{ rotated: activeSubsection === 'journalEntries' }"></i>
+                  <i class="chevron bi bi-chevron-down" :class="{ rotated: activeSubsection === 'journalEntries' }"></i>
+                  <div class="submenu-indicator"></div>
                 </button>
                 <Transition name="slide-down">
-                  <ul v-show="activeSubsection === 'journalEntries'" class="nested-submenu list-unstyled ms-3">
+                  <ul v-show="activeSubsection === 'journalEntries'" class="nested-submenu">
                     <li v-for="item in journalEntryItems" :key="item.to">
-                      <RouterLink :to="item.to"
-                        class="nested-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                        active-class="active">
-                        <i :class="item.icon"></i>
+                      <RouterLink :to="item.to" class="nested-link" active-class="active">
+                        <div class="nested-icon-wrapper">
+                          <i :class="item.icon"></i>
+                        </div>
                         <span>{{ item.label }}</span>
+                        <div class="nested-indicator"></div>
                       </RouterLink>
                     </li>
                   </ul>
                 </Transition>
               </li>
-              <!-- Supplier Transactions -->
-              <li>
-                <button
-                  class="submenu-link submenu-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-                  :class="{ active: activeSubsection === 'supplierTransactions' }"
-                  @click="toggleSubsection('supplierTransactions')">
-                  <i class="bi bi-truck"></i>
-                  <span>Supplier Transactions</span>
-                  <i class="bi bi-chevron-down chevron ms-auto"
-                    :class="{ rotated: activeSubsection === 'supplierTransactions' }"></i>
-                </button>
-                <Transition name="slide-down">
-                  <ul v-show="activeSubsection === 'supplierTransactions'" class="nested-submenu list-unstyled ms-3">
-                    <li v-for="item in supplierTransactionItems" :key="item.to">
-                      <RouterLink :to="item.to"
-                        class="nested-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                        active-class="active">
-                        <i :class="item.icon"></i>
-                        <span>{{ item.label }}</span>
-                      </RouterLink>
-                    </li>
-                  </ul>
-                </Transition>
-              </li>
-              <!-- Customer Transactions -->
-              <li>
-                <button
-                  class="submenu-link submenu-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-                  :class="{ active: activeSubsection === 'customerTransactions' }"
-                  @click="toggleSubsection('customerTransactions')">
-                  <i class="bi bi-people"></i>
-                  <span>Customer Transactions</span>
-                  <i class="bi bi-chevron-down chevron ms-auto"
-                    :class="{ rotated: activeSubsection === 'customerTransactions' }"></i>
-                </button>
-                <Transition name="slide-down">
-                  <ul v-show="activeSubsection === 'customerTransactions'" class="nested-submenu list-unstyled ms-3">
-                    <li v-for="item in customerTransactionItems" :key="item.to">
-                      <RouterLink :to="item.to"
-                        class="nested-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                        active-class="active">
-                        <i :class="item.icon"></i>
-                        <span>{{ item.label }}</span>
-                      </RouterLink>
-                    </li>
-                  </ul>
-                </Transition>
-              </li>
+
               <!-- Other Finance Items -->
               <li v-for="item in otherFinanceItems" :key="item.to">
-                <RouterLink :to="item.to"
-                  class="submenu-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                  active-class="active">
-                  <i :class="item.icon"></i>
+                <RouterLink :to="item.to" class="submenu-link" active-class="active">
+                  <div class="submenu-icon-wrapper">
+                    <i :class="item.icon"></i>
+                  </div>
                   <span>{{ item.label }}</span>
+                  <div class="submenu-indicator"></div>
                 </RouterLink>
               </li>
             </ul>
@@ -187,23 +137,25 @@
 
         <!-- HRM -->
         <li>
-          <button
-            class="nav-link nav-toggle d-flex align-items-center gap-2 px-3 py-2 rounded w-100 border-0 bg-transparent"
-            :class="{ active: activeSection === 'Hrm' }" @click="toggleSection('Hrm')"
+          <button class="nav-link nav-toggle" :class="{ active: activeSection === 'Hrm' }" @click="toggleSection('Hrm')"
             :aria-expanded="activeSection === 'Hrm'">
-            <i class="nav-icon bi bi-people"></i>
+            <div class="nav-icon-wrapper">
+              <i class="nav-icon bi bi-people"></i>
+            </div>
             <span class="nav-text" v-show="!isCollapsed">HRM</span>
-            <i class="bi bi-chevron-down chevron ms-auto" :class="{ rotated: activeSection === 'Hrm' }"
+            <i class="chevron bi bi-chevron-down" :class="{ rotated: activeSection === 'Hrm' }"
               v-show="!isCollapsed"></i>
+            <div class="nav-indicator"></div>
           </button>
           <Transition name="slide-down">
-            <ul v-show="activeSection === 'Hrm' && !isCollapsed" class="submenu list-unstyled ms-2">
+            <ul v-show="activeSection === 'Hrm' && !isCollapsed" class="submenu">
               <li v-for="item in Hrm" :key="item.to">
-                <RouterLink :to="item.to"
-                  class="submenu-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-                  active-class="active">
-                  <i :class="item.icon"></i>
+                <RouterLink :to="item.to" class="submenu-link" active-class="active">
+                  <div class="submenu-icon-wrapper">
+                    <i :class="item.icon"></i>
+                  </div>
                   <span>{{ item.label }}</span>
+                  <div class="submenu-indicator"></div>
                 </RouterLink>
               </li>
             </ul>
@@ -212,11 +164,12 @@
 
         <!-- Reports -->
         <li>
-          <RouterLink to="/reports"
-            class="nav-link d-flex align-items-center gap-2 px-3 py-2 rounded text-decoration-none"
-            active-class="active">
-            <i class="nav-icon bi bi-graph-up"></i>
+          <RouterLink to="/reports" class="nav-link" active-class="active">
+            <div class="nav-icon-wrapper">
+              <i class="nav-icon bi bi-graph-up"></i>
+            </div>
             <span class="nav-text" v-show="!isCollapsed">Reports</span>
+            <div class="nav-indicator"></div>
           </RouterLink>
         </li>
       </ul>
@@ -258,26 +211,16 @@ export default {
         { to: '/dashboard/performance-reviews', label: 'Performance Reviews', icon: 'bi bi-star' }
       ],
       chartOfAccountsItems: [
-        { to: '/finance/AccountList', label: 'Account Types', icon: 'bi bi-journal-bookmark' },
-        { to: '/finance/Account', label: 'Accounts', icon: 'bi bi-journal-text' }
+        { to: '/dashboard/AccountList', label: 'Account Types', icon: 'bi bi-journal-bookmark' },
+        { to: '/dashboard/Accounts', label: 'Accounts', icon: 'bi bi-journal-text' }
       ],
       journalEntryItems: [
-        { to: '/finance/JournalEntry', label: 'Journal Entries', icon: 'bi bi-journal' },
-        { to: '/finance/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
-      ],
-      supplierTransactionItems: [
-        { to: '/finance/SupplierInvoice', label: 'Supplier Invoices', icon: 'bi bi-file-earmark-text' },
-        { to: '/finance/SupplierInvoiceLine', label: 'Invoice Lines', icon: 'bi bi-list-ul' },
-        { to: '/finance/SupplierPayment', label: 'Supplier Payments', icon: 'bi bi-cash-stack' }
-      ],
-      customerTransactionItems: [
-        { to: '/finance/CustomerInvoice', label: 'Customer Invoices', icon: 'bi bi-receipt' },
-        { to: '/finance/CustomerInvoiceLine', label: 'Invoice Lines', icon: 'bi bi-list-check' },
-        { to: '/finance/CustomerPayment', label: 'Customer Payments', icon: 'bi bi-credit-card' }
+        { to: '/dashboard/JournalEntry', label: 'Journal Entries', icon: 'bi bi-journal' },
+        { to: '/dashboard/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
       ],
       otherFinanceItems: [
-        { to: '/finance/Expense', label: 'Expenses', icon: 'bi bi-wallet2' },
-        { to: '/finance/FinancialPeriod', label: 'Financial Periods', icon: 'bi bi-calendar-range' }
+        { to: '/dashboard/Expense', label: 'Expenses', icon: 'bi bi-wallet2' },
+        { to: '/dashboard/FinancialPeriod', label: 'Financial Periods', icon: 'bi bi-calendar-range' }
       ]
     }
   },
@@ -299,236 +242,339 @@ export default {
 </script>
 
 <style scoped>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  font-size: 13px !important;
-  text-decoration: none !important;
-}
-
 .sidebar {
   width: 280px;
   height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  background-color: #ffffff;
-  color: #495057;
+  background: #ffffff;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  z-index: 100;
-  border-right: 1px solid #e5e7eb;
+  z-index: 1010;
+  /* Increased from 100 to 1010 */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
-  text-decoration: none;
-  list-style: none;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+  padding-top: 64px;
+  /* Added to account for topnav height */
 }
 
 .sidebar-collapsed {
   width: 80px;
 }
 
-.sidebar-collapsed .logo-text,
-.sidebar-collapsed .nav-text,
-.sidebar-collapsed .chevron {
-  display: none;
-}
-
-.sidebar-collapsed .nav-link,
-.sidebar-collapsed .nav-toggle {
-  justify-content: center;
-  padding: 0.75rem;
-}
-
-.sidebar-collapsed .sidebar-nav {
-  padding: 0.5rem;
-}
-
 .sidebar-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: inherit;
+  z-index: 1030;
+  /* Higher than topnav */
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem 1.25rem;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 0 20px;
+  height: 64px;
+  /* Match topnav height */
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.logo-section {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  background: #0d6efd;
-  color: white;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
-
-.logo-text {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #495057;
-  transition: opacity 0.3s;
-}
-
-.collapse-btn {
-  background: transparent;
-  border: none;
-  color: #495057;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.collapse-btn:hover {
-  background: #f8f9fa;
+.sidebar-collapsed .sidebar-header {
+  width: 80px;
 }
 
 .sidebar-nav {
   flex: 1;
   overflow-y: auto;
-  padding: 1rem 0.75rem;
+  padding: 16px 12px;
+  height: calc(100vh - 64px);
+  /* Account for header */
+  margin-top: 64px;
+  /* Push content below fixed header */
+}
+
+/* Rest of your existing styles remain the same */
+.sidebar-collapsed .logo-text,
+.sidebar-collapsed .nav-text,
+.sidebar-collapsed .chevron {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sidebar-collapsed .nav-link,
+.sidebar-collapsed .nav-toggle {
+  justify-content: center;
+  padding: 12px;
+}
+
+.sidebar-collapsed .nav-icon-wrapper {
+  margin: 0;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 36px;
+  height: 36px;
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+  color: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.logo-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1e293b;
+  transition: opacity 0.3s ease;
+}
+
+.collapse-btn {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #64748b;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.collapse-btn:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #4f46e5;
 }
 
 .nav-list {
   list-style: none;
-  margin: 0;
-  padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
-  text-decoration: none;
+  gap: 4px;
 }
 
 .nav-link,
 .nav-toggle {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 12px 16px;
   border-radius: 8px;
   background: transparent;
-  color: #495057;
-  font-size: 0.925rem;
+  color: #64748b;
+  font-size: 0.875rem;
   font-weight: 500;
   border: none;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   text-decoration: none;
-
+  position: relative;
 }
 
 .nav-link:hover,
 .nav-toggle:hover {
-  background: #f8f9fa;
-  color: #495057;
+  background: rgba(79, 70, 229, 0.05);
+  color: #4f46e5;
 }
 
 .nav-link.active,
 .nav-toggle.active {
-  background: #e9ecef;
-  color: #0d6efd;
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+  font-weight: 600;
 }
 
-.nav-icon {
-  font-size: 1.1rem;
+.nav-link.active .nav-indicator,
+.nav-toggle.active .nav-indicator {
+  opacity: 1;
+}
+
+.nav-icon-wrapper {
   width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+.nav-icon {
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.nav-text {
+  flex: 1;
+  transition: opacity 0.3s ease;
+}
+
+.nav-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 24px;
+  background: #4f46e5;
+  border-radius: 0 2px 2px 0;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
 .chevron {
   margin-left: auto;
-  font-size: 0.8rem;
-  transition: transform 0.3s;
+  font-size: 12px;
+  transition: all 0.3s ease;
+  opacity: 0.6;
 }
 
 .chevron.rotated {
   transform: rotate(180deg);
+  opacity: 1;
 }
 
 .submenu {
   list-style: none;
-  margin: 0.25rem 0 0 0;
-  padding: 0 0 0 1rem;
-  border-left: 1px solid #e5e7eb;
+  margin: 8px 0 0 0;
+  padding: 0;
+  border-left: 2px solid rgba(79, 70, 229, 0.1);
+  margin-left: 20px;
+  overflow: hidden;
 }
 
 .submenu-link,
 .submenu-toggle {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.65rem 1rem 0.65rem 2.25rem;
-  color: #495057;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  gap: 10px;
+  padding: 10px 16px;
+  color: #64748b;
+  border-radius: 8px;
+  font-size: 0.8125rem;
   font-weight: 500;
   background: transparent;
   border: none;
   width: 100%;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  position: relative;
 }
 
 .submenu-link:hover,
 .submenu-toggle:hover {
-  background: #f8f9fa;
+  background: rgba(79, 70, 229, 0.05);
+  color: #4f46e5;
 }
 
 .submenu-link.active,
 .submenu-toggle.active {
-  background: #e9ecef;
-  color: #0d6efd;
+  background: rgba(79, 70, 229, 0.08);
+  color: #4f46e5;
+  font-weight: 600;
+}
+
+.submenu-link.active .submenu-indicator,
+.submenu-toggle.active .submenu-indicator {
+  opacity: 1;
+}
+
+.submenu-icon-wrapper {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submenu-indicator {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 16px;
+  background: #4f46e5;
+  border-radius: 1px;
+  opacity: 0;
+  transition: all 0.3s ease;
 }
 
 .nested-submenu {
   list-style: none;
-  margin: 0.15rem 0 0 0;
-  padding: 0 0 0 1rem;
-  border-left: 1px solid #e5e7eb;
+  margin: 6px 0 0 0;
+  padding: 0;
+  border-left: 2px solid rgba(79, 70, 229, 0.08);
+  margin-left: 16px;
 }
 
 .nested-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 1rem 0.6rem 3.25rem;
-  color: #495057;
+  gap: 8px;
+  padding: 8px 14px;
+  color: #64748b;
   border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 400;
+  font-size: 0.8125rem;
+  font-weight: 500;
   background: transparent;
   text-decoration: none;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .nested-link:hover {
-  background: #f8f9fa;
+  background: rgba(79, 70, 229, 0.05);
+  color: #4f46e5;
 }
 
 .nested-link.active {
-  background: #e9ecef;
-  color: #0d6efd;
+  background: rgba(79, 70, 229, 0.06);
+  color: #4f46e5;
+  font-weight: 600;
 }
 
-/* Transitions */
+.nested-link.active .nested-indicator {
+  opacity: 1;
+}
+
+.nested-icon-wrapper {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nested-indicator {
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 12px;
+  background: #4f46e5;
+  border-radius: 1px;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
 .slide-down-enter-active,
 .slide-down-leave-active {
-  transition: all 0.25s ease-out;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
 }
 
@@ -536,24 +582,76 @@ export default {
 .slide-down-leave-to {
   max-height: 0;
   opacity: 0;
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
 
 .slide-down-enter-to,
 .slide-down-leave-from {
-  max-height: 500px;
+  max-height: 800px;
   opacity: 1;
   transform: translateY(0);
 }
 
-/* Responsive */
-@media (max-width: 992px) {
+.dark-mode .sidebar {
+  background: #1e293b;
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .sidebar-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .logo-text {
+  color: #f8fafc;
+}
+
+.dark-mode .nav-link,
+.dark-mode .nav-toggle,
+.dark-mode .submenu-link,
+.dark-mode .submenu-toggle,
+.dark-mode .nested-link {
+  color: #94a3b8;
+}
+
+.dark-mode .nav-link:hover,
+.dark-mode .nav-toggle:hover,
+.dark-mode .submenu-link:hover,
+.dark-mode .submenu-toggle:hover,
+.dark-mode .nested-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #a5b4fc;
+}
+
+.dark-mode .collapse-btn {
+  background: rgba(15, 23, 42, 0.8);
+  border-color: rgba(148, 163, 184, 0.1);
+  color: #94a3b8;
+}
+
+.dark-mode .collapse-btn:hover {
+  background: rgba(15, 23, 42, 0.9);
+  color: #e2e8f0;
+}
+
+@media (max-width: 1024px) {
   .sidebar {
     transform: translateX(-100%);
+    z-index: 1050;
+    /* Higher on mobile */
+    padding-top: 0;
   }
 
   .sidebar.show {
     transform: translateX(0);
+  }
+
+  .sidebar-header {
+    top: 0;
+  }
+
+  .sidebar-nav {
+    height: 100vh;
+    margin-top: 0;
   }
 
   .sidebar-collapsed {
@@ -563,13 +661,32 @@ export default {
   .sidebar-collapsed .logo-text,
   .sidebar-collapsed .nav-text,
   .sidebar-collapsed .chevron {
-    display: inline;
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .sidebar-collapsed .nav-link,
   .sidebar-collapsed .nav-toggle {
     justify-content: flex-start;
-    padding: 0.75rem 1rem;
+    padding: 12px 16px;
+  }
+
+  .sidebar-collapsed .nav-icon-wrapper {
+    margin-right: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+
+  .sidebar-header {
+    padding: 0 16px;
+  }
+
+  .sidebar-nav {
+    padding: 12px 8px;
   }
 }
 </style>

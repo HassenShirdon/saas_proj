@@ -94,6 +94,12 @@ const routes = [
         component: () => import('@/views/hrm/performanceReviewsList.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/dashboard/accounts',
+        name: 'accounts',
+        component: () => import('@/views/finance/accountList.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

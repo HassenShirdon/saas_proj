@@ -8,10 +8,7 @@
         </button>
         <span class="brand">Dashboard</span>
       </div>
-      <div class="nav-right">
-        <input class="search-input" type="text" placeholder="Search..." />
-        <img class="avatar" src="https://ui-avatars.com/api/?name=User" alt="User" />
-      </div>
+
     </nav>
 
     <!-- Main Content Area -->

@@ -15,7 +15,6 @@ export const useEmployeeStore = defineStore('employee', {
         this.employees = res.data
       } catch (error) {
         console.error('❌ API fetch failed:', error)
-        alert('Failed to fetch employees. See console for details.')
       } finally {
         this.loading = false
       }
