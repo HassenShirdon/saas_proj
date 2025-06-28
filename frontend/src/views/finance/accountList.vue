@@ -30,10 +30,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="account in displayAccounts" :key="account.id || `new-${index}`"
+                    <tr v-for="(account, index) in displayAccounts" :key="account.id"
                         :class="{ 'table-warning': account.isEditing || account.isNew }">
                         <th scope="row">{{ account.isNew ? 'NEW' : index + 1 }}</th>
 
+                        <!-- Code  Field -->
+                        <td class="text-truncate">
+                            <input v-if="account.isEditing || account.isNew" v-model="account.code" type="text"
+                                class="form-control form-control-sm" :class="{ 'is-invalid': errors[`${index}.code`] }"
+                                placeholder="Account Code" @blur="validateField(index, 'code')" />
+                            <div v-if="errors[`${index}.code`]" class="invalid-feedback">
+                                {{ errors[`${index}.code`] }}
+                            </div>
+                            <span v-else class="fw-semibold">{{ account.code }}</span>
+                        </td>
+
+                        <!-- Name Field -->
                         <td>
                             <input v-if="account.isEditing || account.isNew" v-model="account.name" type="text"
                                 class="form-control form-control-sm" :class="{ 'is-invalid': errors[`${index}.name`] }"
@@ -162,7 +174,7 @@ import { ref, onMounted, computed } from 'vue';
 import { useAccountStore } from '@/stores/finance/accountStore';
 
 const store = useAccountStore();
-const error = ref(null);
+const errors = ref({});
 const loading = ref(true);
 const originalData = ref({});
 
@@ -184,19 +196,24 @@ onMounted(async () => {
         loading.value = false;
     }
 });
+
 const addNewAccount = () => {
     const newAccount = {
-        code: null,
+        code: '',
         name: '',
-        descriptio: '',
+        description: '', // spelling was 'descriptio' in your original, fix it
         is_active: false,
-        opening_balance: null,
-        current_balance: null,
-        account_type: null,
-        parent_account: null
+        opening_balance: 0,
+        current_balance: 0,
+        account_type: '',
+        parent_account: '',
+        createdAt: new Date().toISOString().slice(0, 10), // default today
+        isNew: true,
+        isEditing: true,
     };
-    store.accounts.unshift(newAccount)
-}
+    store.accounts.unshift(newAccount);
+};
+
 const editAccount = (index) => {
     store.accounts[index].isEditing = true;
     originalData.value[index] = { ...store.accounts[index] };
@@ -233,6 +250,7 @@ const handleSave = async (account, index) => {
         store.isSaving = false;
     }
 };
+
 const deleteAccount = async (id, index) => {
     if (store.isSaving) return;
     store.isSaving = true;

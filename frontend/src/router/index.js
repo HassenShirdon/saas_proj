@@ -100,6 +100,12 @@ const routes = [
         component: () => import('@/views/finance/accountList.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/dashboard/expenses',
+        name: 'expenses',
+        component: () => import('@/views/finance/expenseList.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

@@ -219,7 +219,7 @@ export default {
         { to: '/dashboard/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
       ],
       otherFinanceItems: [
-        { to: '/dashboard/Expense', label: 'Expenses', icon: 'bi bi-wallet2' },
+        { to: '/dashboard/Expenses', label: 'Expenses', icon: 'bi bi-wallet2' },
         { to: '/dashboard/FinancialPeriod', label: 'Financial Periods', icon: 'bi bi-calendar-range' }
       ]
     }

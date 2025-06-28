@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <div class="right-controls">
+      <div class="right-controls bg-light">
         <!-- Theme toggle button -->
         <button class="theme-toggle" @click="toggleTheme">
           <i class="bi" :class="isDarkMode ? 'bi-sun' : 'bi-moon'"></i>
@@ -109,15 +109,17 @@ async function handleLogout() {
   padding: 0.75rem 1.5rem;
   position: fixed;
   top: 0;
-  left: 280px;
-  width: calc(100% - 280px);
+  left: 300px;
+  width: calc(100% - 300px);
   height: 64px;
   display: flex;
   align-items: center;
   z-index: 1020;
+
   border-bottom: 1px solid var(--border-color);
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
 }
 
 .topnav.sidebar-collapsed {

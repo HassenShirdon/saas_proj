@@ -178,8 +178,8 @@ class ExpenseList(generics.ListCreateAPIView):
     """API view to list and create expenses."""
     queryset = Expense.objects.all()
     serializer_class = ExpenseSerializer
-    filterset_fields = ['date', 'description', 'amount']
-    ordering_fields = ['date', 'amount']
+    filterset_fields = ['expense_date', 'expense_account', 'amount']
+    ordering_fields = ['vendor', 'amount']
 
 class ExpenseDetail(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete an expense."""
