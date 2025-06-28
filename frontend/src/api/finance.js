@@ -21,23 +21,23 @@ export const deleteAccount = (id) => {
 }
 
 // Account Lists
-export const getAccountLists = () => {
+export const getAccountTypes = () => {
   return axios.get(`/finance/AccountLists/`)
 }
 
-export const getAccountList = (id) => {
+export const getAccountType = (id) => {
   return axios.get(`/finance/AccountList/${id}/`)
 }
 
-export const createAccountLists = (account) => {
+export const createAccountTypes = (account) => {
   return axios.post(`/finance/AccountLists/`, account)
 }
 
-export const updateAccountList = (id, account) => {
+export const updateAccountType = (id, account) => {
   return axios.put(`/finance/AccountList/${id}/`, account)
 }
 
-export const deleteAccountList = (id) => {
+export const deleteAccountType = (id) => {
   return axios.delete(`/finance/AccountList/${id}/`)
 }
 

@@ -106,6 +106,24 @@ const routes = [
         component: () => import('@/views/finance/expenseList.vue'),
         meta: { requiresAuth: true },
       },
+      {
+        path: '/dashboard/journal-entries',
+        name: 'journalEntries',
+        component: () => import('@/views/finance/journalEntryList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/account-types',
+        name: 'AccountTypes',
+        component: () => import('@/views/finance/accountTypesList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/supplier-invoices',
+        name: 'supplierInvoices',
+        component: () => import('@/views/finance/supplierInvoiceList.vue'),
+        meta: { requiresAuth: true },
+      },
     ],
   },
   {

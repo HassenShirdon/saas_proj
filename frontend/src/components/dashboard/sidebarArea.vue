@@ -121,6 +121,32 @@
                 </Transition>
               </li>
 
+              <!-- Invoices -->
+              <li>
+                <button class="submenu-link submenu-toggle" :class="{ active: activeSubsection === 'Invoices' }"
+                  @click="toggleSubsection('Invoices')">
+                  <div class="submenu-icon-wrapper">
+                    <i class="bi bi-journal-text"></i>
+                  </div>
+                  <span> Invoices </span>
+                  <i class="chevron bi bi-chevron-down" :class="{ rotated: activeSubsection === 'Invoices' }"></i>
+                  <div class="submenu-indicator"></div>
+                </button>
+                <Transition name="slide-down">
+                  <ul v-show="activeSubsection === 'Invoices'" class="nested-submenu">
+                    <li v-for="item in Invoices" :key="item.to">
+                      <RouterLink :to="item.to" class="nested-link" active-class="active">
+                        <div class="nested-icon-wrapper">
+                          <i :class="item.icon"></i>
+                        </div>
+                        <span>{{ item.label }}</span>
+                        <div class="nested-indicator"></div>
+                      </RouterLink>
+                    </li>
+                  </ul>
+                </Transition>
+              </li>
+
               <!-- Other Finance Items -->
               <li v-for="item in otherFinanceItems" :key="item.to">
                 <RouterLink :to="item.to" class="submenu-link" active-class="active">
@@ -211,12 +237,16 @@ export default {
         { to: '/dashboard/performance-reviews', label: 'Performance Reviews', icon: 'bi bi-star' }
       ],
       chartOfAccountsItems: [
-        { to: '/dashboard/AccountList', label: 'Account Types', icon: 'bi bi-journal-bookmark' },
+        { to: '/dashboard/account-types', label: 'Account Types', icon: 'bi bi-journal-bookmark' },
         { to: '/dashboard/Accounts', label: 'Accounts', icon: 'bi bi-journal-text' }
       ],
       journalEntryItems: [
-        { to: '/dashboard/JournalEntry', label: 'Journal Entries', icon: 'bi bi-journal' },
+        { to: '/dashboard/journal-entries', label: 'Journal Entries', icon: 'bi bi-journal' },
         { to: '/dashboard/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
+      ],
+      Invoices: [
+        { to: '/dashboard/customer-invoices', label: 'Customer Invoices', icon: 'bi bi-file-earmark-text' },
+        { to: '/dashboard/supplier-invoices', label: 'Supplier Invoices', icon: 'bi bi-file-earmark-text' }
       ],
       otherFinanceItems: [
         { to: '/dashboard/Expenses', label: 'Expenses', icon: 'bi bi-wallet2' },

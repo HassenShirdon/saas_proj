@@ -60,7 +60,7 @@
                                 {{ errors[`${index}.amount`] }}
                             </div>
                             <span v-if="!(expense.isEditing || expense.isNew)" class="fw-semibold">{{ expense.amount
-                            }}</span>
+                                }}</span>
                         </td>
 
                         <!-- Description Field -->
@@ -99,7 +99,7 @@
                                 {{ errors[`${index}.vendor`] }}
                             </div>
                             <span v-if="!(expense.isEditing || expense.isNew)" class="fw-semibold">{{ expense.vendor
-                            }}</span>
+                                }}</span>
                         </td>
 
                         <!-- Tax Amount Field -->
@@ -112,7 +112,7 @@
                                 {{ errors[`${index}.tax_amount`] }}
                             </div>
                             <span v-if="!(expense.isEditing || expense.isNew)" class="fw-semibold">{{ expense.tax_amount
-                            }}</span>
+                                }}</span>
                         </td>
 
                         <!-- Expense Account Field -->
@@ -163,7 +163,7 @@
                                 {{ errors[`${index}.notes`] }}
                             </div>
                             <span v-if="!(expense.isEditing || expense.isNew)" class="fw-semibold">{{ expense.notes
-                            }}</span>
+                                }}</span>
                         </td>
                         <td>
                             <div class="btn-group" role="group">
@@ -314,7 +314,7 @@ const handleSave = async (expense, index) => {
             handleBackendErrors(error.response.data, index)
         } else {
             // Show error message
-            alert('Failed to save customer. Please try again.')
+            alert('Failed to save expense. Please try again.')
         }
     } finally {
         isSaving.value = false
@@ -433,7 +433,7 @@ const clearRowErrors = (index) => {
 }
 
 const deleteExpense = async (id, index) => {
-    if (confirm('Are you sure you want to dlete this expense?his action cannot be undone.')) {
+    if (confirm('Are you sure you want to delete this expense?his action cannot be undone.')) {
         try {
             await store.removeExpense(id)
         } catch (error) {
