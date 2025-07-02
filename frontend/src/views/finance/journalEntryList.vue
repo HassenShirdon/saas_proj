@@ -14,7 +14,7 @@
             <p class="mt-2 text-muted">Loading Journal Entries...</p>
         </div>
 
-        <div class="table-respo">
+        <div class="table-responsive">
             <table class="table table-striped table-bordered">
                 <thead class="table-dark">
                     <tr>
@@ -38,7 +38,7 @@
                         <!-- Entry Number -->
                         <td>
                             <input v-if="journalEntry.isEditing || journalEntry.isNew"
-                                v-model="journalEntry.entry_number" class="form-control form-control-sm"
+                                v-model="journalEntry.entry_number" class="form-control form-control-sm" type="text"
                                 :class="{ 'is-invalid': errors[`${index}.entry_number`] }" placeholder="Entry Number"
                                 @blur="validateField('entry_number', index)" />
                             <div v-if="errors[`${index}.entry_number`]" class="invalid-feedback">

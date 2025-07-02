@@ -80,14 +80,14 @@ class JournalEntryLineList(generics.ListCreateAPIView):
     """API view to list and create journal entry lines."""
     queryset = JournalEntryLine.objects.all()
     serializer_class = JournalEntryLineSerializer
-    filterset_fields = ['journal_entry', 'account', 'debit', 'credit']
+    filterset_fields = ['journal_entry', 'account']
     ordering_fields = ['journal_entry', 'account']
 
 class JournalEntryLineDetail(generics.RetrieveUpdateDestroyAPIView):
     """API view to retrieve, update or delete a journal entry line."""
     queryset = JournalEntryLine.objects.all()
     serializer_class = JournalEntryLineSerializer
-    filterset_fields = ['journal_entry', 'account', 'debit', 'credit']
+    filterset_fields = ['journal_entry', 'account']
     lookup_field = 'id'
 
 class SupplierInvoiceList(generics.ListCreateAPIView):

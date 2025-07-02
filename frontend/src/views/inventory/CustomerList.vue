@@ -1,7 +1,7 @@
 <!-- src/views/Customers/CustomerList.vue -->
 <template>
     <div class="container-fluid p-2">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="container d-flex justify-content-between align-items-center p-4 mb-4 shadow-sm ">
             <h1 class="h2 mb-0">Customers List</h1>
             <button @click="addNewCustomer" class="btn btn-primary" type="button">
                 <i class="fas fa-plus me-2"></i>Add Customer
@@ -349,7 +349,7 @@ const clearRowErrors = (index) => {
 const deleteCustomer = async (id, index) => {
     if (confirm('Are you sure you want to delete this customer? This action cannot be undone.')) {
         try {
-            await store.removeCustomer(id)
+            await store.removeCustomer(customer.id)
         } catch (error) {
             console.error('Error deleting customer:', error)
             alert('Failed to delete customer. Please try again.')

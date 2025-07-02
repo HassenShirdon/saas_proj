@@ -113,6 +113,12 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: '/dashboard/journal-entry-lines',
+        name: 'journalEntryLines',
+        component: () => import('@/views/finance/journalEntryLineList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: '/dashboard/account-types',
         name: 'AccountTypes',
         component: () => import('@/views/finance/accountTypesList.vue'),
@@ -122,6 +128,12 @@ const routes = [
         path: '/dashboard/supplier-invoices',
         name: 'supplierInvoices',
         component: () => import('@/views/finance/supplierInvoiceList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/customer-invoices',
+        name: 'customerInvoices',
+        component: () => import('@/views/finance/customerInvoiceList.vue'),
         meta: { requiresAuth: true },
       },
     ],

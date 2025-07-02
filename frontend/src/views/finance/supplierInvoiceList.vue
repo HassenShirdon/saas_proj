@@ -1,9 +1,9 @@
 <template>
     <div class="container-fluid p-3">
         <div class="container d-flex justify-content-between align-items-center p-4 mb-4 shadow-sm ">
-            <h1 class="h2 mb-0 ">Supplier Inovices</h1>
+            <h1 class="h2 mb-0 ">Supplier Payments</h1>
             <button @click="addNewSupplierInvoice" class="btn btn-primary" type="button">
-                <i class="fas fa-plus me-2"></i>Add Journal Entry
+                <i class="fas fa-plus me-2"></i>Add Payment
             </button>
         </div>
         <!-- loading state -->
@@ -11,133 +11,133 @@
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
-            <p class="mt-2 text-muted">Loading Supplier Inovices...</p>
+            <p class="mt-2 text-muted">Loading Supplier Payments...</p>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-bordered table-hover">
                 <thead class="table-dark">
                     <tr>
                         <th scope="col">S.No</th>
-                        <th scope="col">Invoice Number</th>
-                        <th scope="col">Invoice Date</th>
-                        <th scope="col">Due Date</th>
-                        <th scope="col">Total Amount</th>
-                        <th scope="col">Tax Amount</th>
-                        <th scope="col">Status</th>
+                        <th scope="col">Payment Number</th>
                         <th scope="col">Supplier</th>
-                        <th scope="col">Purchase Order</th>
+                        <th scope="col">Payment Date</th>
+                        <th scope="col">Payment Method</th>
+                        <th scope="col">Reference</th>
+                        <th scope="col">Amount</th>
                         <th scope="col">Journal Entry</th>
                         <th scope="col">Notes</th>
-                        <th scope="col" class="text-center">Actions</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(supplierInvoice, index) in displaySupplierInvoiceLists"
-                        :key="supplierInvoice.id || `new-${index}`"
-                        :class="{ 'table-warning': supplierInvoice.isEditing || supplierInvoice.isNew }">
-                        <th scope="row">{{ supplierInvoice.isNew ? 'New' : index + 1 }}</th>
+                    <tr v-for="(invoice, index) in displaySupplierInvoiceLists" :key="invoice.id || `new-${index}`"
+                        :class="{ 'table-warning': invoice.isEditing || invoice.isNew }">
+                        <th scope="row">{{ invoice.isNew ? 'New' : index + 1 }}</th>
 
+                        <!-- payment number -->
                         <td>
-                            <input v-model="supplierInvoice.invoice_number" type="number"
-                                class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.invoice_number`] }"
-                                @blur="validateSupplierInvoiceField('invoice_number', index)">
-                            <div class="invalid-feedback">{{ errors[`${index}.invoice_number`] }}</div>
-                        </td>
-
-                        <td>
-                            <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.invoice_date" type="date" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.invoice_date`] }"
-                                @blur="validateSupplierInvoiceField('invoice_date', index)">
-                            <div v-if="errors[`${index}.invoice_date`]" class="invalid-feedback">
-                                {{ errors[`${index}.invoice_date`] }}
-                            </div>
-                            <span v-else class="text-muted">
-                                {{ formatDate(supplierInvoice.invoice_date) }}
-                            </span>
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.payment_number"
+                                type="number" class="form-control form-control-sm"
+                                :class="{ 'is-invalid': errors[`${index}.payment_number`] }"
+                                placeholder="Payment Number"
+                                @blur="validateSupplierInvoiceField('payment_number', index)">
+                            <div v-if="errors[`${index}.payment_number`]" class="invalid-feedback">
+                                {{ errors[`${index}.payment_number`] }}</div>
+                            <span v-else class="fw-semibold">{{ invoice.payment_number }}</span>
                         </td>
 
+                        <!-- supplier -->
                         <td>
-                            <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.due_date" type="date" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.due_date`] }"
-                                @blur="validateSupplierInvoiceField('due_date', index)">
-                            <div class="invalid-feedback">{{ errors[`${index}.due_date`] }}</div>
-                        </td>
-                        <td>
-                            <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.total_amount" type="number"
-                                class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.total_amount`] }"
-                                @blur="validateSupplierInvoiceField('total_amount', index)">
-                            <div v-if="errors[`${index}.total_amount`]" class="invalid-feedback">
-                                {{ errors[`${index}.total_amount`] }}
-                            </div>
-                            <span v-else class="text-muted">
-                                {{ supplierInvoice.total_amount }}
-                            </span>
-                        </td>
-
-                        <td>
-                            <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.tax_amount" type="number" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.tax_amount`] }"
-                                @blur="validateSupplierInvoiceField('tax_amount', index)">
-                            <div v-if="errors[`${index}.tax_amount`]" class="invalid-feedback">
-                                {{ errors[`${index}.tax_amount`] }}
-                            </div>
-                        </td>
-                        <td>
-                            <input <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.status" type="text" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.status`] }"
-                                @blur="validateSupplierInvoiceField('status', index)">
-                            <div v-if="errors[`${index}.status`]" class="invalid-feedback">
-                                {{ errors[`${index}.status`] }}
-                            </div>
-                        </td>
-
-                        <td>
-                            <input <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.supplier" type="text" class="form-control form-control-sm"
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.supplier" type="text"
+                                class="form-control form-control-sm" placeholder="Supplier"
                                 :class="{ 'is-invalid': errors[`${index}.supplier`] }"
                                 @blur="validateSupplierInvoiceField('supplier', index)">
                             <div v-if="errors[`${index}.supplier`]" class="invalid-feedback">
                                 {{ errors[`${index}.supplier`] }}
                             </div>
+                            <span v-else class="text-muted">
+                                {{ invoice.supplier }}
+                            </span>
                         </td>
+
+                        <!-- payment date -->
                         <td>
-                            <input <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.purchase_order" type="text"
-                                class="form-control form-control-sm">
-                            <div v-if="errors[`${index}.purchase_order`]" class="invalid-feedback">
-                                {{ errors[`${index}.purchase_order`] }}
-                            </div>
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.payment_date" type="date"
+                                placeholder="Payment Date" class="form-control form-control-sm"
+                                :class="{ 'is-invalid': errors[`${index}.payment_date`] }"
+                                @blur="validateSupplierInvoiceField('payment_date', index)">
+                            <div v-if="errors[`${index}.payment_date`]" class="invalid-feedback"></div>
+                            <span v-else class="text-muted">
+                                {{ formatDate(invoice.payment_date) }}
+                            </span>
                         </td>
+
+                        <!-- payment method -->
                         <td>
-                            <input <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.journal_entry" type="text" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.journal_entry`] }"
-                                @blur="validateSupplierInvoiceField('journal_entry', index)">
-                            <div v-if="errors[`${index}.journal_entry`]" class="invalid-feedback">
-                                {{ errors[`${index}.journal_entry`] }}
+                            <select v-if="invoice.isEditing || invoice.isNew" v-model="invoice.payment_method"
+                                class="form-control form-control-sm"
+                                :class="{ 'is-invalid': errors[`${index}.payment_method`] }"
+                                @blur="validateSupplierInvoiceField('payment_method', index)">
+                                <option value="">Select Method</option>
+                                <option value="cash">Cash</option>
+                                <option value="check">Check</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="credit_card">Credit Card</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <div v-if="errors[`${index}.payment_method`]" class="invalid-feedback">
+                                {{ errors[`${index}.payment_method`] }}
                             </div>
+                            <span v-else class="text-muted">
+                                {{ invoice.payment_method }}
+                            </span>
                         </td>
+
+                        <!-- reference -->
                         <td>
-                            <textarea <input v-if="supplierInvoice.isEditing || supplierInvoice.isNew"
-                                v-model="supplierInvoice.notes" class="form-control form-control-sm"
-                                :class="{ 'is-invalid': errors[`${index}.notes`] }"
-                                @blur="validateSupplierInvoiceField('notes', index)"></textarea>
-                            <div v-if="errors[`${index}.notes`]" class="invalid-feedback">
-                                {{ errors[`${index}.notes`] }}
-                            </div>
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.reference" type="text"
+                                class="form-control form-control-sm" placeholder="Reference">
+                            <span v-else class="text-muted">
+                                {{ invoice.reference }}
+                            </span>
                         </td>
+
+                        <!-- amount -->
+                        <td>
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.amount" type="number"
+                                step="0.01" class="form-control form-control-sm"
+                                :class="{ 'is-invalid': errors[`${index}.amount`] }" placeholder="Amount"
+                                @blur="validateSupplierInvoiceField('amount', index)">
+                            <div v-if="errors[`${index}.amount`]" class="invalid-feedback">
+                                {{ errors[`${index}.amount`] }}
+                            </div>
+                            <span v-else class="text-muted">
+                                {{ formatCurrency(invoice.amount) }}
+                            </span>
+                        </td>
+
+                        <!-- journal entry -->
+                        <td>
+                            <input v-if="invoice.isEditing || invoice.isNew" v-model="invoice.journal_entry" type="text"
+                                class="form-control form-control-sm" placeholder="Journal Entry">
+                            <span v-else class="text-muted">
+                                {{ invoice.journal_entry }}
+                            </span>
+                        </td>
+
+                        <!-- notes -->
+                        <td>
+                            <textarea v-if="invoice.isEditing || invoice.isNew" v-model="invoice.notes"
+                                class="form-control form-control-sm" placeholder="Notes"></textarea>
+                            <span v-else class="text-muted">
+                                {{ invoice.notes }}
+                            </span>
+                        </td>
+
                         <td class="text-center">
-                            <div v-if="supplierInvoice.isEditing || supplierInvoice.isNew" class="btn-group"
-                                role="group">
-                                <button @click="handleSave(supplierInvoice, index)" class="btn btn-success btn-sm"
-                                    :disabled="isSaving" title="Save supplierInvoice">
+                            <div v-if="invoice.isEditing || invoice.isNew" class="btn-group" role="group">
+                                <button @click="handleSave(invoice, index)" class="btn btn-success btn-sm"
+                                    :disabled="isSaving" title="Save invoice">
                                     <i class="bi bi-check-lg"></i>
                                 </button>
                                 <button @click="cancelEdit(index)" class="btn btn-secondary btn-sm" title="Cancel">
@@ -146,38 +146,22 @@
                             </div>
                             <div v-else class="btn-group" role="group">
                                 <button @click="editSupplierInvoice(index)" class="btn btn-outline-primary btn-sm me-2"
-                                    title="Edit supplierInvoice">
+                                    title="Edit invoice">
                                     <i class="bi bi-pencil"></i>
                                 </button>
-                                <button @click="deleteSupplierInvoice(supplierInvoice.id, index)"
+                                <button @click="deleteSupplierInvoice(invoice.id, index)"
                                     class="btn btn-outline-danger btn-sm" title="Delete">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
                         </td>
-
-
                     </tr>
-
                 </tbody>
-
-
             </table>
-
-
-
         </div>
-
-
-
-
-
-
-
-
     </div>
-
 </template>
+
 <script setup>
 import { useSupplierInvoiceStore } from '@/stores/finance/supplierInvoiceStore';
 import { ref, onMounted, computed } from 'vue';
@@ -189,99 +173,89 @@ const isSaving = ref(false);
 const originalData = ref({});
 
 const displaySupplierInvoiceLists = computed(() => {
-    return store.supplierInvoiceLists.map(supplierInvoice => ({
-        ...supplierInvoice,
-        isEditing: supplierInvoice.isEditing || false,
-        isNew: supplierInvoice.isNew || false,
+    return store.supplierInvoices.map(invoice => ({
+        ...invoice,
+        isEditing: invoice.isEditing || false,
+        isNew: invoice.isNew || false,
     }));
 });
 
-
 onMounted(() => {
-
     store.fetchSupplierInvoices()
 });
 
 const addNewSupplierInvoice = () => {
-    const newSupplierInvoice = {
+    const newInvoice = {
         id: null,
-        invoice_number: 0,
-        invoice_date: new Date(),
-        due_date: new Date(),
-        total_amount: 0,
-        tax_amount: 0,
-        status: '',
-        notes: '',
+        payment_number: '',
         supplier: '',
-        purchase_order: '',
+        payment_date: new Date().toISOString().split('T')[0],
+        payment_method: '',
+        reference: '',
+        amount: 0,
         journal_entry: '',
+        notes: '',
         isEditing: true,
         isNew: true,
     };
-    store.supplierInvoiceLists.unshift(newSupplierInvoice);
+    store.supplierInvoices.unshift(newInvoice);
 };
 
 const editSupplierInvoice = (index) => {
-    store.supplierInvoiceLists[index].isEditing = true;
-    originalData.value = { ...store.supplierInvoiceLists[index] };
-
+    store.supplierInvoices[index].isEditing = true;
+    originalData.value[index] = { ...store.supplierInvoices[index] };
 };
+
 const cancelEdit = (index) => {
-    const supplierInvoice = store.supplierInvoiceLists[index];
-    if (supplierInvoice.isNew) {
-        store.supplierInvoiceLists.splice(index, 1);
+    const invoice = store.supplierInvoices[index];
+    if (invoice.isNew) {
+        store.supplierInvoices.splice(index, 1);
     } else {
-        if (!originalData.value[index]) {
-            Object.assign(supplierInvoice, originalData.value);
+        if (originalData.value[index]) {
+            Object.assign(invoice, originalData.value[index]);
             delete originalData.value[index];
         }
-        supplierInvoice.isEditing = false;
+        store.supplierInvoices[index].isEditing = false;
     }
     clearRowErrors(index)
 }
 
-const handleSave = async (index) => {
+const handleSave = async (invoice, index) => {
     try {
         isSaving.value = true;
         clearRowErrors(index);
-        if (!validateSupplierInvoice(supplierInvoice, index)) {
+        if (!validateSupplierInvoice(invoice, index)) {
             isSaving.value = false;
             return;
         }
 
-        const supplierInvoiceData = {
-            id: Date.now(),
-            invoice_number: supplierInvoice.invoice_number || 0,
-            invoice_date: supplierInvoice.invoice_date.date() || new Date(),
-            due_date: supplierInvoice.due_date.date() || new Date(),
-            total_amount: supplierInvoice.total_amount || 0,
-            tax_amount: supplierInvoice.tax_amount || 0,
-            status: supplierInvoice.status || '',
-            notes: supplierInvoice.notes?.trim() || '',
-            supplier: supplierInvoice.supplier || '',
-            purchase_order: supplierInvoice.purchase_order || '',
-            journal_entry: supplierInvoice.journal_entry || '',
+        const invoiceData = {
+            id: invoice.id || null,
+            payment_number: invoice.payment_number,
+            supplier: invoice.supplier,
+            payment_date: invoice.payment_date,
+            payment_method: invoice.payment_method,
+            reference: invoice.reference,
+            amount: parseFloat(invoice.amount),
+            journal_entry: invoice.journal_entry,
+            notes: invoice.notes?.trim() || '',
+        };
 
-        }
-        if (supplierInvoice.isNew) {
-            await store.addSupplierInvoice(supplierInvoiceData);
-            store.supplierInvoiceLists.splice(index, 1)
-            await store.fetchSupplierInvoiceLists();
-
+        if (invoice.isNew) {
+            await store.addSupplierInvoice(invoiceData);
+            store.supplierInvoices.splice(index, 1)
+            await store.fetchSupplierInvoices();
         } else {
-            await store.updateSupplierInvoice(supplierInvoice.id, supplierInvoiceData);
+            await store.updateSupplierInvoice(invoice.id, invoiceData);
             delete originalData.value[index];
-
-        } console.log(`SupplierInvoice ${SupplierInvoice.isNew ? 'created' : 'updated'} successfully!`)
+        }
+        console.log(`Payment ${invoice.isNew ? 'created' : 'updated'} successfully!`)
     } catch (error) {
-        console.error('Error saving SupplierInvoice:', error)
-
-        // Handle validation errors from backend
+        console.error('Error saving payment:', error)
         if (error.response?.status === 400 && error.response.data) {
             handleBackendErrors(error.response.data, index)
         } else {
-            // Show error message
-            alert('Failed to save SupplierInvoice. Please try again.')
+            alert('Failed to save payment. Please try again.')
         }
     } finally {
         isSaving.value = false
@@ -291,28 +265,8 @@ const handleSave = async (index) => {
 const validateSupplierInvoice = (invoice, index) => {
     let isValid = true;
 
-    if (!invoice.invoice_date) {
-        errors.value[`${index}.invoice_date`] = 'Invoice date is required';
-        isValid = false;
-    }
-
-    if (!invoice.due_date) {
-        errors.value[`${index}.due_date`] = 'Due date is required';
-        isValid = false;
-    }
-
-    if (!invoice.total_amount || invoice.total_amount <= 0) {
-        errors.value[`${index}.total_amount`] = 'Total amount must be greater than 0';
-        isValid = false;
-    }
-
-    if (invoice.tax_amount && invoice.tax_amount < 0) {
-        errors.value[`${index}.tax_amount`] = 'Tax amount cannot be negative';
-        isValid = false;
-    }
-
-    if (!invoice.status?.trim()) {
-        errors.value[`${index}.status`] = 'Status is required';
+    if (!invoice.payment_number) {
+        errors.value[`${index}.payment_number`] = 'Payment number is required';
         isValid = false;
     }
 
@@ -321,44 +275,33 @@ const validateSupplierInvoice = (invoice, index) => {
         isValid = false;
     }
 
-    // Optional fields: journal_entry, notes, purchase_order
+    if (!invoice.payment_date) {
+        errors.value[`${index}.payment_date`] = 'Payment date is required';
+        isValid = false;
+    }
+
+    if (!invoice.payment_method) {
+        errors.value[`${index}.payment_method`] = 'Payment method is required';
+        isValid = false;
+    }
+
+    if (!invoice.amount || invoice.amount <= 0) {
+        errors.value[`${index}.amount`] = 'Amount must be greater than 0';
+        isValid = false;
+    }
 
     return isValid;
 };
 
 const validateSupplierInvoiceField = (field, index) => {
-    const invoice = store.supplierInvoiceLists[index];
+    const invoice = store.supplierInvoices[index];
     const errorKey = `${index}.${field}`;
     delete errors.value[errorKey]; // Clear previous error
 
     switch (field) {
-        case 'invoice_date':
-            if (!invoice.invoice_date) {
-                errors.value[errorKey] = 'Invoice date is required';
-            }
-            break;
-
-        case 'due_date':
-            if (!invoice.due_date) {
-                errors.value[errorKey] = 'Due date is required';
-            }
-            break;
-
-        case 'total_amount':
-            if (!invoice.total_amount || invoice.total_amount <= 0) {
-                errors.value[errorKey] = 'Total amount must be greater than 0';
-            }
-            break;
-
-        case 'tax_amount':
-            if (invoice.tax_amount && invoice.tax_amount < 0) {
-                errors.value[errorKey] = 'Tax amount cannot be negative';
-            }
-            break;
-
-        case 'status':
-            if (!invoice.status?.trim()) {
-                errors.value[errorKey] = 'Status is required';
+        case 'payment_number':
+            if (!invoice.payment_number) {
+                errors.value[errorKey] = 'Payment number is required';
             }
             break;
 
@@ -368,18 +311,22 @@ const validateSupplierInvoiceField = (field, index) => {
             }
             break;
 
-        case 'journal_entry':
-            if (!invoice.journal_entry?.trim()) {
-                errors.value[errorKey] = 'Journal entry is required';
+        case 'payment_date':
+            if (!invoice.payment_date) {
+                errors.value[errorKey] = 'Payment date is required';
             }
             break;
 
-        case 'purchase_order':
-            // Add validation if purchase_order is required
+        case 'payment_method':
+            if (!invoice.payment_method) {
+                errors.value[errorKey] = 'Payment method is required';
+            }
             break;
 
-        case 'notes':
-            // Notes are optional
+        case 'amount':
+            if (!invoice.amount || invoice.amount <= 0) {
+                errors.value[errorKey] = 'Amount must be greater than 0';
+            }
             break;
     }
 };
@@ -402,18 +349,27 @@ const clearRowErrors = (index) => {
 }
 
 const deleteSupplierInvoice = async (id, index) => {
-    if (confirm('Are you sure you want to delete this Supplier Invoice ? this action cannot be undone.')) {
+    if (confirm('Are you sure you want to delete this payment? This action cannot be undone.')) {
         try {
             await store.removeSupplierInvoice(id)
         } catch (error) {
-            console.error('Error deleting SupplierInvoice:', error)
-            alert('Failed to delete Supplier Invoice. Please try again.')
+            console.error('Error deleting payment:', error)
+            alert('Failed to delete payment. Please try again.')
         }
     }
 }
+
 const formatDate = (dateString) => {
     if (!dateString) return '-'
     return new Date(dateString).toLocaleDateString()
+}
+
+const formatCurrency = (amount) => {
+    if (amount === null || amount === undefined) return '-'
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    }).format(amount)
 }
 </script>
 

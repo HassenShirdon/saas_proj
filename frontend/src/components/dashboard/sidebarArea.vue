@@ -242,7 +242,7 @@ export default {
       ],
       journalEntryItems: [
         { to: '/dashboard/journal-entries', label: 'Journal Entries', icon: 'bi bi-journal' },
-        { to: '/dashboard/JournalEntryLine', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
+        { to: '/dashboard/journal-entry-lines', label: 'Journal Entry Lines', icon: 'bi bi-journal-plus' }
       ],
       Invoices: [
         { to: '/dashboard/customer-invoices', label: 'Customer Invoices', icon: 'bi bi-file-earmark-text' },
