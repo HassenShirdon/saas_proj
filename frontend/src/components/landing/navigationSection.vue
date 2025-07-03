@@ -26,6 +26,11 @@
             <a class="nav-link" href="#contact">Contact</a>
           </li>
         </ul>
+        <!-- Template -->
+        <button class="theme-toggle p-3 m-2 border-0" @click="toggleTheme">
+          <i class="bi" :class="isDarkMode ? 'bi-sun' : 'bi-moon'"></i>
+        </button>
+
         <div class="nav-buttons">
           <!-- <router-link to="/login" class="btn btn-login">Log in</router-link> -->
           <router-link to="/login" class="btn btn-register">Go to Dashboard</router-link>
@@ -36,14 +41,33 @@
 </template>
 
 <script>
+import { useThemeStore } from '@/stores/themeStore';
+
 export default {
   name: 'NavigationSection',
+
+  data() {
+    return {
+      themeStore: null,
+    };
+  },
+
+  computed: {
+    isDarkMode() {
+      return this.themeStore?.theme === 'dark';
+    }
+  },
+
   mounted() {
+    this.themeStore = useThemeStore(); // ✅ initialize the store in mounted()
+    this.themeStore.initializeTheme(); // optional if not already done globally
     window.addEventListener('scroll', this.handleScroll);
   },
+
   beforeUnmount() {
     window.removeEventListener('scroll', this.handleScroll);
   },
+
   methods: {
     handleScroll() {
       const navbar = document.querySelector('.navbar');
@@ -52,10 +76,17 @@ export default {
       } else {
         navbar.classList.remove('scrolled');
       }
+    },
+
+    toggleTheme() {
+      if (this.themeStore) {
+        this.themeStore.toggleTheme(); // ✅ call through method
+      }
     }
   }
-}
+};
 </script>
+
 
 <style scoped>
 body {

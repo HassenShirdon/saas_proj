@@ -40,6 +40,24 @@ const routes = [
         meta: { requiresAuth: true },
       },
       {
+        path: '/dashboard/reports',
+        name: 'reports',
+        component: () => import('@/views/reports.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/sales',
+        name: 'sales',
+        component: () => import('@/views/inventory/sales.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/returns',
+        name: 'returns',
+        component: () => import('@/views/inventory/returnList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
         path: '/dashboard/suppliers',
         name: 'suppliers',
         component: () => import('@/views/inventory/SupplierList.vue'),
@@ -110,6 +128,12 @@ const routes = [
         path: '/dashboard/journal-entries',
         name: 'journalEntries',
         component: () => import('@/views/finance/journalEntryList.vue'),
+        meta: { requiresAuth: true },
+      },
+      {
+        path: '/dashboard/financial-periods',
+        name: 'FinancialPeriod',
+        component: () => import('@/views/finance/financialPeriods.vue'),
         meta: { requiresAuth: true },
       },
       {

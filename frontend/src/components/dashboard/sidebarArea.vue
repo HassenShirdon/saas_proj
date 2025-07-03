@@ -190,7 +190,7 @@
 
         <!-- Reports -->
         <li>
-          <RouterLink to="/reports" class="nav-link" active-class="active">
+          <RouterLink to="/dashboard/reports" class="nav-link" active-class="active">
             <div class="nav-icon-wrapper">
               <i class="nav-icon bi bi-graph-up"></i>
             </div>
@@ -250,7 +250,7 @@ export default {
       ],
       otherFinanceItems: [
         { to: '/dashboard/Expenses', label: 'Expenses', icon: 'bi bi-wallet2' },
-        { to: '/dashboard/FinancialPeriod', label: 'Financial Periods', icon: 'bi bi-calendar-range' }
+        { to: '/dashboard/financial-periods', label: 'Financial Periods', icon: 'bi bi-calendar-range' }
       ]
     }
   },
