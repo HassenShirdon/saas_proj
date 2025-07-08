@@ -5,10 +5,10 @@
         <!-- Text Column -->
         <div class="col-lg-6 text-center text-lg-start">
           <div class="hero-content">
-            <h1 class="display-1 fw-medium  mb-4">
-              Transform Your Business with <span class="text-gradient">Marjaan Solutions</span>
+            <h1 class="display-2 fw-medium mb-4">
+              Transform Your Business with <span class="text-primary-soft">Marjaan Solutions</span>
             </h1>
-            <p class="lead mb-5">
+            <p class="lead mb-5 p-3">
               Streamline your operations with our all-in-one platform. From HR to finance,
               we've got everything you need to scale your business efficiently.
             </p>
@@ -28,14 +28,7 @@
         <div class="col-lg-6 mt-5 mt-lg-0">
           <div class="hero-image-wrapper">
             <img src="@/assets/hero-illustration.png" alt="Dashboard preview" class="img-fluid hero-image" />
-            <div class="floating-card card-1">
-              <i class="bi bi-graph-up-arrow"></i>
-              <span>98% Uptime</span>
-            </div>
-            <div class="floating-card card-2">
-              <i class="bi bi-shield-check"></i>
-              <span>Enterprise Security</span>
-            </div>
+
           </div>
         </div>
         <div class="trust-badges mt-4 d-flex flex-column align-items-center justify-content-between bg-light pb-1 ">
@@ -82,6 +75,11 @@ export default {
 }
 
 .bg-primary-soft {
+  background-color: #f0f0f0;
+  color: #00aaff;
+}
+
+.text-primary-soft {
   background-color: #f0f0f0;
   color: #00aaff;
 }

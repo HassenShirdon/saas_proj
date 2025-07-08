@@ -1,5 +1,32 @@
 from django.contrib import admin
-from . import models
+from django.contrib.auth.admin import UserAdmin
+from .models import CustomUser
 
-# Register your models here.
-admin.site.register(models.CustomUser)
+class CustomUserAdmin(UserAdmin):
+    model = CustomUser
+    list_display = ['username', 'email', 'tenant_admin', 'created_by', 'is_active']
+    list_filter = ['tenant_admin', 'is_active']
+    search_fields = ['username', 'email']
+    fieldsets = UserAdmin.fieldsets + (
+        ('Tenant Settings', {'fields': ('tenant_admin', 'created_by')}),
+    )
+    add_fieldsets = UserAdmin.add_fieldsets + (
+        ('Tenant Settings', {'fields': ('tenant_admin',)}),
+    )
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.tenant_admin:
+            return qs.filter(created_by__tenant_admin=True)
+        return qs
+
+    def has_add_permission(self, request):
+        return request.user.tenant_admin or request.user.is_superuser
+
+    def has_change_permission(self, request, obj=None):
+        return request.user.tenant_admin or request.user.is_superuser
+
+    def has_delete_permission(self, request, obj=None):
+        return request.user.tenant_admin or request.user.is_superuser
+
+admin.site.register(CustomUser, CustomUserAdmin)

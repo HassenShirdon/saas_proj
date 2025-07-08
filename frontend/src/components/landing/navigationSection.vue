@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg">
-    <div class="container">
+    <div class="container w-75">
       <a class="navbar-brand" href="#">
         <img src="@/assets/logo.png" alt="Logo">
       </a>
@@ -33,7 +33,7 @@
 
         <div class="nav-buttons">
           <!-- <router-link to="/login" class="btn btn-login">Log in</router-link> -->
-          <router-link to="/login" class="btn btn-register">Go to Dashboard</router-link>
+          <router-link to="/login" class="btn btn-register">Log in</router-link>
         </div>
       </div>
     </div>
@@ -112,7 +112,7 @@ body {
 }
 
 .navbar-brand img {
-  height: 40px;
+  height: 35px;
   transition: transform 0.3s ease;
 }
 

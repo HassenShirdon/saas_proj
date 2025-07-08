@@ -2,7 +2,7 @@ from datetime import timedelta
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-load_dotenv(override=True)
+
 # Load environment variables
 load_dotenv()
 
@@ -14,60 +14,61 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in .env file")
 
-DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'  # Convert string to boolean
+DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['*']  # Fixed typo
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']
 
-# For SaaS, allow tenant domains dynamically
-TENANT_SUBFOLDER_PREFIX = None  # Set if using subfolder-based tenants
-
-
-# Shared and tenant-specific apps
-SHARED_APPS = [
+INSTALLED_APPS = [
     'django_tenants',
-    'core',
-    'django.contrib.admin',  # Added for public schema admin
-    'django.contrib.auth',  # Added for authentication
+    'django.contrib.admin',
+    'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'django_filters',
     'rest_framework_simplejwt',
-    'users',
-    
+    'core',  # Tenant models (Client, Domain)
+    'users',  # CustomUser model
+    'inventory',
+    'finance',
+    'hrm',
+]
+
+SHARED_APPS = [
+    'django_tenants',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'core',  # Shared for Client and Domain models
+    'users',  # Shared for CustomUser
 ]
 
 TENANT_APPS = [
     'django.contrib.contenttypes',
+    'rest_framework',
+    'rest_framework_simplejwt',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'rest_framework',
-    'django_filters',
     'inventory',
     'finance',
     'hrm',
-    'users',
-]
-
-# Custom user roles for tenants
-TENANT_USER_ROLES = [
-    ('finance_manager', 'Finance Manager'),
-    ('operation_manager', 'Operation Manager'),
-    ('administrator', 'Administrator'),
-    ('human_resource_manager', 'Human Resource Manager'),
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
-SITE_ID=1
+
 # Tenant configuration
-TENANT_MODEL = "core.Client"  # Ensure core.Client exists
-TENANT_DOMAIN_MODEL = "core.Domain"  # Ensure core.Domain exists
-PUBLIC_SCHEMA_NAME = 'public'  # Explicitly define public schema
-#PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'  # Optional: for public schema
-SHOW_PUBLIC_IF_NO_TENANT_FOUND = True  # Fallback to public schema
+TENANT_MODEL = "core.Client"
+TENANT_DOMAIN_MODEL = "core.Domain"
+PUBLIC_SCHEMA_NAME = 'public'
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
 
 # Middleware
 MIDDLEWARE = [
@@ -82,46 +83,31 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL configuration
 ROOT_URLCONF = 'proj_saas.urls'
-
-# REST Framework configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # Added session auth
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication', 
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
     ),
-    'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-        # ...
-    ),
 }
 
-# CORS configuration
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'http://jeeh.localhost:8000',
-    'http://jeeh.localhost:5173',
-    'http://demo.localhost:5173',
-    'http://demo.localhost:8000',
-
-    # Add tenant-specific domains dynamically in production
 ]
-CORS_ALLOW_CREDENTIALS = True  # Allow credentials for JWT
+CORS_ALLOW_CREDENTIALS = True
 
-# JWT configuration
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),  # Added for sliding refresh
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,  # Track last login
+    'UPDATE_LAST_LOGIN': True,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': os.getenv('SECRET_KEY'),
     'AUTH_HEADER_TYPES': ('Bearer',),
@@ -137,17 +123,18 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
+        'TEST': {  # Added for testing
+            'NAME': os.getenv('TEST_DATABASE_NAME', f"test_{os.getenv('DATABASE_NAME')}"),
+        },
     }
 }
 
-# Database routers
 DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
 
-# Template configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # Added for custom templates
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -159,13 +146,10 @@ TEMPLATES = [
     },
 ]
 
-# WSGI application
 WSGI_APPLICATION = 'proj_saas.wsgi.application'
 
-# Authentication
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -173,29 +157,25 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static and media files
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'  # For collectstatic
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Security settings for production
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000  # 1 year
+    SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     X_FRAME_OPTIONS = 'DENY'
 
-# Logging configuration
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -216,7 +196,4 @@ LOGGING = {
     },
 }
 
-# Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-

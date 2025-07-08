@@ -3,7 +3,6 @@
     <div class="login-card shadow-lg p-4 rounded-4 bg-white" style="max-width: 400px; width: 100%;">
       <div class="text-center mb-4">
         <h2 class="fw-bold mb-1">Sign in to your account</h2>
-        <p class="text-muted small">Welcome back! Please enter your details.</p>
       </div>
 
       <!-- Error message display -->

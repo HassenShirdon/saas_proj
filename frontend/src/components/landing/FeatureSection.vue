@@ -4,7 +4,7 @@
       <div class="section-header text-center">
         <span class="display-2 badge bg-primary-soft">Features</span>
         <h2 class="section-title">Everything You Need to Scale</h2>
-        <p class="section-description">
+        <p class=" text-primary-soft">
           Powerful tools and features to help your business grow efficiently
         </p>
       </div>
@@ -109,6 +109,11 @@ export default {
 
 .bg-primary-soft {
   background-color: rgba(0, 170, 255, 0.1);
+  color: #00aaff;
+}
+
+.text-primary-soft {
+  background-color: #f0f0f0;
   color: #00aaff;
 }
 
