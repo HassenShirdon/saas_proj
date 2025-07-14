@@ -1,22 +1,20 @@
-// stores/themeStore.js
 import { defineStore } from 'pinia'
 
 export const useThemeStore = defineStore('theme', {
   state: () => ({
-    theme: localStorage.getItem('theme') || 'light',
+    isDarkMode: localStorage.getItem('theme') === 'dark' || false,
   }),
   actions: {
-    setTheme(theme) {
-      this.theme = theme
-      document.documentElement.setAttribute('data-bs-theme', theme)
-      localStorage.setItem('theme', theme)
-    },
     toggleTheme() {
-      const newTheme = this.theme === 'dark' ? 'light' : 'dark'
-      this.setTheme(newTheme)
+      this.isDarkMode = !this.isDarkMode
+      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light')
+      document.documentElement.setAttribute('data-theme', this.isDarkMode ? 'dark' : 'light')
     },
-    initializeTheme() {
-      this.setTheme(this.theme) // sets initial theme on load
+    initTheme() {
+      // Initialize theme on app load
+      const savedTheme = localStorage.getItem('theme') || 'light'
+      this.isDarkMode = savedTheme === 'dark'
+      document.documentElement.setAttribute('data-theme', savedTheme)
     },
   },
 })

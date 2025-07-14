@@ -2,17 +2,16 @@
   <section class="features-section">
     <div class="container">
       <div class="section-header text-center">
-        <span class="display-2 badge bg-primary-soft">Features</span>
+        <span class="badge badge-pill badge-gradient">Features</span>
         <h2 class="section-title">Everything You Need to Scale</h2>
-        <p class=" text-primary-soft">
-          Powerful tools and features to help your business grow efficiently
+        <p class="section-description">
+          Powerful tools and features to help your business grow efficiently.
         </p>
       </div>
-
-      <div class="row g-4">
-        <div v-for="(feature, index) in features" :key="index" class="col-md-6 col-lg-4" :data-aos="'fade-up'"
-          :data-aos-delay="index * 100">
-          <div class="feature-card">
+      <div class="row features-grid">
+        <div v-for="(feature, index) in features" :key="index" class="col-12 col-md-6 col-lg-4 d-flex"
+          :data-aos="'fade-up'" :data-aos-delay="index * 100">
+          <div class="feature-card flex-fill">
             <div class="feature-icon" :class="feature.iconColor">
               <i :class="feature.icon"></i>
             </div>
@@ -21,8 +20,9 @@
           </div>
         </div>
       </div>
-
-
+      <div class="features-cta text-center">
+        <button class="btn btn-primary btn-lg">Get Started</button>
+      </div>
     </div>
   </section>
 </template>
@@ -34,52 +34,49 @@ import 'aos/dist/aos.css'
 export default {
   name: 'FeaturesSection',
   mounted() {
-    AOS.init({
-      duration: 800,
-      once: true
-    })
+    AOS.init({ duration: 800, once: true })
   },
   data() {
     return {
       features: [
         {
           icon: 'bi bi-people-fill',
-          iconColor: 'bg-primary-soft',
+          iconColor: 'icon-primary',
           title: 'HR Management',
           description:
             'Streamline your HR processes with our comprehensive employee management system.',
         },
         {
           icon: 'bi bi-graph-up-arrow',
-          iconColor: 'bg-success-soft',
+          iconColor: 'icon-success',
           title: 'Finance Module',
           description:
             'Get real-time insights into your business finances with advanced analytics.',
         },
         {
           icon: 'bi bi-box-seam-fill',
-          iconColor: 'bg-warning-soft',
+          iconColor: 'icon-warning',
           title: 'Inventory System',
           description:
             'Optimize your inventory with smart tracking and automated reordering.',
         },
         {
           icon: 'bi bi-kanban-fill',
-          iconColor: 'bg-info-soft',
+          iconColor: 'icon-info',
           title: 'Project Management',
           description:
             'Collaborate effectively with our intuitive project management tools.',
         },
         {
           icon: 'bi bi-shield-lock-fill',
-          iconColor: 'bg-danger-soft',
+          iconColor: 'icon-danger',
           title: 'Security & Access',
           description:
             'Enterprise-grade security with granular access controls and encryption.',
         },
         {
           icon: 'bi bi-chat-dots-fill',
-          iconColor: 'bg-purple-soft',
+          iconColor: 'icon-purple',
           title: 'Customer Support',
           description:
             'Deliver exceptional customer service with our integrated support system.',
@@ -92,152 +89,144 @@ export default {
 
 <style scoped>
 .features-section {
-  padding: 4rem 0;
-  background: #f0f0f0
+  padding: 5rem 0 3rem 0;
+  background: #f0f0f0;
 }
 
 .section-header {
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
 }
 
-.badge {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  border-radius: 50px;
-}
-
-.bg-primary-soft {
-  background-color: rgba(0, 170, 255, 0.1);
-  color: #00aaff;
-}
-
-.text-primary-soft {
-  background-color: #f0f0f0;
-  color: #00aaff;
+.badge-gradient {
+  background: linear-gradient(90deg, #00aaff 0%, #6f6fff 100%);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+  display: inline-block;
 }
 
 .section-title {
   font-size: 2.5rem;
-  font-weight: 700;
+  font-weight: 800;
   color: #1a202c;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .section-description {
-  font-size: 1.125rem;
-  color: #4a5568;
-  max-width: 600px;
-  margin: 0 auto;
+  font-size: 1.15rem;
+  color: #64748b;
+  max-width: 540px;
+  margin: 0 auto 2rem auto;
+}
+
+.features-grid {
+  row-gap: 2.5rem;
+  column-gap: 0;
 }
 
 .feature-card {
-  background: rgb(250, 247, 247);
-  border-radius: 16px;
-  padding: 2rem;
-  height: 100%;
-  transition: all 0.3s ease;
-  border: 1px solid #e2e8f0;
-  position: relative;
-  overflow: hidden;
+  background: #fff;
+  border-radius: 1.25rem;
+  padding: 2.25rem 1.5rem 2rem 1.5rem;
+  box-shadow: 0 2px 24px 0 rgba(0, 42, 120, 0.07);
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s, transform 0.2s;
+  margin-bottom: 1.5rem;
+  min-height: 320px;
 }
 
 .feature-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  border-color: transparent;
+  box-shadow: 0 8px 32px 0 rgba(0, 42, 120, 0.13);
+  transform: translateY(-4px) scale(1.02);
 }
 
 .feature-icon {
-  width: 56px;
-  height: 56px;
-  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 2rem;
   margin-bottom: 1.5rem;
-  font-size: 1.5rem;
-  color: #1a202c;
+  box-shadow: 0 2px 12px 0 rgba(0, 170, 255, 0.08);
 }
 
-.bg-primary-soft {
-  background-color: rgba(0, 170, 255, 0.1);
+.icon-primary {
+  background: rgba(0, 170, 255, 0.12);
+  color: #00aaff;
 }
 
-.bg-success-soft {
-  background-color: rgba(16, 185, 129, 0.1);
+.icon-success {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
 }
 
-.bg-warning-soft {
-  background-color: rgba(245, 158, 11, 0.1);
+.icon-warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
 }
 
-.bg-info-soft {
-  background-color: rgba(6, 182, 212, 0.1);
+.icon-info {
+  background: rgba(6, 182, 212, 0.12);
+  color: #06b6d4;
 }
 
-.bg-danger-soft {
-  background-color: rgba(239, 68, 68, 0.1);
+.icon-danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
 }
 
-.bg-purple-soft {
-  background-color: rgba(139, 92, 246, 0.1);
+.icon-purple {
+  background: rgba(139, 92, 246, 0.12);
+  color: #8b5cf6;
 }
 
 .feature-title {
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 700;
   color: #1a202c;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .feature-description {
-  color: #4a5568;
-  font-size: 0.875rem;
-  line-height: 1.6;
-  margin-bottom: 1.5rem;
-}
-
-.feature-link {
-  color: #00aaff;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.875rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  transition: all 0.3s ease;
-}
-
-.feature-link:hover {
-  color: #0088cc;
-  gap: 0.75rem;
+  color: #64748b;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 0;
 }
 
 .features-cta {
-  margin-top: 4rem;
+  margin-top: 3rem;
 }
 
 .btn-primary {
-  background: #00aaff;
+  background: linear-gradient(90deg, #00aaff 0%, #6f6fff 100%);
   border: none;
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 170, 255, 0.2);
+  color: #fff;
+  padding: 0.9rem 2.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 16px rgba(0, 170, 255, 0.13);
+  transition: background 0.2s, transform 0.2s;
 }
 
 .btn-primary:hover {
-  background: #0088cc;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 170, 255, 0.3);
+  background: linear-gradient(90deg, #0088cc 0%, #4f4fff 100%);
+  transform: translateY(-2px) scale(1.03);
 }
 
 @media (max-width: 991px) {
   .features-section {
-    padding: 4rem 0;
+    padding: 3rem 0 2rem 0;
   }
 
   .section-title {
@@ -245,7 +234,8 @@ export default {
   }
 
   .feature-card {
-    padding: 1.5rem;
+    padding: 1.5rem 1rem 1.5rem 1rem;
+    min-height: 260px;
   }
 }
 </style>

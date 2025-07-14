@@ -1,46 +1,56 @@
 <template>
   <section class="hero-section">
     <div class="container">
-      <div class="row align-items-center">
+      <div class="row align-items-center flex-column-reverse flex-lg-row">
         <!-- Text Column -->
-        <div class="col-lg-6 text-center text-lg-start">
+        <div class="col-12 col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
           <div class="hero-content">
-            <h1 class="display-2 fw-medium mb-4">
-              Transform Your Business with <span class="text-primary-soft">Marjaan Solutions</span>
+            <h1 class="display-2 fw-bold mb-4">
+              Transform Your Business with
+              <span class="text-primary-gradient">Marjaan Solutions</span>
             </h1>
-            <p class="lead mb-5 p-3">
-              Streamline your operations with our all-in-one platform. From HR to finance,
-              we've got everything you need to scale your business efficiently.
+            <p class="lead mb-5 px-2 px-md-4">
+              Streamline your operations with our all-in-one platform.<br>
+              From HR to finance, we've got everything you need to scale your business efficiently.
             </p>
             <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
-              <a href="#cta" class="btn btn-primary btn-lg">
+              <a href="#cta" class="btn btn-primary btn-lg shadow">
                 Start Free Trial <i class="bi bi-arrow-right ms-2"></i>
               </a>
-              <a href="#features" class="btn btn-outline btn-lg">
+              <a href="#features" class="btn btn-outline-primary btn-lg">
                 <i class="bi bi-play-circle me-2"></i>Watch Demo
               </a>
             </div>
-
           </div>
         </div>
-
         <!-- Image Column -->
-        <div class="col-lg-6 mt-5 mt-lg-0">
-          <div class="hero-image-wrapper">
+        <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center mb-4 mb-lg-0">
+          <div class="hero-image-wrapper position-relative">
             <img src="@/assets/hero-illustration.png" alt="Dashboard preview" class="img-fluid hero-image" />
-
-          </div>
-        </div>
-        <div class="trust-badges mt-4 d-flex flex-column align-items-center justify-content-between bg-light pb-1 ">
-          <p class=" mb-3  fw-semibold badge" style="font-size: large; color: #00aaff;">Trusted by leading companies</p>
-          <div class="d-flex flex-wrap justify-content-center justify-content-lg-start gap-4">
-            <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo">
-            <img src="@/assets/logo.png" alt="Company 2" class="company-logo">
-            <img src="@/assets/logo.png" alt="Company 3" class="company-logo">
+            <!-- Optional: Floating Cards for SaaS feel -->
+            <div class="floating-card card-1 d-none d-md-flex">
+              <i class="bi bi-graph-up-arrow text-primary"></i>
+              <span>Analytics</span>
+            </div>
+            <div class="floating-card card-2 d-none d-md-flex">
+              <i class="bi bi-people text-success"></i>
+              <span>Team Collaboration</span>
+            </div>
           </div>
         </div>
       </div>
-
+      <!-- Trust Badges -->
+      <div class="trust-badges mt-5 py-3 px-2 px-md-4 rounded-4 shadow-sm bg-white">
+        <p class="mb-3 fw-semibold trust-title">
+          <i class="bi bi-shield-check text-primary me-2"></i>
+          Trusted by leading companies
+        </p>
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
+          <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo" />
+          <img src="@/assets/logo.png" alt="Company 2" class="company-logo" />
+          <img src="@/assets/logo.png" alt="Company 3" class="company-logo" />
+        </div>
+      </div>
     </div>
   </section>
 </template>
@@ -56,125 +66,131 @@ export default {
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 6rem 0;
+  padding: 8rem 0 2rem 0;
   background: #f0f0f0;
   position: relative;
   overflow: hidden;
+  color: #1a2233;
 }
 
 .hero-content {
   position: relative;
   z-index: 2;
+  color: #1a2233;
 }
 
-.badge {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  font-size: 0.875rem;
-  border-radius: 50px;
+.display-2 {
+  font-size: 2.5rem;
+  line-height: 1.15;
+  color: #1a2233;
 }
 
-.bg-primary-soft {
-  background-color: #f0f0f0;
-  color: #00aaff;
+@media (min-width: 768px) {
+  .display-2 {
+    font-size: 3rem;
+  }
 }
 
-.text-primary-soft {
-  background-color: #f0f0f0;
-  color: #00aaff;
+@media (min-width: 1200px) {
+  .display-2 {
+    font-size: 3.5rem;
+  }
 }
 
-.text-gradient {
-  background: #f0f0f0;
+.text-primary-gradient {
+  background: linear-gradient(90deg, #3a8dde 0%, #00aaff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-h1 {
-  color: #1a202c;
-  line-height: 1.2;
-  font-size: 3.5rem;
-}
-
 .lead {
-  color: #4a5568;
-  font-size: 1.25rem;
+  color: #2d3a4a;
+  font-size: 1.15rem;
   line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-primary {
-  background: #00aaff;
+  background: linear-gradient(90deg, #3a8dde 0%, #00aaff 100%);
   border: none;
-  color: white;
+  color: #fff;
   padding: 1rem 2rem;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
-  box-shadow: #f0f0f0;
+  box-shadow: 0 4px 16px rgba(58, 141, 222, 0.08);
 }
 
 .btn-primary:hover {
-  background: #0088cc;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 170, 255, 0.3);
+  background: linear-gradient(90deg, #2b6cb0 0%, #0088cc 100%);
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(58, 141, 222, 0.15);
 }
 
-.btn-outline {
+.btn-outline-primary {
   background: transparent;
-  border: 2px solid #e2e8f0;
-  color: #4a5568;
+  border: 2px solid #3a8dde;
+  color: #3a8dde;
   padding: 1rem 2rem;
   border-radius: 12px;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.btn-outline:hover {
-  background: #f8fafc;
-  border-color: #cbd5e0;
-  transform: translateY(-2px);
+.btn-outline-primary:hover {
+  background: #e0f7fa;
+  border-color: #00aaff;
+  color: #2b6cb0;
+  transform: translateY(-2px) scale(1.03);
 }
 
 .hero-image-wrapper {
   position: relative;
-  padding: 2rem;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
 }
 
 .hero-image {
   border-radius: 24px;
-  /* box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); */
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(58, 141, 222, 0.10);
   transition: all 0.3s ease;
 }
 
 .hero-image:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 0 25px 50px rgba(58, 141, 222, 0.15);
 }
 
 .floating-card {
   position: absolute;
-  background: white;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  background: #fff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(58, 141, 222, 0.08);
   display: flex;
   align-items: center;
   gap: 0.75rem;
   font-weight: 500;
-  color: #2d3748;
+  color: #1a2233;
   animation: float 3s ease-in-out infinite;
+  font-size: 1rem;
 }
 
 .card-1 {
   top: 10%;
-  right: 0;
+  right: -30px;
   animation-delay: 0s;
 }
 
 .card-2 {
   bottom: 10%;
-  left: 0;
+  left: -30px;
   animation-delay: 1.5s;
 }
 
@@ -190,45 +206,87 @@ h1 {
   }
 }
 
+/* Trust Badges */
+.trust-badges {
+  margin-top: 2.5rem;
+  background: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 2px 16px rgba(58, 141, 222, 0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.trust-title {
+  font-size: 1.1rem;
+  color: #3a8dde;
+  letter-spacing: 0.02em;
+}
+
 .company-logo {
-  height: 24px;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
+  height: 38px;
+  width: auto;
+  opacity: 0.8;
+  filter: grayscale(0.2);
+  transition: opacity 0.3s, filter 0.3s;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.5rem;
 }
 
 .company-logo:hover {
   opacity: 1;
-}
-
-.trust-badges {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-}
-
-.company-logo {
-  height: 50px;
-  margin: 1 2rem;
+  filter: none;
+  background: #e0f7fa;
 }
 
 @media (max-width: 991px) {
   .hero-section {
-    padding: 4rem 0;
+    padding: 2.5rem 0 1.5rem 0;
     text-align: center;
   }
 
-  h1 {
-    font-size: 2.5rem;
-  }
-
   .hero-image-wrapper {
-    margin-top: 3rem;
+    margin-top: 2rem;
+    max-width: 340px;
   }
 
   .floating-card {
-    display: none;
+    display: none !important;
+  }
+
+  .trust-badges {
+    margin-top: 2rem;
+    padding: 1.25rem 0.5rem;
+  }
+}
+
+@media (max-width: 575px) {
+  .display-2 {
+    font-size: 2rem;
+  }
+
+  .lead {
+    font-size: 1rem;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .hero-section {
+    padding: 1.5rem 0 1rem 0;
+  }
+
+  .trust-badges {
+    padding: 1rem 0.25rem;
+    border-radius: 1rem;
+  }
+
+  .company-logo {
+    height: 28px;
+    padding: 0.15rem 0.3rem;
   }
 }
 </style>

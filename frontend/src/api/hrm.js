@@ -60,21 +60,21 @@ export const deleteAttendance = (id) => {
 }
 
 export const getLeaves = () => {
-  return axios.get(`/hrm/leaves/`)
+  return axios.get(`/hrm/leave-types/`)
 }
 export const getLeave = (id) => {
-  return axios.get(`/hrm/leaves/${id}/`)
+  return axios.get(`/hrm/leave-types/${id}/`)
 }
 
 export const createLeave = (leave) => {
-  return axios.post(`/hrm/leaves/`, leave)
+  return axios.post(`/hrm/leave-types/`, leave)
 }
 
 export const updateLeave = (id, leave) => {
-  return axios.put(`/hrm/leaves/${id}/`, leave)
+  return axios.put(`/hrm/leave-types/${id}/`, leave)
 }
 export const deleteLeave = (id) => {
-  return axios.delete(`/hrm/leaves/${id}/`)
+  return axios.delete(`/hrm/leave-types/${id}/`)
 }
 
 export const getSalaries = () => {

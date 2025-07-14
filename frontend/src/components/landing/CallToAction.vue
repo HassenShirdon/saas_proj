@@ -3,20 +3,16 @@
     <div class="container">
       <div class="cta-content">
         <div class="cta-text">
-          <span class="badge bg-white-soft mb-3">Get Started</span>
-          <h2 class="cta-title">Ready to Transform Your Business?</h2>
+          <span class="badge bg-primary-soft mb-3">Start for Free</span>
+          <h2 class="cta-title">Supercharge Your Workflow with Marjaan Solutions</h2>
           <p class="cta-description">
-            Join thousands of businesses that trust Marjaan Solutions for their operations.
-            Start your journey today with our 14-day free trial.
+            Experience the all-in-one SaaS platform trusted by modern businesses. Automate, collaborate, and grow—risk
+            free.
           </p>
-          <div class="cta-buttons">
-            <a href="#contact" class="btn btn-primary btn-lg">
-              Start Free Trial <i class="bi bi-arrow-right ms-2"></i>
-            </a>
-            <a href="#demo" class="btn btn-outline-light btn-lg">
-              <i class="bi bi-play-circle me-2"></i>Watch Demo
-            </a>
-          </div>
+          <form class="cta-form" @submit.prevent>
+            <input type="email" placeholder="Enter your business email" class="cta-input" required>
+            <button type="submit" class="btn btn-primary btn-lg">Start Free Trial</button>
+          </form>
           <div class="cta-features">
             <div class="feature">
               <i class="bi bi-check-circle-fill"></i>
@@ -33,7 +29,7 @@
           </div>
         </div>
         <div class="cta-image">
-          <img src="@/assets/loginScreen.jpg" alt="Get Started" class="img-fluid ">
+          <img src="@/assets/loginScreen.jpg" alt="SaaS Dashboard Preview" class="img-fluid">
         </div>
       </div>
     </div>
@@ -48,25 +44,13 @@ export default {
 
 <style scoped>
 .cta-section {
-  padding: 3rem 0;
-  background: #00aaff;
+  padding: 4rem 0;
+  background: #f0f0f0;
   position: relative;
   overflow: hidden;
 }
 
-.cta-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-
-  opacity: 0.1;
-}
-
 .cta-content {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -75,90 +59,100 @@ export default {
 
 .cta-text {
   flex: 1;
-  color: white;
+  color: #222;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .badge {
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.95rem;
   border-radius: 50px;
+  letter-spacing: 0.03em;
+  display: inline-block;
 }
 
-.bg-white-soft {
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+.bg-primary-soft {
+  background-color: #e0f6ff;
+  color: #00aaff;
 }
 
 .cta-title {
-  font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
-  line-height: 1.2;
+  font-size: 2.7rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  line-height: 1.15;
+  color: #222;
 }
 
 .cta-description {
-  font-size: 1.125rem;
-  opacity: 0.9;
+  font-size: 1.15rem;
+  opacity: 0.95;
   margin-bottom: 2rem;
-  max-width: 600px;
+  max-width: 520px;
+  color: #444;
 }
 
-.cta-buttons {
+.cta-form {
   display: flex;
   gap: 1rem;
   margin-bottom: 2rem;
+  max-width: 430px;
+}
+
+.cta-input {
+  flex: 1;
+  padding: 0.9rem 1.2rem;
+  border: 1.5px solid #d1eaff;
+  border-radius: 10px;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+  background: #fff;
+}
+
+.cta-input:focus {
+  border-color: #00aaff;
 }
 
 .btn-primary {
-  background: white;
-  color: #00aaff;
+  background: #00aaff;
+  color: #fff;
   border: none;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.9rem 2rem;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(0, 170, 255, 0.08);
 }
 
 .btn-primary:hover {
-  background: #f8fafc;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.btn-outline-light {
-  background: transparent;
-  border: 2px solid rgba(255, 255, 255, 0.5);
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: 12px;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-outline-light:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: white;
-  transform: translateY(-2px);
+  background: #008ecc;
 }
 
 .cta-features {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  gap: 1.2rem;
+  margin-top: 0.5rem;
 }
 
 .feature {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.875rem;
-  opacity: 0.9;
+  font-size: 0.98rem;
+  color: #00aaff;
+  background: #e0f6ff;
+  border-radius: 8px;
+  padding: 0.4rem 0.9rem;
 }
 
 .feature i {
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
 .cta-image {
@@ -169,8 +163,11 @@ export default {
 }
 
 .cta-image img {
-  max-width: 100%;
+  max-width: 95%;
   height: auto;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  background: #fff;
   animation: float 6s ease-in-out infinite;
 }
 
@@ -182,23 +179,19 @@ export default {
   }
 
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-18px);
   }
 }
 
 @media (max-width: 991px) {
-  .cta-section {
-    padding: 4rem 0;
-  }
-
   .cta-content {
     flex-direction: column;
     text-align: center;
-    gap: 2rem;
+    gap: 2.5rem;
   }
 
   .cta-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .cta-description {
@@ -206,16 +199,9 @@ export default {
     margin-right: auto;
   }
 
-  .cta-buttons {
-    justify-content: center;
-  }
-
-  .cta-features {
-    justify-content: center;
-  }
-
-  .cta-image {
-    order: -1;
+  .cta-form {
+    flex-direction: column;
+    max-width: 100%;
   }
 
   .cta-image img {

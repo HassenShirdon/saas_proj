@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from . import views
 
@@ -40,3 +42,5 @@ urlpatterns = [
     path('payroll-records/', views.PayrollRecordListCreateView.as_view(), name='payrollrecord-list'),
     path('payroll-records/<int:pk>/', views.PayrollRecordDetailView.as_view(), name='payrollrecord-detail'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

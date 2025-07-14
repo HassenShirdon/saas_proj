@@ -2,6 +2,7 @@ from rest_framework import generics, filters
 from rest_framework.permissions import IsAuthenticated
 from django_filters.rest_framework import DjangoFilterBackend
 from django.db.models import Prefetch
+from rest_framework.renderers import JSONRenderer
 
 from .models import (
     Employee,
@@ -43,6 +44,7 @@ class EmployeeListCreateView(generics.ListCreateAPIView):
     search_fields = ['first_name', 'last_name', 'email', 'employee_id']
     ordering_fields = ['first_name', 'last_name', 'date_hired', 'employee_id']
     ordering = ['last_name', 'first_name']
+    renderer_classes = [JSONRenderer]
 
     def get_queryset(self):
         return Employee.objects.select_related('department', 'manager').filter(status='active')

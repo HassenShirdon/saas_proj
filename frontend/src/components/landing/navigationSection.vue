@@ -1,17 +1,20 @@
 <template>
   <nav class="navbar navbar-expand-lg">
-    <div class="container w-75">
+    <div class="container mx-auto">
       <a class="navbar-brand" href="#">
         <img src="@/assets/logo.png" alt="Logo">
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+        <span class="navbar-toggler-icon dark"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link" href="#home">Home</a>
+            <a class="nav-link modern-link" href="#home">
+              <i class="bi bi-house-door-fill me-1"></i>
+              Home
+            </a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#features">Features</a>
@@ -27,7 +30,7 @@
           </li>
         </ul>
         <!-- Template -->
-        <button class="theme-toggle p-3 m-2 border-0" @click="toggleTheme">
+        <button class="theme-toggle p-2 m-2 border-0" @click="toggleTheme">
           <i class="bi" :class="isDarkMode ? 'bi-sun' : 'bi-moon'"></i>
         </button>
 
@@ -41,7 +44,7 @@
 </template>
 
 <script>
-import { useThemeStore } from '@/stores/themeStore';
+
 
 export default {
   name: 'NavigationSection',
@@ -59,8 +62,7 @@ export default {
   },
 
   mounted() {
-    this.themeStore = useThemeStore(); // ✅ initialize the store in mounted()
-    this.themeStore.initializeTheme(); // optional if not already done globally
+
     window.addEventListener('scroll', this.handleScroll);
   },
 
