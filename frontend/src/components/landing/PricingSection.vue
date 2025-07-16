@@ -1,6 +1,6 @@
 <template>
     <!-- Pricing Section -->
-    <section class="pricing-section">
+    <section id="pricing-section" class="pricing-section">
         <div class="container">
             <div class="section-header text-center">
                 <span class="badge bg-primary-soft mb-3">Pricing</span>

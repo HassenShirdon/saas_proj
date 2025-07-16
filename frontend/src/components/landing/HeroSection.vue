@@ -1,9 +1,9 @@
 <template>
-  <section class="hero-section">
+  <section id="hero-section" class="hero-section">
     <div class="container">
       <div class="row align-items-center flex-column-reverse flex-lg-row">
         <!-- Text Column -->
-        <div class="col-12 col-lg-6 text-center text-lg-start mb-5 mb-lg-0">
+        <div class="col-12 col-lg-6 text-center text-lg-start mb-2 mb-lg-0">
           <div class="hero-content">
             <h1 class="display-2 fw-bold mb-4">
               Transform Your Business with

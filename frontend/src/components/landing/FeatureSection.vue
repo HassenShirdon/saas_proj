@@ -1,5 +1,5 @@
 <template>
-  <section class="features-section">
+  <section id="features-section" class="features-section">
     <div class="container">
       <div class="section-header text-center">
         <span class="badge badge-pill badge-gradient">Features</span>

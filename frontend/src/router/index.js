@@ -8,6 +8,16 @@ const routes = [
     name: 'landing',
     component: import('@/views/Landing/landingPage.vue'),
   },
+  {
+    path: '/superDashboard',
+    name: 'superDashboard',
+    component: import('@/views/Dashboard/superDashboard.vue'),
+  },
+  {
+    path: '/tenantAdmin',
+    name: 'tenantAdmin',
+    component: import('@/views/Dashboard/tenantAdmin.vue'),
+  },
 
   {
     path: '/dashboard',

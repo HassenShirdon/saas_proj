@@ -1,18 +1,18 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django_tenants.utils import get_tenant_model
 
 class CustomUser(AbstractUser):
-    tenant_admin = models.BooleanField(default=False)  # Indicates if user is a tenant admin
-    created_by = models.ForeignKey(
-        'self',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='created_users'
-    )  # Tracks who created the user
+    is_tenant_admin = models.BooleanField(default=False)
+    tenant = models.ForeignKey(
+    'core.Client',  # or whatever your tenant model is
+    on_delete=models.CASCADE,
+    null=True,
+    blank=True
+)
 
     class Meta:
-        db_table = 'custom_user'  # Ensure consistent table name across tenant schemas
-
-    def __str__(self):
-        return f"{self.username} ({self.email})"
+        permissions = [
+            ("manage_users", "Can manage tenant users"),
+        ]
+    

@@ -1,5 +1,5 @@
 <template>
-  <section class="about-section trendy-bg">
+  <section id="about-section" class="about-section trendy-bg">
     <div class="container">
       <div class="row align-items-center flex-wrap-reverse">
         <!-- Image Content -->

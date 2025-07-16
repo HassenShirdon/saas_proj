@@ -19,7 +19,7 @@
         </div>
       </transition>
 
-      <form @submit.prevent="handleLogin" autocomplete="on">
+      <form @submit.prevent="login" autocomplete="on">
         <div class="mb-3">
           <label for="username" class="form-label fw-semibold">Username</label>
           <input type="text" v-model="username" id="username" class="form-control modern-input" required
@@ -49,60 +49,37 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useAuthStore } from '@/stores/authStore';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { loginUser } from '@/api/auth'
 
-const username = ref('');
-const password = ref('');
-const errorMessage = ref('');
-const isLoading = ref(false);
-const auth = useAuthStore();
+const router = useRouter()
+const username = ref('')
+const password = ref('')
+const errorMessage = ref('')
+const isLoading = ref(false)
 
-async function handleLogin() {
-  // Reset error message
-  errorMessage.value = '';
-  isLoading.value = true;
-
+async function login() {
+  errorMessage.value = ''
+  isLoading.value = true
   try {
-    // console.log('Attempting login with:', { username: username.value });
-    await auth.login({ username: username.value, password: password.value });
-    // Login successful - auth store will handle redirect
-  } catch (error) {
-    console.error('Login failed:', error);
-
-    // More detailed error handling
-    if (error.response) {
-      // Server responded with error status
-      const status = error.response.status;
-      const data = error.response.data;
-
-      if (status === 401) {
-        errorMessage.value = 'Invalid username or password';
-      } else if (status === 400) {
-        // Handle validation errors
-        if (data.username) {
-          errorMessage.value = `Username: ${data.username.join(', ')}`;
-        } else if (data.password) {
-          errorMessage.value = `Password: ${data.password.join(', ')}`;
-        } else if (data.detail) {
-          errorMessage.value = data.detail;
-        } else {
-          errorMessage.value = 'Please check your input and try again';
-        }
-      } else if (status >= 500) {
-        errorMessage.value = 'Server error. Please try again later.';
-      } else {
-        errorMessage.value = data.detail || 'Login failed. Please try again.';
-      }
-    } else if (error.request) {
-      // Network error
-      errorMessage.value = 'Network error. Please check your connection.';
+    const response = await loginUser({ username: username.value, password: password.value })
+    // Save tokens and user info
+    localStorage.setItem('access_token', response.access)
+    localStorage.setItem('user', JSON.stringify(response.user))
+    // Redirect based on user role
+    const user = response.user
+    if (user.is_superuser) {
+      router.push('/superDashboard')
+    } else if (user.is_tenant_admin) {
+      window.location.href = `http://${user.domain}/tenantAdmin`
     } else {
-      // Other error
-      errorMessage.value = 'An unexpected error occurred. Please try again.';
+      window.location.href = `http://${user.domain}/dashboard`
     }
+  } catch (error) {
+    errorMessage.value = error?.message || 'Login failed. Please try again.'
   } finally {
-    isLoading.value = false;
+    isLoading.value = false
   }
 }
 </script>

@@ -11,19 +11,19 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mx-auto">
           <li class="nav-item">
-            <a class="nav-link modern-link" href="#home">
-              <i class="bi bi-house-door-fill me-1"></i>
+            <a class="nav-link modern-link" href="">
+
               Home
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#features">Features</a>
+            <a class="nav-link" href="#features-section">Features</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#about">About</a>
+            <a class="nav-link" href="#about-section">About</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#pricing">Pricing</a>
+            <a class="nav-link" href="#pricing-section">Pricing</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#contact">Contact</a>

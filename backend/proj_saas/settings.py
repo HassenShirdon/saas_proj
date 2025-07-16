@@ -83,6 +83,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'
 ROOT_URLCONF = 'proj_saas.urls'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
