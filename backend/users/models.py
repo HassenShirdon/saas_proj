@@ -1,18 +1,27 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group, Permission
 from django.db import models
-from django_tenants.utils import get_tenant_model
 
 class CustomUser(AbstractUser):
-    is_tenant_admin = models.BooleanField(default=False)
-    tenant = models.ForeignKey(
-    'core.Client',  # or whatever your tenant model is
-    on_delete=models.CASCADE,
-    null=True,
-    blank=True
-)
+    email = models.EmailField(unique=True)
+    full_name = models.CharField(max_length=255, blank=True)
 
-    class Meta:
-        permissions = [
-            ("manage_users", "Can manage tenant users"),
-        ]
-    
+    username = models.CharField(max_length=150, unique=True)
+    groups = models.ManyToManyField(
+        Group,
+        related_name='customuser_groups',
+        blank=True
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='customuser_permissions',
+        blank=True
+    )
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
+
+    # 🔽 Fix: Use default manager if CustomUserManager is undefined
+    objects = BaseUserManager()
+
+    def __str__(self):
+        return self.email

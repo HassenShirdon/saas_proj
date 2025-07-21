@@ -1,31 +1,36 @@
-# users/views.py
-from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.contrib.auth import authenticate
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from tenant_users.tenants.utils import get_tenant_model
+from django.conf import settings
+from .serializers import CustomUserSerializer
 
-from core.models import Domain
+Client = get_tenant_model()
 
-class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
-        user = self.user
-        tenant = user.tenant
+class LoginRedirectAPIView(APIView):
+    def post(self, request):
+        email = request.data.get("email")
+        password = request.data.get("password")
 
-        domain = Domain.objects.filter(tenant=tenant).first()
-        domain_url = domain.domain if domain else "localhost:5173"
+        user = authenticate(request, email=email, password=password)
 
-        data['user'] = {
-            'id': user.id,
-            'username': user.username,
-            'is_superuser': user.is_superuser,
-            'is_tenant_admin': getattr(user, 'is_tenant_admin', False),
-            'tenant_id':  tenant.id if tenant else None,
-            'domain': domain_url  # 👈 sent to Vue for redirect
-        }
+        if not user:
+            return Response({"detail": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        return data
+        refresh = RefreshToken.for_user(user)
 
+        if hasattr(user, "tenants") and user.tenants.exists():
+            tenant = user.tenants.first()
+            domain_obj = tenant.domains.first()
+            redirect_url = f"https://{domain_obj.domain}/"
+        else:
+            redirect_url = f"https://{settings.PUBLIC_DOMAIN}/"
 
-class CustomLoginView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
+        return Response({
+            "access": str(refresh.access_token),
+            "refresh": str(refresh),
+            "user": CustomUserSerializer(user).data,
+            "redirect_url": redirect_url,
+        })

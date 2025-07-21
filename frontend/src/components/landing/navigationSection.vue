@@ -4,15 +4,14 @@
       <a class="navbar-brand" href="#">
         <img src="@/assets/logo.png" alt="Logo">
       </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon dark"></span>
-      </button>
+  <span class="navbar-toggler-icon"></span>
+</button>
       <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mx-auto">
+        <ul class="navbar-nav mx-auto item-center">
           <li class="nav-item">
             <a class="nav-link modern-link" href="">
-
               Home
             </a>
           </li>
@@ -106,6 +105,7 @@ body {
   right: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
+  font: "roboto"
 }
 
 .navbar.scrolled {
@@ -127,7 +127,9 @@ body {
   justify-content: center;
   flex-grow: 1;
 }
-
+ .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(33, 37, 41, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+  } 
 .nav-link {
   color: #2d3748 !important;
   font-weight: 500;

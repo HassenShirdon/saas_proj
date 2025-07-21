@@ -2,31 +2,22 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
 
+@admin.register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ['username', 'email', 'is_tenant_admin', 'is_active']
-    list_filter = ['is_tenant_admin', 'is_active']
-    search_fields = ['username', 'email']
-    fieldsets = UserAdmin.fieldsets + (
-        ('Tenant Settings', {'fields': ('is_tenant_admin',)}),
+    list_display = ("email", "full_name", "is_staff", "is_active")
+    list_filter = ("is_staff", "is_active")
+    search_fields = ("email", "full_name")
+    ordering = ("email",)
+    fieldsets = (
+        (None, {"fields": ("email", "password")}),
+        ("Personal info", {"fields": ("full_name",)}),
+        ("Permissions", {"fields": ("is_staff", "is_active", "is_superuser", "groups", "user_permissions")}),
+        ("Important dates", {"fields": ("last_login", "date_joined")}),
     )
-    add_fieldsets = UserAdmin.add_fieldsets + (
-        ('Tenant Settings', {'fields': ('is_tenant_admin',)}),
+    add_fieldsets = (
+        (None, {
+            "classes": ("wide",),
+            "fields": ("email", "password1", "password2", "is_staff", "is_active")}
+        ),
     )
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_tenant_admin:
-            return qs.filter(created_by__tenant_admin=True)
-        return qs
-
-    def has_add_permission(self, request):
-        return request.user.tenant_admin or request.user.is_superuser
-
-    def has_change_permission(self, request, obj=None):
-        return request.user.tenant_admin or request.user.is_superuser
-
-    def has_delete_permission(self, request, obj=None):
-        return request.user.tenant_admin or request.user.is_superuser
-
-admin.site.register(CustomUser, CustomUserAdmin)

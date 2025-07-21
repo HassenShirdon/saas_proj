@@ -1,58 +1,80 @@
 <template>
   <section id="hero-section" class="hero-section">
-    <div class="container">
-      <div class="row align-items-center flex-column-reverse flex-lg-row">
-        <!-- Text Column -->
-        <div class="col-12 col-lg-6 text-center text-lg-start mb-2 mb-lg-0">
-          <div class="hero-content">
-            <h1 class="display-2 fw-bold mb-4">
-              Transform Your Business with
-              <span class="text-primary-gradient">Marjaan Solutions</span>
-            </h1>
-            <p class="lead mb-5 px-2 px-md-4">
-              Streamline your operations with our all-in-one platform.<br>
-              From HR to finance, we've got everything you need to scale your business efficiently.
-            </p>
-            <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-lg-start gap-3">
-              <a href="#cta" class="btn btn-primary btn-lg shadow">
-                Start Free Trial <i class="bi bi-arrow-right ms-2"></i>
-              </a>
-              <a href="#features" class="btn btn-outline-primary btn-lg">
-                <i class="bi bi-play-circle me-2"></i>Watch Demo
-              </a>
+
+    <div class="container mt-5" data-aos="fade-up" data-aos-delay="100">
+
+      <div class="row align-items-center mb-5">
+        <div class="col-lg-7 mb-4 mb-lg-0">
+          <div class="badge-wrapper mb-3">
+            <div class="d-inline-flex align-items-center rounded-pill border border-accent-light my-2">
+              <div class="icon-circle me-2">
+                <i class="bi bi-bell"></i>
+              </div>
+              <span class="badge-text me-3">Innovative Solutions</span>
+            </div>
+          </div>
+
+          <h3 class="hero-title my-3 ">One Platform to Command Inventory, HR & Finance</h3>
+
+          <p class="hero-description my-4 text-primary font-bold">Deliver precision, compliance, and efficiency with Marjaan <br/> <span class="text-dark text-semibold"> The unified software that replaces siloed spreadsheets across your operations. Ensure accurate stock levels, smarter HR workflows, and financially sound decision-making - all from a single pane of glass</span>.</p>
+
+          <div class="cta-wrapper">
+            <a href="#" class="btn btn-primary">Discover More</a>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="hero-image">
+            <img src="@/assets/hero-illustration.png" class="img-fluid border-0" style="max-height: 450px;" alt="Responsive image" loading="lazy">
+          </div>
+        </div>
+      </div>
+
+      <div class="row feature-boxes">
+        <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-box">
+            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+              <i class="bi bi-gear"></i>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Rapid Deployment</h3>
+              <p class="feature-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus
+                nec ullamcorper mattis.</p>
             </div>
           </div>
         </div>
-        <!-- Image Column -->
-        <div class="col-12 col-lg-6 d-flex justify-content-center align-items-center mb-4 mb-lg-0">
-          <div class="hero-image-wrapper position-relative">
-            <img src="@/assets/hero-illustration.png" alt="Dashboard preview" class="img-fluid hero-image" />
-            <!-- Optional: Floating Cards for SaaS feel -->
-            <div class="floating-card card-1 d-none d-md-flex">
-              <i class="bi bi-graph-up-arrow text-primary"></i>
-              <span>Analytics</span>
+
+        <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-box">
+            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+              <i class="bi bi-window"></i>
             </div>
-            <div class="floating-card card-2 d-none d-md-flex">
-              <i class="bi bi-people text-success"></i>
-              <span>Team Collaboration</span>
+            <div class="feature-content">
+              <h3 class="feature-title">Advanced Security</h3>
+              <p class="feature-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                fugiat nulla pariatur.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-box">
+            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
+              <i class="bi bi-headset"></i>
+            </div>
+            <div class="feature-content">
+              <h3 class="feature-title">Dedicated Support</h3>
+              <p class="feature-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+                mollit anim id est laborum.</p>
             </div>
           </div>
         </div>
       </div>
-      <!-- Trust Badges -->
-      <div class="trust-badges mt-5 py-3 px-2 px-md-4 rounded-4 shadow-sm bg-white">
-        <p class="mb-3 fw-semibold trust-title">
-          <i class="bi bi-shield-check text-primary me-2"></i>
-          Trusted by leading companies
-        </p>
-        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4">
-          <img src="@/assets/jeehgeneral.jpeg" alt="jeeh General Trading" class="company-logo" />
-          <img src="@/assets/logo.png" alt="Company 2" class="company-logo" />
-          <img src="@/assets/logo.png" alt="Company 3" class="company-logo" />
-        </div>
-      </div>
+
     </div>
-  </section>
+
+  </section><!-- /Hero Section -->
+
 </template>
 
 <script>
@@ -158,7 +180,6 @@ export default {
 .hero-image {
   border-radius: 24px;
   width: 100%;
-  box-shadow: 0 12px 40px rgba(58, 141, 222, 0.10);
   transition: all 0.3s ease;
 }
 

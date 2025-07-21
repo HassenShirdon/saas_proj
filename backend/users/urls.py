@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import CustomLoginView
+from .views import LoginRedirectAPIView
 
 urlpatterns = [
-    path('login/', CustomLoginView.as_view(), name='token_obtain_pair'),
+    path("token/", LoginRedirectAPIView.as_view(), name="login-redirect"),
 ]

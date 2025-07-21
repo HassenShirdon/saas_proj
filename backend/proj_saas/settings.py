@@ -18,26 +18,27 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']
 
-INSTALLED_APPS = [
-    'django_tenants',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'corsheaders',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'core',  # Tenant models (Client, Domain)
-    'users',  # CustomUser model
-    'inventory',
-    'finance',
-    'hrm',
-]
+# INSTALLED_APPS = [
+#     'django_tenants',
+#     'django.contrib.admin',
+#     'django.contrib.auth',
+#     'django.contrib.contenttypes',
+#     'django.contrib.sessions',
+#     'django.contrib.messages',
+#     'django.contrib.staticfiles',
+#     'corsheaders',
+#     'rest_framework',
+#     'rest_framework_simplejwt',
+#     'core',  # Tenant models (Client, Domain)
+#     'users',  # CustomUser model
+#     'inventory',
+#     'finance',
+#     'hrm',
+# ]
 
 SHARED_APPS = [
     'django_tenants',
+    'tenant_users.tenants',       # For Client & Domain models
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,6 +58,7 @@ TENANT_APPS = [
     'rest_framework_simplejwt',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'tenant_users.permissions',   # Optional permissions system
     'inventory',
     'finance',
     'hrm',
@@ -83,7 +85,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'
+# PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'
 ROOT_URLCONF = 'proj_saas.urls'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -101,6 +103,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://jeeh.localhost:5173',
 ]
 CORS_ALLOW_CREDENTIALS = True
+PUBLIC_DOMAIN = 'localhost:8000' 
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
@@ -131,6 +134,8 @@ DATABASES = {
 }
 
 DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
+
+# VUE_DEV_SERVER_URL = "localhost:5173"
 
 TEMPLATES = [
     {
