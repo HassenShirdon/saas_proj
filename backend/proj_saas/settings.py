@@ -1,124 +1,55 @@
+# proj_saas/settings.py
+# This file configures your Django project, including multi-tenancy, DRF, and JWT.
+import os
 from datetime import timedelta
 from pathlib import Path
-import os
+
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
-# Build paths inside the project
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Security settings
-SECRET_KEY = os.getenv('SECRET_KEY')
+
+SECRET_KEY = os.getenv('SECRET_KEY') # Using environment variable for SECRET_KEY
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY must be set in .env file")
 
 DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.localhost']
+ALLOWED_HOSTS = ['*'] # For development, allow all hosts. Restrict in production.
 
-# INSTALLED_APPS = [
-#     'django_tenants',
-#     'django.contrib.admin',
-#     'django.contrib.auth',
-#     'django.contrib.contenttypes',
-#     'django.contrib.sessions',
-#     'django.contrib.messages',
-#     'django.contrib.staticfiles',
-#     'corsheaders',
-#     'rest_framework',
-#     'rest_framework_simplejwt',
-#     'core',  # Tenant models (Client, Domain)
-#     'users',  # CustomUser model
-#     'inventory',
-#     'finance',
-#     'hrm',
-# ]
+
 
 SHARED_APPS = [
-    'django_tenants',
-    'tenant_users.tenants',       # For Client & Domain models
+    'django_tenants', # Must be first
+   
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',
     'rest_framework',
     'rest_framework_simplejwt',
-    'core',  # Shared for Client and Domain models
-    'users',  # Shared for CustomUser
+    'corsheaders', # Required for CORS if frontend is on a different origin
+    'core',           # Your core app for tenant management
+    'users', 
 ]
 
 TENANT_APPS = [
-    'django.contrib.contenttypes',
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'tenant_users.permissions',   # Optional permissions system
-    'inventory',
-    'finance',
-    'hrm',
+    'users',     # Tenant-specific user management
+    'inventory', # Tenant-specific inventory app
+    'finance',   # Tenant-specific finance app (create this app later)
+    'hrm',       # Tenant-specific HRM app (create this app later)
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
 
-# Tenant configuration
-TENANT_MODEL = "core.Client"
-TENANT_DOMAIN_MODEL = "core.Domain"
-PUBLIC_SCHEMA_NAME = 'public'
-SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
-
-# Middleware
-MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',  # Must be first
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-# PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'
-ROOT_URLCONF = 'proj_saas.urls'
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-}
-
-
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://127.0.0.1:8000',
-    'http://jeeh.localhost:5173',
-]
-CORS_ALLOW_CREDENTIALS = True
-PUBLIC_DOMAIN = 'localhost:8000' 
-
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=7),
-    'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': True,
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': os.getenv('SECRET_KEY'),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-}
-
-# Database configuration
+# Database configuration for multi-tenancy
+# PostgreSQL is required for schema-based multi-tenancy.
 DATABASES = {
     'default': {
         'ENGINE': 'django_tenants.postgresql_backend',
@@ -127,23 +58,41 @@ DATABASES = {
         'PASSWORD': os.getenv('DATABASE_PASSWORD'),
         'HOST': os.getenv('DATABASE_HOST', 'localhost'),
         'PORT': os.getenv('DATABASE_PORT', '5432'),
-        'TEST': {  # Added for testing
-            'NAME': os.getenv('TEST_DATABASE_NAME', f"test_{os.getenv('DATABASE_NAME')}"),
-        },
+       
     }
 }
 
-DATABASE_ROUTERS = ['django_tenants.routers.TenantSyncRouter']
+DATABASE_ROUTERS = ('django_tenants.routers.TenantSyncRouter',)
 
-# VUE_DEV_SERVER_URL = "localhost:5173"
+# Set the Tenant model and Domain model for django-tenants
+TENANT_MODEL = "core.Tenant"
+TENANT_DOMAIN_MODEL = "core.Domain"
+PUBLIC_SCHEMA_NAME = 'public'
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True # Important for development to access public schema without subdomain
+
+# Middleware for multi-tenancy and authentication
+MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware', # Must be first
+    'corsheaders.middleware.CorsMiddleware', # Add CORS middleware
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+ROOT_URLCONF = 'proj_saas.urls' # Ensure this matches your project name (e.g., proj_saas.urls)
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates'], # Added templates directory if you have one
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.request',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -152,36 +101,124 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'proj_saas.wsgi.application'
+WSGI_APPLICATION = 'proj_saas.wsgi.application' # Ensure this matches your project name (e.g., proj_saas.wsgi.application)
 
-AUTH_USER_MODEL = 'users.CustomUser'
+
+# Password validation
+# https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
+
+# Internationalization
+# https://docs.djangoproject.com/en/5.0/topics/i18n/
+
 LANGUAGE_CODE = 'en-us'
+
 TIME_ZONE = 'UTC'
+
 USE_I18N = True
+
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-MEDIA_ROOT =  os.path.join(BASE_DIR, 'media')
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/5.0/howto/static-files/
+
+STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles' # Added STATIC_ROOT for deployment
+MEDIA_ROOT =  os.path.join(BASE_DIR, 'media') # Added MEDIA_ROOT for user-uploaded files
 MEDIA_URL = '/media/'
 
-if not DEBUG:
-    SECURE_SSL_REDIRECT = True
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-    X_FRAME_OPTIONS = 'DENY'
 
+# Default primary key field type
+# https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django Rest Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated', # Default to requiring authentication
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+}
+
+# Simple JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60), # Access token valid for 60 minutes
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),    # Refresh token valid for 1 day
+    'ROTATE_REFRESH_TOKENS': True, # Automatically rotate refresh tokens
+    'BLACKLIST_AFTER_ROTATION': True, # Blacklist old refresh tokens
+    'UPDATE_LAST_LOGIN': True, # Update last login time on token refresh
+
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': SECRET_KEY,
+    'VERIFYING_KEY': None,
+    'AUDIENCE': None,
+    'ISSUER': None,
+    'JWK_URL': None,
+    'LEEWAY': 0,
+
+    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
+    # 'USER_ID_FIELD': 'id',
+    # 'USER_ID_CLAIM': 'user_id',
+    'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
+
+    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
+    'TOKEN_TYPE_CLAIM': 'token_type',
+    'TOKEN_USER_CLASS': 'rest_framework_simplejwt.models.TokenUser',
+
+    'JTI_CLAIM': 'jti',
+
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+}
+
+# Django-tenants-users settings
+# Specify the custom user model for django-tenants-users
+AUTH_USER_MODEL = 'users.CustomUser' # <--- RE-CORRECTED THIS LINE TO MATCH YOUR models.py
+
+# CORS settings for frontend communication
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080", # Your Vue.js dev server (common for Vue CLI)
+    "http://localhost:5173", # Your Vue.js dev server (common for Vite)
+    "http://localhost:8000", # Your Django dev server
+    # Add your production frontend URL here later, e.g., "https://yourlogisticsapp.com"
+]
+CORS_ALLOW_CREDENTIALS = True # Allow cookies/authentication headers to be sent
+CORS_ALLOW_HEADERS = [
+    "accept",
+    "accept-encoding",
+    "authorization",
+    "content-type",
+    "dnt",
+    "origin",
+    "user-agent",
+    "x-csrftoken",
+    "x-requested-with",
+]
+
+# Logging configuration (from your original settings.py)
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -202,4 +239,5 @@ LOGGING = {
     },
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Ensure PUBLIC_SCHEMA_DOMAIN is set for development
+PUBLIC_SCHEMA_DOMAIN = 'localhost'

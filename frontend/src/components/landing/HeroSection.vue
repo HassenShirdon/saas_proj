@@ -1,81 +1,61 @@
-<template>
-  <section id="hero-section" class="hero-section">
-
-    <div class="container mt-5" data-aos="fade-up" data-aos-delay="100">
-
-      <div class="row align-items-center mb-5">
-        <div class="col-lg-7 mb-4 mb-lg-0">
-          <div class="badge-wrapper mb-3">
-            <div class="d-inline-flex align-items-center rounded-pill border border-accent-light my-2">
-              <div class="icon-circle me-2">
-                <i class="bi bi-bell"></i>
-              </div>
-              <span class="badge-text me-3">Innovative Solutions</span>
+  <template>
+    <section id="hero-section" class="pt-5 mt-5" style="min-height: 100vh;  background: #f0f0f0;">
+      <div class="container">
+        <div class="row align-items-center">
+          <!-- Hero Content -->
+          <div class="col-lg-6 mb-4 mb-lg-0">
+            <div class="mb-3">
+              <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
+                <i class="bi bi-bell-fill me-2"></i> Inventory & Logistics Reinvented
+              </span>
             </div>
+
+            <h1 class="display-7 fw-bold mb-5">Unified Platform for Smarter Inventory & Logistics</h1>
+
+            <p class="lead text-dark mb-4">
+              Marjaan empowers your business with real-time control of inventory, seamless logistics, and data-driven
+              decisions — all from one intuitive dashboard.
+            </p>
+
+            <a href="#" class="btn btn-primary btn-lg px-4">Get Started Now</a>
           </div>
 
-          <h3 class="hero-title my-3 ">One Platform to Command Inventory, HR & Finance</h3>
-
-          <p class="hero-description my-4 text-primary font-bold">Deliver precision, compliance, and efficiency with Marjaan <br/> <span class="text-dark text-semibold"> The unified software that replaces siloed spreadsheets across your operations. Ensure accurate stock levels, smarter HR workflows, and financially sound decision-making - all from a single pane of glass</span>.</p>
-
-          <div class="cta-wrapper">
-            <a href="#" class="btn btn-primary">Discover More</a>
-          </div>
-        </div>
-
-        <div class="col-lg-5">
-          <div class="hero-image">
-            <img src="@/assets/hero-illustration.png" class="img-fluid border-0" style="max-height: 450px;" alt="Responsive image" loading="lazy">
-          </div>
-        </div>
-      </div>
-
-      <div class="row feature-boxes">
-        <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="200">
-          <div class="feature-box">
-            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
-              <i class="bi bi-gear"></i>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Rapid Deployment</h3>
-              <p class="feature-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus
-                nec ullamcorper mattis.</p>
-            </div>
+          <!-- Hero Image -->
+          <div class="col-lg-6 text-center">
+            <img src="@/assets/hero-illustration.png" alt="Platform Illustration" class="img-fluid"
+              style="max-height: 450px;" loading="lazy">
           </div>
         </div>
 
-        <div class="col-lg-4 mb-4 mb-lg-0" data-aos="fade-up" data-aos-delay="300">
-          <div class="feature-box">
-            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
-              <i class="bi bi-window"></i>
-            </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Advanced Security</h3>
-              <p class="feature-text">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                fugiat nulla pariatur.</p>
+        <!-- Features Section -->
+        <div class="row text-center mt-5">
+          <div class="col-md-4 mb-4">
+            <div class="p-3">
+              <h5 class="fw-semibold text-primary">📦 Real-Time Inventory</h5>
+              <p class="text-dark">Track stock levels, locations, and movements instantly — avoid stockouts and
+                overstock.</p>
             </div>
           </div>
-        </div>
-
-        <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
-          <div class="feature-box">
-            <div class="feature-icon me-sm-4 mb-3 mb-sm-0">
-              <i class="bi bi-headset"></i>
+          <div class="col-md-4 mb-4">
+            <div class="p-3">
+              <h5 class="fw-semibold text-primary">🚚 Smart Logistics Automation</h5>
+              <p class="text-dark">Streamline procurement to delivery with intelligent workflows and route
+                optimization.</p>
             </div>
-            <div class="feature-content">
-              <h3 class="feature-title">Dedicated Support</h3>
-              <p class="feature-text">Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                mollit anim id est laborum.</p>
+          </div>
+          <div class="col-md-4 mb-4">
+            <div class="p-3">
+              <h5 class="fw-semibold text-primary">📊 Data-Driven Insights</h5>
+              <p class="text-dark">Make informed decisions with powerful analytics on stock movement, suppliers, and
+                cost.</p>
             </div>
           </div>
         </div>
       </div>
+    </section>
+  </template>
 
-    </div>
 
-  </section><!-- /Hero Section -->
-
-</template>
 
 <script>
 export default {
@@ -84,8 +64,9 @@ export default {
 </script>
 
 <style scoped>
-.hero-section {
+#hero-section {
   min-height: 100vh;
+  top: 50px;
   display: flex;
   align-items: center;
   padding: 8rem 0 2rem 0;

@@ -1,37 +1,18 @@
-from rest_framework import viewsets, permissions
-from rest_framework.permissions import IsAdminUser
-from .models import Client
-from .serializers import ClientSerializer
-from django_tenants.utils import tenant_context
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.db import connection
+from rest_framework.permissions import AllowAny  # Can replace later with IsSuperAdmin
+from .models import Tenant, Domain
+from .serializers import TenantSerializer
+from rest_framework.permissions import AllowAny
 
-class ClientViewSet(viewsets.ModelViewSet):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
-    permission_classes = [IsAdminUser]  # Only superusers can access
+class TenantViewSet(viewsets.ModelViewSet):
+    queryset = Tenant.objects.all()
+    serializer_class = TenantSerializer
+    permission_classes = [AllowAny]  # Replace with custom permission if needed
 
-    def get_queryset(self):
-        if connection.schema_name != 'public':
-            return Client.objects.none()  # Restrict to public schema
-        return super().get_queryset()
-
-    def perform_create(self, serializer):
-        with tenant_context(self.request.tenant):
-            instance = serializer.save()
-            return instance
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
-    def activate(self, request, pk=None):
-        client = self.get_object()
-        client.is_active = True
-        client.save()
-        return Response({'status': 'Tenant activated'})
-
-    @action(detail=True, methods=['post'], permission_classes=[IsAdminUser])
-    def deactivate(self, request, pk=None):
-        client = self.get_object()
-        client.is_active = False
-        client.save()
-        return Response({'status': 'Tenant deactivated'})
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

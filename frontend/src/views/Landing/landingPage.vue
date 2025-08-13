@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container-fluid" style="background: #f0f0f0;">
     <navigationSection />
     <HeroSection />
     <FeaturesSection />
