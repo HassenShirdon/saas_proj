@@ -22,10 +22,8 @@ DEBUG = os.getenv('DEBUG', 'False').lower() == 'true'
 ALLOWED_HOSTS = ['*'] # For development, allow all hosts. Restrict in production.
 
 
-
 SHARED_APPS = [
-    'django_tenants', # Must be first
-   
+    'django_tenants',  # MUST BE FIRST
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,20 +31,22 @@ SHARED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt',
-    'corsheaders', # Required for CORS if frontend is on a different origin
-    'core',           # Your core app for tenant management
-    'users', 
+    'core',           # Contains Tenant/Domain models
+    'users',          # User model must be in SHARED_APPS (docs requirement)
 ]
 
 TENANT_APPS = [
-    'users',     # Tenant-specific user management
-    'inventory', # Tenant-specific inventory app
-    'finance',   # Tenant-specific finance app (create this app later)
-    'hrm',       # Tenant-specific HRM app (create this app later)
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'inventory',
+    'finance',
+    'hrm',
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+# settings.py
 
 # Database configuration for multi-tenancy
 # PostgreSQL is required for schema-based multi-tenancy.
@@ -72,18 +72,22 @@ SHOW_PUBLIC_IF_NO_TENANT_FOUND = True # Important for development to access publ
 
 # Middleware for multi-tenancy and authentication
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware', # Must be first
-    'corsheaders.middleware.CorsMiddleware', # Add CORS middleware
+    'django_tenants.middleware.main.TenantMainMiddleware',  # Must remain first
+    'core.middleware.TenantAuthValidationMiddleware', 
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
-ROOT_URLCONF = 'proj_saas.urls' # Ensure this matches your project name (e.g., proj_saas.urls)
+# settings.py
+ROOT_URLCONF = 'proj_saas.urls'           # For TENANT schemas (tenant1.localhost)
+PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'  # For PUBLIC schema (localhost)
 
 TEMPLATES = [
     {
@@ -153,12 +157,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated', # Default to requiring authentication
-    ),
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
+    )
 }
 
 # Simple JWT settings
@@ -194,16 +193,17 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-# Django-tenants-users settings
-# Specify the custom user model for django-tenants-users
-AUTH_USER_MODEL = 'users.CustomUser' # <--- RE-CORRECTED THIS LINE TO MATCH YOUR models.py
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+]
 
+AUTH_USER_MODEL = 'users.User' # <--- 
 # CORS settings for frontend communication
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080", # Your Vue.js dev server (common for Vue CLI)
     "http://localhost:5173", # Your Vue.js dev server (common for Vite)
-    "http://localhost:8000", # Your Django dev server
-    # Add your production frontend URL here later, e.g., "https://yourlogisticsapp.com"
+    
 ]
 CORS_ALLOW_CREDENTIALS = True # Allow cookies/authentication headers to be sent
 CORS_ALLOW_HEADERS = [

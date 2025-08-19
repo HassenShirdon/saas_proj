@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from inventory.models import Supplier, Customer, PurchaseOrder, SalesOrder
 
 class AccountType(models.Model):
     """Represents different types of accounts in the chart of accounts"""
@@ -57,7 +56,7 @@ class Account(models.Model):
 class JournalEntry(models.Model):
     """Main accounting journal entry"""
     entry_number = models.CharField(max_length=50, unique=True)
-    date = models.DateField(default=timezone.now)
+    date = models.DateTimeField(default=timezone.now)
     description = models.TextField()
     reference = models.CharField(max_length=100, blank=True, null=True)
     is_adjusting = models.BooleanField(default=False)
@@ -113,15 +112,15 @@ class JournalEntryLine(models.Model):
 class SupplierInvoice(models.Model):
     """Supplier invoices received for goods/services"""
     invoice_number = models.CharField(max_length=100)
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT)
+    supplier = models.ForeignKey('inventory.Supplier', on_delete=models.PROTECT)  # String reference
     purchase_order = models.ForeignKey(
-        PurchaseOrder,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
-    invoice_date = models.DateField()
-    due_date = models.DateField()
+    'inventory.PurchaseOrder',  # Use string reference
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True
+)
+    invoice_date = models.DateTimeField()
+    due_date = models.DateTimeField()
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     status = models.CharField(
@@ -161,10 +160,10 @@ class SupplierInvoiceLine(models.Model):
         related_name='lines'
     )
     inventory_item = models.ForeignKey(
-        'inventory.InventoryItem',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
+    'inventory.InventoryItem',  # Use string reference
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True
     )
     description = models.TextField()
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
@@ -186,8 +185,8 @@ class SupplierInvoiceLine(models.Model):
 class SupplierPayment(models.Model):
     """Payments made to suppliers"""
     payment_number = models.CharField(max_length=50, unique=True)
-    supplier = models.ForeignKey(Supplier, on_delete=models.PROTECT)
-    payment_date = models.DateField(default=timezone.now)
+    supplier = models.ForeignKey('inventory.Supplier', on_delete=models.PROTECT)  # String reference
+    payment_date = models.DateTimeField(default=timezone.now)
     payment_method = models.CharField(
         max_length=20,
         choices=[
@@ -225,15 +224,15 @@ class SupplierPayment(models.Model):
 class CustomerInvoice(models.Model):
     """Invoices sent to customers"""
     invoice_number = models.CharField(max_length=100, unique=True)
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
+    customer = models.ForeignKey('inventory.Customer', on_delete=models.PROTECT)  # String reference
     sales_order = models.ForeignKey(
-        'inventory.SalesOrder',
+        'inventory.SalesOrder',  # String reference
         on_delete=models.SET_NULL,
         null=True,
         blank=True
     )
-    invoice_date = models.DateField(default=timezone.now)
-    due_date = models.DateField()
+    invoice_date = models.DateTimeField(default=timezone.now)
+    due_date = models.DateTimeField()
     total_amount = models.DecimalField(max_digits=12, decimal_places=2)
     tax_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
     status = models.CharField(
@@ -281,11 +280,11 @@ class CustomerInvoiceLine(models.Model):
         related_name='lines'
     )
     inventory_item = models.ForeignKey(
-        'inventory.InventoryItem',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True
-    )
+    'inventory.InventoryItem',  # Use string reference
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True
+)
     description = models.TextField()
     quantity = models.DecimalField(max_digits=10, decimal_places=2)
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -306,8 +305,8 @@ class CustomerInvoiceLine(models.Model):
 class CustomerPayment(models.Model):
     """Payments received from customers"""
     payment_number = models.CharField(max_length=50, unique=True)
-    customer = models.ForeignKey(Customer, on_delete=models.PROTECT)
-    payment_date = models.DateField(default=timezone.now)
+    customer = models.ForeignKey('inventory.Customer', on_delete=models.PROTECT)  # String reference
+    payment_date = models.DateTimeField(default=timezone.now)
     payment_method = models.CharField(
         max_length=20,
         choices=[
@@ -345,7 +344,7 @@ class CustomerPayment(models.Model):
 class Expense(models.Model):
     """Records business expenses"""
     expense_number = models.CharField(max_length=50, unique=True)
-    expense_date = models.DateField(default=timezone.now)
+    expense_date = models.DateTimeField(default=timezone.now)
     vendor = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField()
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -390,8 +389,8 @@ class Expense(models.Model):
 class FinancialPeriod(models.Model):
     """Accounting periods for reporting"""
     name = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
     is_closed = models.BooleanField(default=False)
     closed_at = models.DateTimeField(null=True, blank=True)
     notes = models.TextField(blank=True, null=True)

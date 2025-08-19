@@ -1,14 +1,23 @@
-from django.db import models
 from django_tenants.models import TenantMixin, DomainMixin
+from django.db import models
+from django_tenants.utils import get_public_schema_name
 
 class Tenant(TenantMixin):
-    name = models.CharField(max_length=100)
-    paid_until =  models.DateField()
-    on_trial = models.BooleanField()
+    tenant_name = models.CharField(max_length=100)
+    address = models.TextField()
     created_on = models.DateField(auto_now_add=True)
-
-    # default true, schema will be automatically created and synced when it is saved
+    is_active = models.BooleanField(default=False)
+    max_users = models.IntegerField(default=4)
+    
     auto_create_schema = True
+    auto_drop_schema = True
+    
+    def __str__(self):
+        return self.tenant_name
+    
+    def is_public(self):
+        return self.schema_name == get_public_schema_name()
 
 class Domain(DomainMixin):
-    pass
+    def __str__(self):
+        return self.domain

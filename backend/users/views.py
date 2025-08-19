@@ -1,25 +1,74 @@
-from rest_framework import viewsets, permissions
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import CustomUser
-from .serializers import UserSerializer
-from .permissions import IsTenantAdmin, IsTenantUser
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django_tenants.utils import get_tenant_model, get_public_schema_name
+from .models import User
+from .serializers import UserSerializer, UserCreateSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = [IsTenantAdmin | permissions.IsAdminUser]
+def get_tenant_from_request(request):
+    TenantModel = get_tenant_model()
+    hostname = request.get_host().split(':')[0]
     
-    def get_queryset(self):
-        # Tenant admins can only see users from their tenant
-        if self.request.user.is_tenant_admin:
-            return CustomUser.objects.filter(tenant=self.request.user.tenant)
-        return super().get_queryset()
+    if hostname in ['localhost', '127.0.0.1']:
+        return TenantModel.objects.get(schema_name=get_public_schema_name())
     
+    subdomain = hostname.split('.')[0]
+    return TenantModel.objects.get(schema_name=subdomain)
+
+class PublicTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        try:
+            tenant = get_tenant_from_request(request)
+            if tenant.schema_name != get_public_schema_name():
+                return Response(
+                    {"detail": "Only accessible via public schema"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except Exception as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return super().post(request, *args, **kwargs)
+
+class TenantTokenObtainPairView(TokenObtainPairView):
+    def post(self, request, *args, **kwargs):
+        try:
+            tenant = get_tenant_from_request(request)
+            if tenant.schema_name == get_public_schema_name():
+                return Response(
+                    {"detail": "Only accessible via tenant schemas"}, 
+                    status=status.HTTP_403_FORBIDDEN
+                )
+        except Exception as e:
+            return Response(
+                {"detail": str(e)},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        return super().post(request, *args, **kwargs)
+
+class UserCreateAPIView(generics.CreateAPIView):
+    serializer_class = UserCreateSerializer
+    permission_classes = [permissions.IsAdminUser]
+
     def perform_create(self, serializer):
-        # Automatically set the tenant to the current user's tenant
-        serializer.save(tenant=self.request.user.tenant)
-    
-    def get_permissions(self):
-        if self.action == 'retrieve':
-            return [IsTenantUser()]
-        return super().get_permissions()
+        tenant = get_tenant_from_request(self.request)
+        serializer.save(tenant=tenant)
+
+class UserListAPIView(generics.ListAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        tenant = get_tenant_from_request(self.request)
+        return User.objects.filter(tenant=tenant)
+
+class UserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    # REMOVE the generic queryset: queryset = User.objects.all()
+
+    def get_queryset(self):
+        # Add the same tenant filtering as in UserListAPIView
+        tenant = get_tenant_from_request(self.request)
+        return User.objects.filter(tenant=tenant)

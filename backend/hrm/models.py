@@ -20,7 +20,7 @@ class Employee(models.Model):
     employee_id = models.CharField(max_length=20, unique=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)  # Removed primary_key=True
+    email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
     date_hired = models.DateField(auto_now_add=True)
@@ -99,7 +99,6 @@ class Attendance(models.Model):
     ], default='present')
 
     def save(self, *args, **kwargs):
-        # Calculate total hours if both check_in and check_out are provided
         if self.check_in_time and self.check_out_time:
             time_diff = self.check_out_time - self.check_in_time
             self.total_hours = round(time_diff.total_seconds() / 3600, 2)

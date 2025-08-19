@@ -1,32 +1,27 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer
-
-CustomUser = get_user_model()
+from django.contrib.auth.password_validation import validate_password
+from .models import User
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CustomUser
-        fields = ['id', 'email', 'first_name', 'last_name', 'role', 'is_active', 'date_joined']
-        read_only_fields = ['id', 'is_active', 'date_joined']
+        model = User
+        fields = ['id', 'email', 'first_name', 'last_name', 'is_active', 'tenant']
+        read_only_fields = ['id', 'tenant']
 
-class UserCreateSerializer(BaseUserCreateSerializer):
-    class Meta(BaseUserCreateSerializer.Meta):
-        model = CustomUser
-        fields = ['id', 'email', 'password', 'first_name', 'last_name', 'role', 'tenant']
-    
+class UserCreateSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password_confirm = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'password', 'password_confirm', 'first_name', 'last_name']
+
     def validate(self, attrs):
-        request = self.context.get('request')
-        
-        if request and hasattr(request, 'user'):
-            if not request.user.is_tenant_admin:
-                raise serializers.ValidationError("Only tenant admins can create users")
-            
-            # Tenant admins can only create users for their own tenant
-            attrs['tenant'] = request.user.tenant
-            
-            # Prevent creating other tenant admins
-            if attrs.get('role') == 'TENANT_ADMIN':
-                raise serializers.ValidationError("Cannot create tenant admin users")
-        
-        return super().validate(attrs)
+        if attrs['password'] != attrs['password_confirm']:
+            raise serializers.ValidationError("Passwords don't match")
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('password_confirm')
+        user = User.objects.create_user(**validated_data)
+        return user

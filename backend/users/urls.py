@@ -1,13 +1,10 @@
+# users/urls.py
 from django.urls import path
-from rest_framework.routers import DefaultRouter
-from .views import UserViewSet
-from djoser.views import UserViewSet as DjoserUserViewSet
+from .views import UserCreateAPIView, UserListAPIView, UserDetailAPIView
 
-router = DefaultRouter()
-router.register(r'users', UserViewSet, basename='user')
-
-urlpatterns =[
-    path('users/me/', DjoserUserViewSet.as_view({'get': 'me'})),
-
-] + router.urls
-
+urlpatterns = [
+    # User Management (Tenant Schema Only)
+    path('', UserListAPIView.as_view(), name='user-list'),
+    path('create/', UserCreateAPIView.as_view(), name='user-create'),
+    path('<int:pk>/', UserDetailAPIView.as_view(), name='user-detail'),
+]
