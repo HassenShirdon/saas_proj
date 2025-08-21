@@ -72,8 +72,7 @@ SHOW_PUBLIC_IF_NO_TENANT_FOUND = True # Important for development to access publ
 
 # Middleware for multi-tenancy and authentication
 MIDDLEWARE = [
-    'django_tenants.middleware.main.TenantMainMiddleware',  # Must remain first
-    'core.middleware.TenantAuthValidationMiddleware', 
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -82,7 +81,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    
 ]
 
 # settings.py
