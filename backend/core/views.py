@@ -8,7 +8,7 @@ from .serializers import TenantSerializer, DomainSerializer
 # , TenantSignupSerializer
 from users.models import User
 from rest_framework.permissions import IsAdminUser, AllowAny
-
+import re
 
 class TenantListView(generics.ListAPIView):
     queryset = Tenant.objects.all()
@@ -49,8 +49,14 @@ class TenantCreateView(generics.CreateAPIView):
         admin_email = request.data.get('admin_email')
         admin_password = request.data.get('admin_password')
         
+        # Clean and validate schema name (FIXED)
+        schema_name = self.clean_schema_name(data.get('schema_name', ''))
+        
+        # Validate schema name format
+        if not self.is_valid_schema_name(schema_name):
+            raise ValidationError("Invalid schema name. Must start with a letter and contain only letters, numbers, and underscores.")
+        
         # Validate schema doesn't exist
-        schema_name = data.get('schema_name', '').lower().replace(' ', '-')
         if schema_exists(schema_name):
             raise ValidationError("Tenant with this schema name already exists")
 
@@ -78,13 +84,18 @@ class TenantCreateView(generics.CreateAPIView):
         
         # Create admin user in tenant schema if credentials provided
         if admin_email and admin_password:
-            with tenant_context(tenant):
-                User.objects.create_user(
-                    email=admin_email,
-                    password=admin_password,
-                    is_staff=True,
-                    is_superuser=True
-                )
+            try:
+                with tenant_context(tenant):
+                    User.objects.create_user(
+                        email=admin_email,
+                        password=admin_password,
+                        is_staff=True,
+                        is_superuser=True
+                    )
+            except Exception as e:
+                # If user creation fails, we might want to handle this gracefully
+                # You can choose to delete the tenant or just log the error
+                raise ValidationError(f"Failed to create admin user: {str(e)}")
         
         return Response({
             'status': 'success',
@@ -92,7 +103,58 @@ class TenantCreateView(generics.CreateAPIView):
             'tenant': TenantSerializer(tenant).data,
             'domain': DomainSerializer(domain).data
         }, status=status.HTTP_201_CREATED)
-
+    
+    def clean_schema_name(self, name):
+        """Clean and format schema name to be PostgreSQL compatible"""
+        if not name:
+            # Generate a default name if empty
+            import uuid
+            return f"tenant_{uuid.uuid4().hex[:8]}"
+        
+        # Convert to lowercase
+        name = name.lower().strip()
+        
+        # Replace spaces, hyphens, and other separators with underscores
+        name = re.sub(r'[\s\-\.]+', '_', name)
+        
+        # Remove invalid characters (keep only letters, numbers, underscores)
+        name = re.sub(r'[^a-z0-9_]', '', name)
+        
+        # Remove leading underscores and numbers
+        name = re.sub(r'^[0-9_]+', '', name)
+        
+        # Ensure it starts with a letter
+        if name and not name[0].isalpha():
+            name = f"t_{name}"
+        
+        # Ensure it's not too long (PostgreSQL limit is 63 characters)
+        if len(name) > 63:
+            name = name[:63]
+        
+        return name
+    
+    def is_valid_schema_name(self, name):
+        """Validate schema name according to PostgreSQL and django-tenants rules"""
+        if not name or len(name) < 1:
+            return False
+        
+        # Check if starts with letter
+        if not name[0].isalpha():
+            return False
+        
+        # Check if contains only valid characters
+        if not re.match(r'^[a-z][a-z0-9_]*$', name):
+            return False
+        
+        # Check if not starting with pg_ (PostgreSQL reserved)
+        if name.startswith('pg_'):
+            return False
+        
+        # Check length
+        if len(name) > 63:
+            return False
+        
+        return True
 # class TenantSignupView(generics.CreateAPIView):
 #     serializer_class = TenantSignupSerializer
 #     permission_classes = [AllowAny]  # Public access for signup

@@ -31,8 +31,9 @@ SHARED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'core',           # Contains Tenant/Domain models
-    'users',          # User model must be in SHARED_APPS (docs requirement)
+    'users.apps.UsersConfig',  # Use explicit app config
 ]
 
 TENANT_APPS = [
@@ -84,7 +85,7 @@ MIDDLEWARE = [
 ]
 
 # settings.py
-ROOT_URLCONF = 'proj_saas.urls'           # For TENANT schemas (tenant1.localhost)
+ROOT_URLCONF = 'proj_saas.urls_tenant'           # For TENANT schemas (tenant1.localhost)
 PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'  # For PUBLIC schema (localhost)
 
 TEMPLATES = [
@@ -154,7 +155,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Django Rest Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
+         'rest_framework_simplejwt.authentication.JWTAuthentication',
+         'rest_framework.authentication.SessionAuthentication', 
     )
 }
 

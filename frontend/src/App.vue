@@ -2,14 +2,5 @@
   <router-view />
 </template>
 
-<script>
-export default {
-  name: 'App',
-}
+<script setup>
 </script>
-
-<style>
-body {
-  font-family: 'Inter', sans-serif;
-}
-</style>
