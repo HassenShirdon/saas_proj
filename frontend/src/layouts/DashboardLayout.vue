@@ -1,7 +1,8 @@
 <template>
   <div class="flex h-screen bg-gray-100 dark:bg-gray-900">
     <!-- Sidebar -->
-    <Sidebar :open="sidebarOpen" @close="sidebarOpen = false" />
+    <Sidebar :open="sidebarOpen" :collapsed="sidebarCollapsed" @toggle="sidebarOpen = !sidebarOpen"
+      @close="sidebarOpen = false" @toggle-collapse="sidebarCollapsed = !sidebarCollapsed" />
 
     <!-- Main content area -->
     <div class="flex-1 flex flex-col">
@@ -21,5 +22,6 @@ import { ref } from 'vue'
 import Sidebar from '../components/dashboard/Sidebar.vue'
 import Menubar from '../components/dashboard/Menubar.vue'
 
-const sidebarOpen = ref(false)
+const sidebarOpen = ref(false)       // for mobile
+const sidebarCollapsed = ref(false)  // for desktop
 </script>

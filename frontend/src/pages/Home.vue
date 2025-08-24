@@ -4,7 +4,9 @@
     <Hero />
     <Features />
     <About />
+    <Products />
     <Pricing />
+    <Testimonials />
     <CallToAction />
     <Footer />
   </LandingLayout>
@@ -16,6 +18,8 @@ import Header from '../components/landing/Header.vue'
 import Hero from '../components/landing/Hero.vue'
 import Features from '../components/landing/Features.vue'
 import About from '../components/landing/About.vue'
+import Products from '../components/landing/Products.vue'
+import Testimonials from '../components/landing/Testimonials.vue'
 import Pricing from '../components/landing/Pricing.vue'
 import CallToAction from '../components/landing/CallToAction.vue'
 import Footer from '../components/landing/Footer.vue'
