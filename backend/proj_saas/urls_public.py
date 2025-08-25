@@ -1,21 +1,20 @@
-# proj_saas/urls_public.py
+# proj_saas/urls_public.py (REVISED)
 from django.contrib import admin
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-)
+from rest_framework_simplejwt.views import TokenObtainPairView
 from django.urls import path, include
 
 urlpatterns = [
     # ===== PUBLIC SCHEMA ENDPOINTS (localhost:8000/) ===== #
     
-    # Admin site is also accessible from the public domain
+    # Admin site
     path('admin/', admin.site.urls),
-    # Public Authentication
-     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     
-    # Users Management 
+    # Authentication
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    
+    # Core app (tenant management)
+    path('api/', include('core.urls')),
+    
+    # Users management (public schema operations)
     path('api/users/', include('users.urls')),
-    # Tenant & Domain Management (Superadmin only)
-    path('api/',include('core.urls')),
-    
 ]

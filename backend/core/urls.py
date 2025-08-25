@@ -2,15 +2,11 @@
 from django.urls import path
 from .views import (
     TenantListView, TenantCreateView, TenantDetailView,
-     DomainListView, DomainDetailView
-    #  TenantSignupView,
+    DomainListView, DomainDetailView
 )
 
 urlpatterns = [
-    # Public endpoints
-    # path('signup/', TenantSignupView.as_view(), name='tenant-signup'),
-    
-    # Admin endpoints
+    # Tenant management
     path('tenants/', TenantListView.as_view(), name='tenant-list'),
     path('tenants/create/', TenantCreateView.as_view(), name='tenant-create'),
     path('tenants/<int:id>/', TenantDetailView.as_view(), name='tenant-detail'),

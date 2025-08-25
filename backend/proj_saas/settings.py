@@ -23,7 +23,8 @@ ALLOWED_HOSTS = ['*'] # For development, allow all hosts. Restrict in production
 
 
 SHARED_APPS = [
-    'django_tenants',  # MUST BE FIRST
+    'django_tenants',  # Must be first
+    'users',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,9 +32,9 @@ SHARED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework_simplejwt',
-    'core',           # Contains Tenant/Domain models
-    'users.apps.UsersConfig',  # Use explicit app config
+    'rest_framework.authtoken',
+    'corsheaders',
+    'core',  # Contains Tenant and Domain models
 ]
 
 TENANT_APPS = [
@@ -41,9 +42,14 @@ TENANT_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'inventory',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'members',  # Tenant-specific users app
     'finance',
     'hrm',
+    'inventory',
 ]
 
 INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -195,6 +201,7 @@ SIMPLE_JWT = {
 
 AUTHENTICATION_BACKENDS = [
     # Needed to login by username in Django admin, regardless of `allauth`
+    'users.backends.TenantAwareAuthBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
 

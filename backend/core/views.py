@@ -1,3 +1,4 @@
+# core/views.py
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
@@ -5,10 +6,10 @@ from django_tenants.utils import tenant_context, schema_exists
 from django.db import transaction
 from .models import Tenant, Domain
 from .serializers import TenantSerializer, DomainSerializer
-# , TenantSignupSerializer
 from users.models import User
-from rest_framework.permissions import IsAdminUser, AllowAny
+from rest_framework.permissions import IsAdminUser
 import re
+import uuid
 
 class TenantListView(generics.ListAPIView):
     queryset = Tenant.objects.all()
@@ -16,10 +17,12 @@ class TenantListView(generics.ListAPIView):
     permission_classes = [IsAdminUser]
     
     def get_queryset(self):
-        """Superusers see all tenants, staff see only assigned tenants"""
+        """Superusers see all tenants, tenant admins see only their tenant"""
         if self.request.user.is_superuser:
             return Tenant.objects.all()
-        return Tenant.objects.filter(pk=self.request.user.tenant_id)
+        elif hasattr(self.request.user, 'tenant'):
+            return Tenant.objects.filter(id=self.request.user.tenant_id)
+        return Tenant.objects.none()
 
 class TenantDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Tenant.objects.all()
@@ -40,6 +43,12 @@ class TenantCreateView(generics.CreateAPIView):
     
     @transaction.atomic
     def create(self, request, *args, **kwargs):
+        if not request.user.is_superuser:
+            return Response(
+                {"error": "Only superusers can create tenants"}, 
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
         # Use the existing serializer for tenant validation
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -48,8 +57,10 @@ class TenantCreateView(generics.CreateAPIView):
         data = serializer.validated_data
         admin_email = request.data.get('admin_email')
         admin_password = request.data.get('admin_password')
+        admin_username = request.data.get('admin_username', admin_email)
+        domain_name = request.data.get('domain_name')
         
-        # Clean and validate schema name (FIXED)
+        # Clean and validate schema name
         schema_name = self.clean_schema_name(data.get('schema_name', ''))
         
         # Validate schema name format
@@ -65,13 +76,13 @@ class TenantCreateView(generics.CreateAPIView):
             schema_name=schema_name,
             tenant_name=data.get('tenant_name'),
             address=data.get('address', ''),
-            is_active=data.get('is_active', False),
-            max_users=data.get('max_users', 5)
+            is_active=data.get('is_active', True),
+            max_users=data.get('max_users', 10)
         )
         tenant.save()
         
-        # Create domain (default to schema_name.localhost)
-        domain_name = request.data.get('domain', f"{schema_name}.localhost")
+        # Create domain
+        domain_name = domain_name or f"{schema_name}.localhost"
         if Domain.objects.filter(domain=domain_name).exists():
             raise ValidationError("Domain already exists")
             
@@ -87,14 +98,16 @@ class TenantCreateView(generics.CreateAPIView):
             try:
                 with tenant_context(tenant):
                     User.objects.create_user(
+                        username=admin_username,
                         email=admin_email,
                         password=admin_password,
-                        is_staff=True,
-                        is_superuser=True
+                        first_name=request.data.get('admin_first_name', ''),
+                        last_name=request.data.get('admin_last_name', ''),
+                        tenant=tenant,
+                        role=User.Role.TENANT_ADMIN,
+                        is_staff=True
                     )
             except Exception as e:
-                # If user creation fails, we might want to handle this gracefully
-                # You can choose to delete the tenant or just log the error
                 raise ValidationError(f"Failed to create admin user: {str(e)}")
         
         return Response({
@@ -107,109 +120,38 @@ class TenantCreateView(generics.CreateAPIView):
     def clean_schema_name(self, name):
         """Clean and format schema name to be PostgreSQL compatible"""
         if not name:
-            # Generate a default name if empty
-            import uuid
             return f"tenant_{uuid.uuid4().hex[:8]}"
         
-        # Convert to lowercase
         name = name.lower().strip()
-        
-        # Replace spaces, hyphens, and other separators with underscores
         name = re.sub(r'[\s\-\.]+', '_', name)
-        
-        # Remove invalid characters (keep only letters, numbers, underscores)
         name = re.sub(r'[^a-z0-9_]', '', name)
-        
-        # Remove leading underscores and numbers
         name = re.sub(r'^[0-9_]+', '', name)
         
-        # Ensure it starts with a letter
         if name and not name[0].isalpha():
             name = f"t_{name}"
         
-        # Ensure it's not too long (PostgreSQL limit is 63 characters)
         if len(name) > 63:
             name = name[:63]
         
         return name
     
     def is_valid_schema_name(self, name):
-        """Validate schema name according to PostgreSQL and django-tenants rules"""
         if not name or len(name) < 1:
             return False
         
-        # Check if starts with letter
         if not name[0].isalpha():
             return False
         
-        # Check if contains only valid characters
         if not re.match(r'^[a-z][a-z0-9_]*$', name):
             return False
         
-        # Check if not starting with pg_ (PostgreSQL reserved)
         if name.startswith('pg_'):
             return False
         
-        # Check length
         if len(name) > 63:
             return False
         
         return True
-# class TenantSignupView(generics.CreateAPIView):
-#     serializer_class = TenantSignupSerializer
-#     permission_classes = [AllowAny]  # Public access for signup
-    
-#     @transaction.atomic
-#     def create(self, request, *args, **kwargs):
-#         serializer = self.get_serializer(data=request.data)
-#         serializer.is_valid(raise_exception=True)
-#         data = serializer.validated_data
-        
-#         # Validate schema doesn't exist
-#         schema_name = data['name'].lower().replace(' ', '-')
-#         if schema_exists(schema_name):
-#             raise ValidationError({'name': 'Organization name is already taken'})
-
-#         # Validate domain doesn't exist
-#         if Domain.objects.filter(domain=data['domain']).exists():
-#             raise ValidationError({'domain': 'This domain is already registered'})
-
-#         # Create tenant
-#         tenant = Tenant(
-#             name=data['name'],
-#             schema_name=schema_name,
-#             is_active=False,  # Require admin approval
-#             max_users=data.get('max_users', 3)
-#         )
-#         tenant.save()
-        
-#         # Create domain
-#         domain = Domain(
-#             domain=data['domain'],
-#             tenant=tenant,
-#             is_primary=True
-#         )
-#         domain.save()
-        
-#         # Create admin user in tenant schema
-#         with tenant_context(tenant):
-#             try:
-#                 User.objects.create_user(
-#                     email=data['email'],
-#                     password=data['password'],
-#                     username=data['email'],
-#                     is_staff=True,
-#                     is_active=True
-#                 )
-#             except Exception as e:
-#                 raise ValidationError({'user': str(e)})
-        
-#         return Response({
-#             'status': 'success',
-#             'message': 'Tenant registered successfully. Awaiting admin approval.',
-#             'tenant': TenantSerializer(tenant).data,
-#             'domain': DomainSerializer(domain).data
-#         }, status=status.HTTP_201_CREATED)
 
 class DomainListView(generics.ListCreateAPIView):
     serializer_class = DomainSerializer
