@@ -1,34 +1,43 @@
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from django.contrib.auth.password_validation import validate_password
-from core.models import Tenant  # your tenant model
-from members.models import Member  # will link User to tenant
+from .models import User, TenantUserRole
+from django_tenants.utils import get_tenant_model
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-User = get_user_model()
-
+Tenant = get_tenant_model()
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "email", "first_name", "last_name", "is_active", "is_staff", "is_superuser"]
+        fields = ["id", "username", "email", "is_superadmin"]
 
-
-class UserCreateSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password], min_length=6)
-
+class TenantUserRoleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = User
-        fields = ["id", "username", "email", "password", "first_name", "last_name", "is_staff"]
+        model = TenantUserRole
+        fields = ["id", "user", "tenant", "role", "module"]
 
-    def create(self, validated_data):
-        password = validated_data.pop("password")
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-        return user
+# JWT Serializer with automatic tenant detection
+class AutoTenantTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
 
+class AutoTenantTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = self.user
 
-class TenantSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tenant
-        fields = ["id", "name", "schema_name", "paid_until", "on_trial", "created_on"]
+        # ✅ Allow BOTH Django superusers and your custom superadmins
+        if getattr(user, "is_superuser", False) or getattr(user, "is_superadmin", False):
+            tenant_info = {"subdomain": "public", "role": "superadmin"}
+        else:
+            tenant_roles = TenantUserRole.objects.filter(user=user)
+            if not tenant_roles.exists():
+                raise serializers.ValidationError("User does not belong to any tenant")
+            tenant_role = tenant_roles.first()
+            tenant_info = {
+                "subdomain": tenant_role.tenant.schema_name,
+                "role": tenant_role.role
+            }
+
+        data.update({"tenant_info": tenant_info})
+        return data

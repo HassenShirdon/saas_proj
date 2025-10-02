@@ -1,70 +1,82 @@
-from django.contrib.auth import get_user_model, authenticate, login, logout
-from rest_framework import viewsets, permissions, status
-from rest_framework.decorators import action
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from core.models import Tenant, Domain
-from .serializers import UserSerializer, UserCreateSerializer, TenantSerializer
+from rest_framework.permissions import IsAuthenticated
+from .models import User, TenantUserRole
+from .serializers import UserSerializer, TenantUserRoleSerializer, AutoTenantTokenObtainPairSerializer
+from .permissions import IsSuperAdmin, IsTenantAdmin
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django_tenants.utils import get_tenant_model
 
-User = get_user_model()
+Tenant = get_tenant_model()
 
+# JWT login
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = AutoTenantTokenObtainPairSerializer
 
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+# Superadmin endpoints
+class TenantAdminViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsSuperAdmin]
+    serializer_class = UserSerializer
+    queryset = User.objects.filter(tenantuserrole__role='tenant_admin')
 
-    def get_serializer_class(self):
-        if self.action in ["create", "create_tenant_admin"]:
-            return UserCreateSerializer
-        return UserSerializer
+    def create(self, request, *args, **kwargs):
+        tenant_id = request.data.get("tenant_id")
+        password = request.data.get("password")
+        email = request.data.get("email")
+        username = request.data.get("username")
 
-    def get_permissions(self):
-        if self.action in ["list", "destroy", "create_tenant_admin", "create_tenant"]:
-            permission_classes = [permissions.IsAdminUser]  # superuser only
-        else:
-            permission_classes = [permissions.IsAuthenticated]
-        return [permission() for permission in permission_classes]
+        if not all([tenant_id, password, email, username]):
+            return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return User.objects.all()
-        return User.objects.filter(id=user.id)
+        tenant = Tenant.objects.get(id=tenant_id)
+        user = User.objects.create_user(username=username, email=email, password=password)
+        TenantUserRole.objects.create(user=user, tenant=tenant, role="tenant_admin")
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    # Login endpoint
-    @action(detail=False, methods=["post"], permission_classes=[permissions.AllowAny])
-    def login(self, request):
+# Tenant admin endpoints
+class ManagerViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsTenantAdmin]
+    serializer_class = UserSerializer
+    queryset = User.objects.filter(tenantuserrole__role='manager')
+
+    def create(self, request, *args, **kwargs):
+        modules = request.data.get("modules", [])
+        email = request.data.get("email")
         username = request.data.get("username")
         password = request.data.get("password")
-        user = authenticate(username=username, password=password)
-        if user:
-            login(request, user)
-            return Response({"message": "Login successful"})
-        return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
-    # Logout endpoint
-    @action(detail=False, methods=["post"])
-    def logout(self, request):
-        logout(request)
-        return Response({"message": "Logged out successfully"})
+        if not all([email, username, password]):
+            return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Superuser creates a tenant
-    @action(detail=False, methods=["post"])
-    def create_tenant(self, request):
-        serializer = TenantSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        tenant = serializer.save()
-        # You should also create a Domain for tenant (example)
-        Domain.objects.create(domain=f"{tenant.schema_name}.localhost", tenant=tenant, is_primary=True)
-        return Response({"message": "Tenant created", "tenant": serializer.data})
+        user = User.objects.create_user(username=username, email=email, password=password)
+        tenant = request.user.tenantuserrole_set.get(role="tenant_admin").tenant
 
-    # Superuser creates a Tenant Admin user
-    @action(detail=False, methods=["post"])
-    def create_tenant_admin(self, request):
-        serializer = UserCreateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.save()
-        # Link user to tenant through Member
-        tenant_id = request.data.get("tenant_id")
-        from members.models import Member
-        tenant = Tenant.objects.get(id=tenant_id)
-        Member.objects.create(user=user, role=Member.Role.TENANT_ADMIN, tenant=tenant)
-        return Response({"message": "Tenant Admin created", "user_id": user.id})
+        for module in modules:
+            TenantUserRole.objects.create(user=user, tenant=tenant, role="manager", module=module)
+
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class MemberViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated, IsTenantAdmin]
+    serializer_class = UserSerializer
+    queryset = User.objects.filter(tenantuserrole__role='member')
+
+    def create(self, request, *args, **kwargs):
+        modules = request.data.get("modules", [])
+        email = request.data.get("email")
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if not all([email, username, password]):
+            return Response({"error": "Missing required fields"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = User.objects.create_user(username=username, email=email, password=password)
+        tenant = request.user.tenantuserrole_set.get(role="tenant_admin").tenant
+
+        for module in modules:
+            TenantUserRole.objects.create(user=user, tenant=tenant, role="member", module=module)
+
+        serializer = self.get_serializer(user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)

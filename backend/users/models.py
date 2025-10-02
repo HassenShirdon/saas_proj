@@ -1,27 +1,36 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-
-
-class UserManager(BaseUserManager):
-    def create_user(self, username, email=None, password=None, **extra_fields):
-        email = self.normalize_email(email)
-        user = self.model(username=username, email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
-
-    def create_superuser(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        if not extra_fields.get("is_staff"):
-            raise ValueError("Superuser must have is_staff=True")
-        if not extra_fields.get("is_superuser"):
-            raise ValueError("Superuser must have is_superuser=True")
-        return self.create_user(username, email, password, **extra_fields)
+from django.conf import settings
 
 
 class User(AbstractUser):
-    objects = UserManager()
+    is_superadmin = models.BooleanField(default=False)
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
+
+class TenantUserRole(models.Model):
+    ROLE_CHOICES = [
+        ("tenant_admin", "Tenant Admin"),
+        ("manager", "Manager"),
+        ("member", "Member"),
+    ]
+
+    MODULE_CHOICES = [
+        ("hrm", "HRM"),
+        ("finance", "Finance"),
+        ("inventory", "Inventory"),
+        ("operations", "Operations"),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    tenant = models.ForeignKey('core.Tenant', on_delete=models.CASCADE)
+    role = models.CharField(max_length=50, choices=ROLE_CHOICES)
+    module = models.CharField(max_length=50, choices=MODULE_CHOICES, blank=True, null=True)
+
+    class Meta:
+        unique_together = ("user", "tenant", "role", "module")
 
     def __str__(self):
-        return self.username
+        return f"{self.user.email} - {self.role} - {self.module or 'all'}"

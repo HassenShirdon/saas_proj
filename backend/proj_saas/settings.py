@@ -46,7 +46,6 @@ TENANT_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'members',  # Tenant-specific users app
     'finance',
     'hrm',
     'inventory',
@@ -86,13 +85,14 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'users.middleware.TenantAccessMiddleware',  # <-- after AuthenticationMiddleware
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # settings.py
-ROOT_URLCONF = 'proj_saas.urls_tenant'           # For TENANT schemas (tenant1.localhost)
-PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls_public'  # For PUBLIC schema (localhost)
+ROOT_URLCONF = 'proj_saas.urls'
+PUBLIC_SCHEMA_URLCONF = 'proj_saas.urls'
 
 TEMPLATES = [
     {
@@ -210,7 +210,8 @@ AUTH_USER_MODEL = 'users.User' # <---
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080", # Your Vue.js dev server (common for Vue CLI)
     "http://localhost:5173", # Your Vue.js dev server (common for Vite)
-    
+    "http://127.0.0.1:5173", # Localhost IP
+    "http://*.localhost:5173", # Allow all tenant subdomains - ADD THIS LINE
 ]
 CORS_ALLOW_CREDENTIALS = True # Allow cookies/authentication headers to be sent
 CORS_ALLOW_HEADERS = [
@@ -223,6 +224,14 @@ CORS_ALLOW_HEADERS = [
     "user-agent",
     "x-csrftoken",
     "x-requested-with",
+]
+CORS_ALLOW_METHODS = [
+    "DELETE",
+    "GET",
+    "OPTIONS",
+    "PATCH",
+    "POST",
+    "PUT",
 ]
 
 # Logging configuration (from your original settings.py)
